@@ -1,10 +1,14 @@
 package com.swordglowsblue.artifice.mixin;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.swordglowsblue.artifice.api.virtualpack.ArtificeResourcePackContainer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screen.pack.PackListWidget;
+import net.minecraft.client.gui.screen.pack.PackScreen;
 import net.minecraft.client.gui.screen.pack.ResourcePackOrganizer;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.resource.ResourcePackProfile;
+import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,17 +16,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.minecraft.client.gui.screen.pack.AbstractPackScreen;
-import net.minecraft.client.gui.screen.pack.PackListWidget;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.resource.ResourcePackProfile;
-import net.minecraft.text.Text;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import java.util.ArrayList;
+import java.util.List;
 
 @Environment(EnvType.CLIENT)
-@Mixin(AbstractPackScreen.class)
+@Mixin(PackScreen.class)
 public abstract class MixinResourcePackOptionsScreen {
     @Shadow
     private PackListWidget availablePackList;

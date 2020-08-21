@@ -1,6 +1,5 @@
 package com.swordglowsblue.artifice.test;
 
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.swordglowsblue.artifice.api.Artifice;
@@ -8,7 +7,6 @@ import com.swordglowsblue.artifice.api.ArtificeResourcePack;
 import com.swordglowsblue.artifice.api.builder.data.dimension.BiomeSourceBuilder;
 import com.swordglowsblue.artifice.api.builder.data.dimension.ChunkGeneratorTypeBuilder;
 import com.swordglowsblue.artifice.api.resource.StringResource;
-import com.swordglowsblue.artifice.api.util.Processor;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -23,15 +21,16 @@ import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.*;
-import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.ChunkRegion;
+import net.minecraft.world.Heightmap;
+import net.minecraft.world.WorldAccess;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.StructuresConfig;
-import net.minecraft.world.gen.chunk.SurfaceChunkGenerator;
 import net.minecraft.world.gen.chunk.VerticalBlockSample;
 import net.minecraft.world.gen.feature.StructureFeature;
 
@@ -153,7 +152,7 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
     public static class TestChunkGenerator extends ChunkGenerator {
         public static final Codec<TestChunkGenerator> CODEC = RecordCodecBuilder.create((instance) ->
                 instance.group(
-                        BiomeSource.field_24713.fieldOf("biome_source")
+                        BiomeSource.CODEC.fieldOf("biome_source")
                                 .forGetter((generator) -> generator.biomeSource),
                         Codec.BOOL.fieldOf("test_bool").forGetter((generator) -> generator.testBool)
                 )
@@ -168,7 +167,7 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
         }
 
         @Override
-        protected Codec<? extends ChunkGenerator> method_28506() {
+        protected Codec<? extends ChunkGenerator> getCodec() {
             return CODEC;
         }
 

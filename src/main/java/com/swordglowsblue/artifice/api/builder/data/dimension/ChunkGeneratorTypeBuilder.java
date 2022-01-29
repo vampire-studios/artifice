@@ -4,6 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.swordglowsblue.artifice.api.builder.TypedJsonBuilder;
 import com.swordglowsblue.artifice.api.util.Processor;
+import net.minecraft.structure.StructureManager;
+import net.minecraft.world.gen.chunk.StructureConfig;
 
 public class ChunkGeneratorTypeBuilder extends TypedJsonBuilder<JsonObject> {
 
@@ -129,30 +131,31 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonBuilder<JsonObject> {
         }
 
         /**
-         * Build a structure manager.
-         * @param structureManagerBuilder
-         * @return
-         */
-        public FlatChunkGeneratorTypeBuilder structureManager(Processor<StructureManagerBuilder> structureManagerBuilder) {
-            with(this.root.getAsJsonObject("settings"),"structures", JsonObject::new, jsonObject -> structureManagerBuilder.process(new StructureManagerBuilder()).buildTo(jsonObject));
-            return this;
-        }
-
-        /**
          * Set the biome to biomeId.
-         * @param biomeId
-         * @return
+         * @param biomeId the biome id.
+         * @return this
          */
         public FlatChunkGeneratorTypeBuilder biome(String biomeId) {
             this.root.getAsJsonObject("settings").addProperty("biome", biomeId);
             return this;
         }
 
+        /**
+         * Set the biome to biomeId.
+         * @param lakes the biome id.
+         * @return this
+         */
         public FlatChunkGeneratorTypeBuilder lakes(boolean lakes) {
+            StructureConfig
             this.root.getAsJsonObject("settings").addProperty("lakes", lakes);
             return this;
         }
 
+        /**
+         * Set the biome to biomeId.
+         * @param biomeId the biome id.
+         * @return this
+         */
         public FlatChunkGeneratorTypeBuilder features(boolean features) {
             this.root.getAsJsonObject("settings").addProperty("features", features);
             return this;

@@ -3,7 +3,8 @@ plugins {
     id 'maven-publish'
     id 'signing'
     id "com.jfrog.bintray"
-    id "com.github.fudge.forgedflowerloom" version "2.0.0"
+    id("io.github.juuxel.loom-quiltflower-mini") version "1.2.0"
+    id 'org.quiltmc.quilt-mappings-on-loom' version '3.1.1'
 }
 
 def total_version = "$mod_version+$minecraft_version"
@@ -19,8 +20,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     mavenCentral()
-//    maven { url "https://minecraft.curseforge.com/api/maven/" }
-//	maven { url 'http://maven.sargunv.s3-website-us-west-2.amazonaws.com/' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 }
 minecraft {
 }
@@ -41,18 +41,10 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modApi "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
-    testImplementation "org.junit.jupiter:junit-jupiter-params:5.4.2"
-    testRuntime "org.junit.jupiter:junit-jupiter-engine:5.4.2"
+    testImplementation('org.junit.jupiter:junit-jupiter:5.8.2')
 
     testmodImplementation sourceSets.main.output
     modRuntime("net.fabricmc.fabric-api:fabric-api:$fabric_version")
-
-//	modRuntime "io.github.prospector.modmenu:ModMenu:1.6.2-92"
-//	modRuntime "foamfix-for-minecraft:foamfix:0.12.1"
-//	modRuntime "me.shedaniel:RoughlyEnoughItems:2.9.4+build.129"
-//	modRuntime "me.sargunvohra.mcmods:auto-config:1.1.2+mc1.14.1"
-//	modRuntime "informed-load-fabric:informedload:2.1.0:1.14"
 }
 
 test { useJUnitPlatform() }

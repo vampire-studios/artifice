@@ -12,6 +12,7 @@ import com.swordglowsblue.artifice.api.builder.data.worldgen.biome.BiomeBuilder;
 import com.swordglowsblue.artifice.api.builder.data.worldgen.configured.ConfiguredCarverBuilder;
 import com.swordglowsblue.artifice.api.builder.data.worldgen.configured.ConfiguredSurfaceBuilder;
 import com.swordglowsblue.artifice.api.builder.data.worldgen.configured.feature.ConfiguredFeatureBuilder;
+import com.swordglowsblue.artifice.api.builder.data.worldgen.configured.feature.PlacedFeatureBuilder;
 import com.swordglowsblue.artifice.api.resource.ArtificeResource;
 import com.swordglowsblue.artifice.api.util.Processor;
 import com.swordglowsblue.artifice.api.virtualpack.ArtificeResourcePackContainer;
@@ -311,6 +312,14 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param f A callback which will be passed an {@link ConfiguredFeatureBuilder} to create the feature.
          */
         void addConfiguredFeature(Identifier id, Processor<ConfiguredFeatureBuilder> f);
+
+        /**
+         * Add a Feature with the given ID.
+         *
+         * @param id The ID of the feature, which will be converted into the correct path.
+         * @param f A callback which will be passed an {@link PlacedFeatureBuilder} to create the feature.
+         */
+        void addPlacedFeature(Identifier id, Processor<PlacedFeatureBuilder> f);
 
         /**
          * Add a ConfiguredSurfaceBuilder with the given ID.

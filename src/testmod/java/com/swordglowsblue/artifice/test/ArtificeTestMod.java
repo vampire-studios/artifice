@@ -67,47 +67,49 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 		Artifice.registerDataPack(id("optional_test"), pack -> {
 			pack.setOptional();
 
-			pack.add(id("recipes/test_optional.json"), new StringResource("{\n" +
-					"  \"type\": \"minecraft:crafting_shaped\",\n" +
-					"  \"group\": \"wooden_door\",\n" +
-					"  \"pattern\": [\n" +
-					"    \"##\",\n" +
-					"    \"##\",\n" +
-					"    \"   \"\n" +
-					"  ],\n" +
-					"  \"key\": {\n" +
-					"    \"#\": {\n" +
-					"      \"item\": \"minecraft:stone\"\n" +
-					"    }\n" +
-					"  },\n" +
-					"  \"result\": {\n" +
-					"    \"item\": \"artifice:test_item\",\n" +
-					"    \"count\": 2\n" +
-					"  }\n" +
-					"}"));
+			pack.add(id("recipes/test_optional.json"), new StringResource("""
+					{
+					  "type": "minecraft:crafting_shaped",
+					  "group": "wooden_door",
+					  "pattern": [
+					    "##",
+					    "##",
+					    "#  "
+					  ],
+					  "key": {
+					    "#": {
+					      "item": "minecraft:stone"
+					    }
+					  },
+					  "result": {
+					    "item": "artifice:test_item",
+					    "count": 2
+					  }
+					}"""));
 		});
 		Artifice.registerDataPack(id("testmod"), pack -> {
 			pack.setDisplayName("Artifice Test Data");
 			pack.setDescription("Data for the Artifice test mod");
 
-			pack.add(id("recipes/test_item.json"), new StringResource("{\n" +
-					"  \"type\": \"minecraft:crafting_shaped\",\n" +
-					"  \"group\": \"wooden_door\",\n" +
-					"  \"pattern\": [\n" +
-					"    \"##\",\n" +
-					"    \"##\",\n" +
-					"    \"##\"\n" +
-					"  ],\n" +
-					"  \"key\": {\n" +
-					"    \"#\": {\n" +
-					"      \"item\": \"minecraft:stone\"\n" +
-					"    }\n" +
-					"  },\n" +
-					"  \"result\": {\n" +
-					"    \"item\": \"artifice:test_item\",\n" +
-					"    \"count\": 3\n" +
-					"  }\n" +
-					"}"));
+			pack.add(id("recipes/test_item.json"), new StringResource("""
+					{
+					  "type": "minecraft:crafting_shaped",
+					  "group": "wooden_door",
+					  "pattern": [
+					    "##",
+					    "##",
+					    "##"
+					  ],
+					  "key": {
+					    "#": {
+					      "item": "minecraft:stone"
+					    }
+					  },
+					  "result": {
+					    "item": "artifice:test_item",
+					    "count": 3
+					  }
+					}"""));
 
 			pack.addDimensionType(testDimension.getValue(), dimensionTypeBuilder -> dimensionTypeBuilder
 					.natural(false).hasRaids(false).respawnAnchorWorks(true).bedWorks(false).piglinSafe(false)
@@ -157,7 +159,7 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 					biomeEffectsBuilder.skyColor(4159204);
 				});
 				biomeBuilder.addAirCarvers(id("test_carver").toString());
-				biomeBuilder.addFeaturesbyStep(GenerationStep.Feature.VEGETAL_DECORATION, id("test_decorated_feature").toString());
+				//biomeBuilder.addFeaturesbyStep(GenerationStep.Feature.VEGETAL_DECORATION, id("test_decorated_feature").toString());
 			});
 
 			pack.addConfiguredCarver(id("test_carver"), carverBuilder ->
@@ -187,7 +189,7 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 											.minAndMaxInclusive(-1F, -0.4F)
 							))
 			);
-
+/*
 			// Tested, it works now. Wasn't in 20w28a.
 			pack.addConfiguredFeature(id("test_featureee"), configuredFeatureBuilder ->
 					configuredFeatureBuilder.featureID("minecraft:tree")
@@ -236,7 +238,7 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 											), new DecoratedFeatureConfigBuilder())).decorator(configuredDecoratorBuilder ->
 							configuredDecoratorBuilder.name("minecraft:count_extra")
 									.config(countExtraDecoratorConfigBuilder ->
-											countExtraDecoratorConfigBuilder.count(10).extraChance(0.2F).extraCount(2), new CountExtraDecoratorConfigBuilder())), new DecoratedFeatureConfigBuilder()));
+											countExtraDecoratorConfigBuilder.count(10).extraChance(0.2F).extraCount(2), new CountExtraDecoratorConfigBuilder())), new DecoratedFeatureConfigBuilder()));*/
 			try {
 				pack.dumpResources("testing_data", "data");
 			} catch (IOException e) {

@@ -37,12 +37,12 @@ public class ConfiguredCarverBuilder extends TypedJsonBuilder<JsonResource<JsonO
     }
 
     public ConfiguredCarverBuilder horizontalRadiusModifier(Processor<HeightProviderBuilders> processor) {
-        with(this.root.getAsJsonObject("config"), "horizontal_radius_modifier", JsonObject::new, jsonObject -> processor.process(new HeightProviderBuilders()).buildTo(jsonObject));
+        with(this.root.getAsJsonObject("config"), "horizontal_radius_multiplier", JsonObject::new, jsonObject -> processor.process(new HeightProviderBuilders()).buildTo(jsonObject));
         return this;
     }
 
     public ConfiguredCarverBuilder verticalRadiusModifier(Processor<HeightProviderBuilders> processor) {
-        with(this.root.getAsJsonObject("config"), "vertical_radius_modifier", JsonObject::new, jsonObject -> processor.process(new HeightProviderBuilders()).buildTo(jsonObject));
+        with(this.root.getAsJsonObject("config"), "vertical_radius_multiplier", JsonObject::new, jsonObject -> processor.process(new HeightProviderBuilders()).buildTo(jsonObject));
         return this;
     }
 

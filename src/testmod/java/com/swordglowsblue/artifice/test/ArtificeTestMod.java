@@ -2,18 +2,18 @@ package com.swordglowsblue.artifice.test;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.swordglowsblue.artifice.api.Artifice;
-import com.swordglowsblue.artifice.api.ArtificeResourcePack;
-import com.swordglowsblue.artifice.api.builder.data.dimension.ChunkGeneratorTypeBuilder;
-import com.swordglowsblue.artifice.api.builder.data.worldgen.BlockStateProviderBuilder;
-import com.swordglowsblue.artifice.api.builder.data.worldgen.configured.decorator.config.CountExtraDecoratorConfigBuilder;
-import com.swordglowsblue.artifice.api.builder.data.worldgen.configured.decorator.config.DecoratedDecoratorConfigBuilder;
-import com.swordglowsblue.artifice.api.builder.data.worldgen.configured.feature.config.DecoratedFeatureConfigBuilder;
-import com.swordglowsblue.artifice.api.builder.data.worldgen.configured.feature.config.TreeFeatureConfigBuilder;
-import com.swordglowsblue.artifice.api.builder.data.worldgen.gen.FeatureSizeBuilder;
-import com.swordglowsblue.artifice.api.builder.data.worldgen.gen.FoliagePlacerBuilder;
-import com.swordglowsblue.artifice.api.builder.data.worldgen.gen.TrunkPlacerBuilder;
-import com.swordglowsblue.artifice.api.resource.StringResource;
+import io.github.vampirestudios.artifice.api.Artifice;
+import io.github.vampirestudios.artifice.api.ArtificeResourcePack;
+import io.github.vampirestudios.artifice.api.builder.data.dimension.ChunkGeneratorTypeBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.BlockStateProviderBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.decorator.config.CountExtraDecoratorConfigBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.decorator.config.DecoratedDecoratorConfigBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config.DecoratedFeatureConfigBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config.TreeFeatureConfigBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.FeatureSizeBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.FoliagePlacerBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.TrunkPlacerBuilder;
+import io.github.vampirestudios.artifice.api.resource.StringResource;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -39,8 +39,10 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.StructureAccessor;
-import net.minecraft.world.gen.chunk.*;
-import net.minecraft.world.gen.feature.StructureFeature;
+import net.minecraft.world.gen.chunk.Blender;
+import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.world.gen.chunk.StructuresConfig;
+import net.minecraft.world.gen.chunk.VerticalBlockSample;
 
 import java.io.IOException;
 import java.util.Random;
@@ -107,13 +109,11 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 					"  }\n" +
 					"}"));
 
-			pack.addDimensionType(testDimension.getValue(), dimensionTypeBuilder -> {
-				dimensionTypeBuilder
-						.natural(false).hasRaids(false).respawnAnchorWorks(true).bedWorks(false).piglinSafe(false)
-						.ambientLight(6.0F).infiniburn(BlockTags.INFINIBURN_OVERWORLD.getId())
-						.ultrawarm(false).hasCeiling(false).hasSkylight(false).coordinate_scale(1.0).logicalHeight(832).height(832).minimumY(-512).effects("minecraft:the_end");
-			});
-			FlatChunkGeneratorConfig
+			pack.addDimensionType(testDimension.getValue(), dimensionTypeBuilder -> dimensionTypeBuilder
+					.natural(false).hasRaids(false).respawnAnchorWorks(true).bedWorks(false).piglinSafe(false)
+					.ambientLight(6.0F).infiniburn(BlockTags.INFINIBURN_OVERWORLD.getId())
+					.ultrawarm(false).hasCeiling(false).hasSkylight(false).coordinate_scale(1.0).logicalHeight(832).height(832).minimumY(-512).effects("minecraft:the_end"));
+
 			pack.addDimension(id("test_dimension"), dimensionBuilder -> dimensionBuilder
 					.dimensionType(testDimension.getValue())
 					.flatGenerator(flatChunkGeneratorTypeBuilder -> flatChunkGeneratorTypeBuilder
@@ -121,9 +121,9 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 							.addLayer(layersBuilder -> layersBuilder.block("minecraft:stone").height(2))
 							.addLayer(layersBuilder -> layersBuilder.block("minecraft:granite").height(2))
 							.biome("minecraft:plains")
-							.structureManager(structureManagerBuilder ->
+							/*.structureManager(structureManagerBuilder ->
 									structureManagerBuilder.addStructure(Registry.STRUCTURE_FEATURE.getId(StructureFeature.MINESHAFT).toString(),
-											structureConfigBuilder -> structureConfigBuilder.salt(1999999).separation(1).spacing(2)))
+											structureConfigBuilder -> structureConfigBuilder.salt(1999999).separation(1).spacing(2)))*/
 					)
 			);
 
@@ -157,12 +157,35 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 					biomeEffectsBuilder.skyColor(4159204);
 				});
 				biomeBuilder.addAirCarvers(id("test_carver").toString());
-				biomeBuilder.addFeaturesbyStep(GenerationStep.Feature.LAKES, "minecraft:lake_water", "minecraft:lake_lava")
-						.addFeaturesbyStep(GenerationStep.Feature.VEGETAL_DECORATION, id("test_decorated_feature").toString());
+				biomeBuilder.addFeaturesbyStep(GenerationStep.Feature.VEGETAL_DECORATION, id("test_decorated_feature").toString());
 			});
 
 			pack.addConfiguredCarver(id("test_carver"), carverBuilder ->
-					carverBuilder.probability(0.9F).name(new Identifier("cave").toString())
+					carverBuilder
+							.probability(0.15F)
+							.type("minecraft:cave")
+							.y(heightProviderBuilders -> heightProviderBuilders.uniform("y",
+									uniformHeightProviderBuilder -> uniformHeightProviderBuilder
+											.minInclusive(yOffsetBuilder -> yOffsetBuilder.aboveBottom(8))
+											.maxInclusive(yOffsetBuilder -> yOffsetBuilder.absolute(180))
+							))
+							.yScale(heightProviderBuilders -> heightProviderBuilders.uniform("yScale",
+									uniformHeightProviderBuilder -> uniformHeightProviderBuilder
+											.minAndMaxInclusive(0.1F, 0.9F)
+							))
+							.lavaLevel(yOffsetBuilder -> yOffsetBuilder.aboveBottom(8))
+							.horizontalRadiusModifier(heightProviderBuilders -> heightProviderBuilders.uniform("horizontal_radius_modifier",
+									uniformHeightProviderBuilder -> uniformHeightProviderBuilder
+											.minAndMaxInclusive(1.7F, 2.4F)
+							))
+							.verticalRadiusModifier(heightProviderBuilders -> heightProviderBuilders.uniform("vertical_radius_modifier",
+									uniformHeightProviderBuilder -> uniformHeightProviderBuilder
+											.minAndMaxInclusive(1.5F, 2.1F)
+							))
+							.floorLevel(heightProviderBuilders -> heightProviderBuilders.uniform("floor_level",
+									uniformHeightProviderBuilder -> uniformHeightProviderBuilder
+											.minAndMaxInclusive(-1F, -0.4F)
+							))
 			);
 
 			// Tested, it works now. Wasn't in 20w28a.

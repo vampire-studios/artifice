@@ -1,16 +1,16 @@
 {
   "required": true,
-  "package": "com.swordglowsblue.artifice.mixin",
+  "package": "io.github.vampirestudios.artifice.mixin",
   "compatibilityLevel": "JAVA_8",
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
-    "MixinResourcePackManager"
+	"MixinResourcePackManager"
   ],
   "client": [
-    "MixinMinecraftClient",
-    "MixinResourcePackEntry",
-    "MixinResourcePackOrganizer"
+	"MixinMinecraftClient",
+	"MixinResourcePackEntry",
+	"MixinResourcePackOrganizer"
   ]
 }

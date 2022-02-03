@@ -5,12 +5,12 @@
 
   "name": "Artifice",
   "description": "Library for programmatically generated resource files.",
-  "authors": [ "swordglowsblue","Fudge"],
+  "authors": [ "swordglowsblue","Fudge", "Vampire Studios"],
 
   "contact": {
-    "homepage": "https://github.com/natanfudge/artifice",
-    "sources": "https://github.com/natanfudge/artifice",
-    "issues": "https://github.com/natanfudge/artifice/issues"
+    "homepage": "https://github.com/vampire-studios/artifice",
+    "sources": "https://github.com/vampire-studios/artifice",
+    "issues": "https://github.com/vampire-studios/artifice/issues"
   },
 
   "license": "MIT",
@@ -18,8 +18,8 @@
 
   "mixins": [ "artifice.mixins.json" ],
   "depends": {
-    "minecraft": ">=1.16-alpha.20.19.a",
-    "fabricloader": ">=0.7.1"
+    "minecraft": "1.18.x",
+    "fabricloader": ">=0.12.12"
   },
   "custom": {
     "modmenu:api": true

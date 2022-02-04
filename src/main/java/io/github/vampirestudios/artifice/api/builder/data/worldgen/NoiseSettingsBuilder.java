@@ -125,4 +125,14 @@ public class NoiseSettingsBuilder extends TypedJsonBuilder<JsonResource<JsonObje
         with("structures", JsonObject::new, jsonObject -> structureManagerBuilder.process(new StructureManagerBuilder()).buildTo(jsonObject));
         return this;
     }
+
+    /**
+     * Build surface rules.
+     * @param surfaceRulesBuilder
+     * @return this
+     */
+    public NoiseSettingsBuilder surfaceRules(Processor<SurfaceRulesBuilder> surfaceRulesBuilder) {
+        with("surface_rule", JsonObject::new, jsonObject -> surfaceRulesBuilder.process(new SurfaceRulesBuilder()).buildTo(jsonObject));
+        return this;
+    }
 }

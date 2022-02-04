@@ -36,6 +36,7 @@ import net.minecraft.world.biome.source.BiomeAccess;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.biome.source.util.MultiNoiseUtil;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.StructureAccessor;
@@ -44,6 +45,7 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.StructuresConfig;
 import net.minecraft.world.gen.chunk.VerticalBlockSample;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
@@ -56,6 +58,8 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 	private static final Item testBlockItem = Registry.register(Registry.ITEM, id("test_block"), new BlockItem(testBlock, itemSettings));
 	private static final RegistryKey<DimensionType> testDimension = RegistryKey.of(Registry.DIMENSION_TYPE_KEY, id("test_dimension_type_vanilla"));
 	private static final RegistryKey<DimensionType> testDimensionCustom = RegistryKey.of(Registry.DIMENSION_TYPE_KEY, id("test_dimension_type_custom"));
+	private static final RegistryKey<DimensionOptions> testDimensionKey = RegistryKey.of(Registry.DIMENSION_KEY, id("test_dimension"));
+	private static final RegistryKey<DimensionOptions> testDimensionCustomKey = RegistryKey.of(Registry.DIMENSION_KEY, id("test_dimension_custom"));
 
 	private static Identifier id(String name) {
 		return new Identifier("artifice", name);
@@ -189,7 +193,14 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 											.minAndMaxInclusive(-1F, -0.4F)
 							))
 			);
-/*
+			// gotta wait on noise config
+			/*pack.addNoiseSettingsBuilder(id("test_dimension"),noiseSettingsBuilder ->
+					noiseSettingsBuilder.aquifersEnabled(true).defaultBlock(stateDataBuilder ->
+							stateDataBuilder.name("minecraft:stone")).defaultFluid(stateDataBuilder ->
+							stateDataBuilder.name("minecraft:lava")).seaLevel(65).legacyRandomSource(false).noodleCavesEnabled(false)
+							.oreVeinsEnabled(true).noiseConfig(noiseConfigBuilder -> noiseConfigBuilder)
+			);*/
+/*//not even going to touch this until we get everything else working
 			// Tested, it works now. Wasn't in 20w28a.
 			pack.addConfiguredFeature(id("test_featureee"), configuredFeatureBuilder ->
 					configuredFeatureBuilder.featureID("minecraft:tree")

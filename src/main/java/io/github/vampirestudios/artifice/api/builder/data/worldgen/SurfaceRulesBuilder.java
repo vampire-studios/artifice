@@ -2,7 +2,10 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen;
 
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.dimension.NoiseConfigBuilder;
 import io.github.vampirestudios.artifice.api.util.Processor;
+
+import java.util.function.Function;
 
 public class SurfaceRulesBuilder extends TypedJsonBuilder<JsonObject> {
 
@@ -21,7 +24,7 @@ public class SurfaceRulesBuilder extends TypedJsonBuilder<JsonObject> {
         return this;
     }
 
-    public SurfaceRulesBuilder condition(Processor<SurfaceRulesBuilder> surfaceRulesBuilder) {
+    public SurfaceRulesBuilder condition(Processor<ConditionalRuleBuilder> conditionalRuleBuilder) {
         root.addProperty("type","minecraft:condition");
         return this;
     }
@@ -34,6 +37,23 @@ public class SurfaceRulesBuilder extends TypedJsonBuilder<JsonObject> {
     public SurfaceRulesBuilder resultState(Processor<SurfaceRulesBuilder> surfaceRulesBuilder) {
         root.addProperty("type","minecraft:result_state");
         return this;
+    }
+
+    public class ConditionalRuleBuilder extends TypedJsonBuilder<JsonObject>{
+
+        protected ConditionalRuleBuilder() {
+            super(new JsonObject(), j->j);
+        }
+
+        public SurfaceRulesBuilder.ConditionalRuleBuilder ifTrue(Processor<SurfaceRulesBuilder> surfaceRulesBuilder) {
+            this.with("if_true", JsonObject::new, jsonObject -> surfaceRulesBuilder.process(new SurfaceRulesBuilder()).buildTo(jsonObject));
+            return this;
+        }
+
+        public SurfaceRulesBuilder.ConditionalRuleBuilder thenRun(Processor<SurfaceRulesBuilder> surfaceRulesBuilder) {
+            this.with("then_run", JsonObject::new, jsonObject -> surfaceRulesBuilder.process(new SurfaceRulesBuilder()).buildTo(jsonObject));
+            return this;
+        }
     }
 
 }

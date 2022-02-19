@@ -1,11 +1,14 @@
 package com.swordglowsblue.artifice.test;
 
+import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.vampirestudios.artifice.api.Artifice;
 import io.github.vampirestudios.artifice.api.ArtificeResourcePack;
 import io.github.vampirestudios.artifice.api.builder.data.dimension.ChunkGeneratorTypeBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.BlockStateProviderBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.SurfaceRulesBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.YOffsetBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.decorator.config.CountExtraDecoratorConfigBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.decorator.config.DecoratedDecoratorConfigBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config.DecoratedFeatureConfigBuilder;
@@ -37,6 +40,7 @@ import net.minecraft.world.biome.source.BiomeAccess;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.biome.source.util.MultiNoiseUtil;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.StructureAccessor;
@@ -45,6 +49,7 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.StructuresConfig;
 import net.minecraft.world.gen.chunk.VerticalBlockSample;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
@@ -57,6 +62,8 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 	private static final Item testBlockItem = Registry.register(Registry.ITEM, id("test_block"), new BlockItem(testBlock, itemSettings));
 	private static final RegistryKey<DimensionType> testDimension = RegistryKey.of(Registry.DIMENSION_TYPE_KEY, id("test_dimension_type_vanilla"));
 	private static final RegistryKey<DimensionType> testDimensionCustom = RegistryKey.of(Registry.DIMENSION_TYPE_KEY, id("test_dimension_type_custom"));
+	private static final RegistryKey<DimensionOptions> testDimensionKey = RegistryKey.of(Registry.DIMENSION_KEY, id("test_dimension"));
+	private static final RegistryKey<DimensionOptions> testDimensionCustomKey = RegistryKey.of(Registry.DIMENSION_KEY, id("test_dimension_custom"));
 
 	private static Identifier id(String name) {
 		return new Identifier("artifice", name);
@@ -68,47 +75,49 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 		Artifice.registerDataPack(id("optional_test"), pack -> {
 			pack.setOptional();
 
-			pack.add(id("recipes/test_optional.json"), new StringResource("{\n" +
-					"  \"type\": \"minecraft:crafting_shaped\",\n" +
-					"  \"group\": \"wooden_door\",\n" +
-					"  \"pattern\": [\n" +
-					"    \"##\",\n" +
-					"    \"##\",\n" +
-					"    \"   \"\n" +
-					"  ],\n" +
-					"  \"key\": {\n" +
-					"    \"#\": {\n" +
-					"      \"item\": \"minecraft:stone\"\n" +
-					"    }\n" +
-					"  },\n" +
-					"  \"result\": {\n" +
-					"    \"item\": \"artifice:test_item\",\n" +
-					"    \"count\": 2\n" +
-					"  }\n" +
-					"}"));
+			pack.add(id("recipes/test_optional.json"), new StringResource("""
+					{
+					  "type": "minecraft:crafting_shaped",
+					  "group": "wooden_door",
+					  "pattern": [
+					    "##",
+					    "##",
+					    "#  "
+					  ],
+					  "key": {
+					    "#": {
+					      "item": "minecraft:stone"
+					    }
+					  },
+					  "result": {
+					    "item": "artifice:test_item",
+					    "count": 2
+					  }
+					}"""));
 		});
 		Artifice.registerDataPack(id("testmod"), pack -> {
 			pack.setDisplayName("Artifice Test Data");
 			pack.setDescription("Data for the Artifice test mod");
 
-			pack.add(id("recipes/test_item.json"), new StringResource("{\n" +
-					"  \"type\": \"minecraft:crafting_shaped\",\n" +
-					"  \"group\": \"wooden_door\",\n" +
-					"  \"pattern\": [\n" +
-					"    \"##\",\n" +
-					"    \"##\",\n" +
-					"    \"##\"\n" +
-					"  ],\n" +
-					"  \"key\": {\n" +
-					"    \"#\": {\n" +
-					"      \"item\": \"minecraft:stone\"\n" +
-					"    }\n" +
-					"  },\n" +
-					"  \"result\": {\n" +
-					"    \"item\": \"artifice:test_item\",\n" +
-					"    \"count\": 3\n" +
-					"  }\n" +
-					"}"));
+			pack.add(id("recipes/test_item.json"), new StringResource("""
+					{
+					  "type": "minecraft:crafting_shaped",
+					  "group": "wooden_door",
+					  "pattern": [
+					    "##",
+					    "##",
+					    "##"
+					  ],
+					  "key": {
+					    "#": {
+					      "item": "minecraft:stone"
+					    }
+					  },
+					  "result": {
+					    "item": "artifice:test_item",
+					    "count": 3
+					  }
+					}"""));
 
 			pack.addDimensionType(testDimension.getValue(), dimensionTypeBuilder -> dimensionTypeBuilder
 					.natural(false).hasRaids(false).respawnAnchorWorks(true).bedWorks(false).piglinSafe(false)
@@ -158,7 +167,7 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 					biomeEffectsBuilder.skyColor(4159204);
 				});
 				biomeBuilder.addAirCarvers(id("test_carver").toString());
-				biomeBuilder.addFeaturesbyStep(GenerationStep.Feature.VEGETAL_DECORATION, id("test_decorated_feature").toString());
+				//biomeBuilder.addFeaturesbyStep(GenerationStep.Feature.VEGETAL_DECORATION, id("test_decorated_feature").toString());
 			});
 
 			pack.addConfiguredStructureFeature(id("test_structure"), configuredStructureFeatureBuilder -> {
@@ -197,14 +206,14 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 							.type("minecraft:cave")
 							.y(heightProviderBuilders -> heightProviderBuilders.uniform("y",
 									uniformHeightProviderBuilder -> uniformHeightProviderBuilder
-											.minInclusive(yOffsetBuilder -> yOffsetBuilder.aboveBottom(8))
-											.maxInclusive(yOffsetBuilder -> yOffsetBuilder.absolute(180))
+											.minInclusive(YOffsetBuilder.aboveBottom(8))
+											.maxInclusive(YOffsetBuilder.absolute(180))
 							))
 							.yScale(heightProviderBuilders -> heightProviderBuilders.uniform("yScale",
 									uniformHeightProviderBuilder -> uniformHeightProviderBuilder
 											.minAndMaxInclusive(0.1F, 0.9F)
 							))
-							.lavaLevel(yOffsetBuilder -> yOffsetBuilder.aboveBottom(8))
+							.lavaLevel( YOffsetBuilder.aboveBottom(8))
 							.horizontalRadiusModifier(heightProviderBuilders -> heightProviderBuilders.uniform("horizontal_radius_modifier",
 									uniformHeightProviderBuilder -> uniformHeightProviderBuilder
 											.minAndMaxInclusive(1.7F, 2.4F)
@@ -218,7 +227,20 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 											.minAndMaxInclusive(-1F, -0.4F)
 							))
 			);
-
+			// gotta wait on noise config
+			/*pack.addNoiseSettingsBuilder(id("test_dimension"),noiseSettingsBuilder ->
+					noiseSettingsBuilder.aquifersEnabled(true).defaultBlock(stateDataBuilder ->
+							stateDataBuilder.name("minecraft:stone")).defaultFluid(stateDataBuilder ->
+							stateDataBuilder.name("minecraft:lava")).seaLevel(65).legacyRandomSource(false).noodleCavesEnabled(false)
+							.oreVeinsEnabled(true).noiseConfig(noiseConfigBuilder -> noiseConfigBuilder)
+			);*/
+			System.out.println(new SurfaceRulesBuilder().sequence(surfaceRulesBuilder ->
+					surfaceRulesBuilder.verticalGradient(
+							"aaaaa",
+							YOffsetBuilder.aboveBottom(5),
+							YOffsetBuilder.belowTop(3)
+					)).buildTo(new JsonObject()).toString());
+/*//not even going to touch this until we get everything else working
 			// Tested, it works now. Wasn't in 20w28a.
 			pack.addConfiguredFeature(id("test_featureee"), configuredFeatureBuilder ->
 					configuredFeatureBuilder.featureID("minecraft:tree")
@@ -267,7 +289,7 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 											), new DecoratedFeatureConfigBuilder())).decorator(configuredDecoratorBuilder ->
 							configuredDecoratorBuilder.name("minecraft:count_extra")
 									.config(countExtraDecoratorConfigBuilder ->
-											countExtraDecoratorConfigBuilder.count(10).extraChance(0.2F).extraCount(2), new CountExtraDecoratorConfigBuilder())), new DecoratedFeatureConfigBuilder()));
+											countExtraDecoratorConfigBuilder.count(10).extraChance(0.2F).extraCount(2), new CountExtraDecoratorConfigBuilder())), new DecoratedFeatureConfigBuilder()));*/
 			try {
 				pack.dumpResources("testing_data", "data");
 			} catch (IOException e) {

@@ -338,7 +338,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
             this.add("worldgen/placed_feature/", id, ".json", f, PlacedFeatureBuilder::new);
         }
 
-        @Override
+        //remove?, this has been moved to surface rules within noise within dimensions from surface builders
         public void addConfiguredSurfaceBuilder(Identifier id, Processor<ConfiguredSurfaceBuilder> f) {
             this.add("worldgen/configured_surface_builder/", id, ".json", f, ConfiguredSurfaceBuilder::new);
         }

@@ -7,6 +7,8 @@ import io.github.vampirestudios.artifice.api.builder.data.worldgen.YOffsetBuilde
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
+import java.util.Map;
+
 public class ConfiguredCarverBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
     public ConfiguredCarverBuilder() {
         super(new JsonObject(), JsonResource::new);
@@ -31,18 +33,18 @@ public class ConfiguredCarverBuilder extends TypedJsonBuilder<JsonResource<JsonO
         return this;
     }
 
-    public ConfiguredCarverBuilder lavaLevel(Processor<YOffsetBuilder> processor) {
-        with(this.root.getAsJsonObject("config"), "lava_level", JsonObject::new, jsonObject -> processor.process(new YOffsetBuilder()).buildTo(jsonObject));
+    public ConfiguredCarverBuilder lavaLevel(Map.Entry<String, Integer> obj) {
+        with(this.root.getAsJsonObject("config"), "lava_level", JsonObject::new, jsonObject -> jsonObject.addProperty(obj.getKey(),obj.getValue()));
         return this;
     }
 
     public ConfiguredCarverBuilder horizontalRadiusModifier(Processor<HeightProviderBuilders> processor) {
-        with(this.root.getAsJsonObject("config"), "horizontal_radius_modifier", JsonObject::new, jsonObject -> processor.process(new HeightProviderBuilders()).buildTo(jsonObject));
+        with(this.root.getAsJsonObject("config"), "horizontal_radius_multiplier", JsonObject::new, jsonObject -> processor.process(new HeightProviderBuilders()).buildTo(jsonObject));
         return this;
     }
 
     public ConfiguredCarverBuilder verticalRadiusModifier(Processor<HeightProviderBuilders> processor) {
-        with(this.root.getAsJsonObject("config"), "vertical_radius_modifier", JsonObject::new, jsonObject -> processor.process(new HeightProviderBuilders()).buildTo(jsonObject));
+        with(this.root.getAsJsonObject("config"), "vertical_radius_multiplier", JsonObject::new, jsonObject -> processor.process(new HeightProviderBuilders()).buildTo(jsonObject));
         return this;
     }
 

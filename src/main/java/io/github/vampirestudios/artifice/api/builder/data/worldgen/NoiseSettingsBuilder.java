@@ -14,7 +14,7 @@ public class NoiseSettingsBuilder extends TypedJsonBuilder<JsonResource<JsonObje
     }
 
     /**
-     * Set the bedrock roof position.
+     * Set the bedrock roof position. deprecated?
      * @param bedrockRoofPosition
      * @return
      */
@@ -24,7 +24,7 @@ public class NoiseSettingsBuilder extends TypedJsonBuilder<JsonResource<JsonObje
     }
 
     /**
-     * Set the bedrock floor position.
+     * Set the bedrock floor position. deprecated?
      * @param bedrockFloorPosition
      * @return
      */
@@ -66,6 +66,22 @@ public class NoiseSettingsBuilder extends TypedJsonBuilder<JsonResource<JsonObje
         return this;
     }
 
+    public NoiseSettingsBuilder noodleCavesEnabled(boolean noodleCavesEnabled) {
+        this.root.addProperty("noodle_caves_enabled", noodleCavesEnabled);
+        return this;
+    }
+
+    public NoiseSettingsBuilder oreVeinsEnabled(boolean oreVeinsEnabled) {
+        this.root.addProperty("ore_veins_enabled", oreVeinsEnabled);
+        return this;
+    }
+
+    public NoiseSettingsBuilder legacyRandomSource(boolean legacyRandomSource) {
+        this.root.addProperty("legacy_random_source", legacyRandomSource);
+        return this;
+    }
+
+    @Deprecated
     public NoiseSettingsBuilder grimstoneEnabled(boolean grimstoneEnabled) {
         this.root.addProperty("grimstone_enabled", grimstoneEnabled);
         return this;
@@ -107,6 +123,16 @@ public class NoiseSettingsBuilder extends TypedJsonBuilder<JsonResource<JsonObje
      */
     public NoiseSettingsBuilder structureManager(Processor<StructureManagerBuilder> structureManagerBuilder) {
         with("structures", JsonObject::new, jsonObject -> structureManagerBuilder.process(new StructureManagerBuilder()).buildTo(jsonObject));
+        return this;
+    }
+
+    /**
+     * Build surface rules.
+     * @param surfaceRulesBuilder
+     * @return this
+     */
+    public NoiseSettingsBuilder surfaceRules(Processor<SurfaceRulesBuilder> surfaceRulesBuilder) {
+        with("surface_rule", JsonObject::new, jsonObject -> surfaceRulesBuilder.process(new SurfaceRulesBuilder()).buildTo(jsonObject));
         return this;
     }
 }

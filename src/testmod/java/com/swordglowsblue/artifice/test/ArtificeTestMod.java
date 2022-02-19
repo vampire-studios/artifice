@@ -10,6 +10,7 @@ import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.de
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.decorator.config.DecoratedDecoratorConfigBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config.DecoratedFeatureConfigBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config.TreeFeatureConfigBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.structure.SpawnsBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.FeatureSizeBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.FoliagePlacerBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.TrunkPlacerBuilder;
@@ -117,10 +118,10 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 			pack.addDimension(id("test_dimension"), dimensionBuilder -> dimensionBuilder
 					.dimensionType(testDimension.getValue())
 					.flatGenerator(flatChunkGeneratorTypeBuilder -> flatChunkGeneratorTypeBuilder
-							.addLayer(layersBuilder -> layersBuilder.block("minecraft:bedrock").height(2))
-							.addLayer(layersBuilder -> layersBuilder.block("minecraft:stone").height(2))
-							.addLayer(layersBuilder -> layersBuilder.block("minecraft:granite").height(2))
-							.biome("minecraft:plains")
+									.addLayer(layersBuilder -> layersBuilder.block("minecraft:bedrock").height(2))
+									.addLayer(layersBuilder -> layersBuilder.block("minecraft:stone").height(2))
+									.addLayer(layersBuilder -> layersBuilder.block("minecraft:granite").height(2))
+									.biome("minecraft:plains")
 							/*.structureManager(structureManagerBuilder ->
 									structureManagerBuilder.addStructure(Registry.STRUCTURE_FEATURE.getId(StructureFeature.MINESHAFT).toString(),
 											structureConfigBuilder -> structureConfigBuilder.salt(1999999).separation(1).spacing(2)))*/
@@ -158,6 +159,36 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 				});
 				biomeBuilder.addAirCarvers(id("test_carver").toString());
 				biomeBuilder.addFeaturesbyStep(GenerationStep.Feature.VEGETAL_DECORATION, id("test_decorated_feature").toString());
+			});
+
+			pack.addConfiguredStructureFeature(id("test_structure"), configuredStructureFeatureBuilder -> {
+				configuredStructureFeatureBuilder.type("minecraft:village");
+				configuredStructureFeatureBuilder.singleBiome("minecraft:plains");
+				configuredStructureFeatureBuilder.adoptNoise(false);
+				configuredStructureFeatureBuilder.spawnOverrides(spawnOverridesBuilder -> {});
+				configuredStructureFeatureBuilder.featureConfig(featureConfigBuilder -> {
+					featureConfigBuilder.jsonString("start_pool", "minecraft:village/desert/town_centers");
+					featureConfigBuilder.jsonNumber("size", 6);
+				});
+			});
+
+			pack.addConfiguredStructureFeature(id("test_structure2"), configuredStructureFeatureBuilder -> {
+				configuredStructureFeatureBuilder.type("minecraft:village");
+				configuredStructureFeatureBuilder.singleBiome("minecraft:nether_wastes");
+				configuredStructureFeatureBuilder.adoptNoise(true);
+				configuredStructureFeatureBuilder.spawnOverrides(spawnOverridesBuilder ->
+					spawnOverridesBuilder.monster(mobSpawnOverrideRuleBuilder ->
+						mobSpawnOverrideRuleBuilder.pieceBoundingBox().spawns(
+							new SpawnsBuilder("minecraft:piglin", 5, 4, 4),
+							new SpawnsBuilder("minecraft:piglin_brute", 5, 4, 4),
+							new SpawnsBuilder("minecraft:zombified_piglin", 5, 4, 4)
+						)
+					)
+				);
+				configuredStructureFeatureBuilder.featureConfig(featureConfigBuilder -> {
+					featureConfigBuilder.jsonString("start_pool", "minecraft:village/desert/town_centers");
+					featureConfigBuilder.jsonNumber("size", 8);
+				});
 			});
 
 			pack.addConfiguredCarver(id("test_carver"), carverBuilder ->
@@ -296,7 +327,7 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 						.apply(instance, instance.stable(TestChunkGenerator::new))
 		);
 
-		private boolean testBool;
+		private final boolean testBool;
 
 		public TestChunkGenerator(BiomeSource biomeSource, boolean testBool) {
 			super(biomeSource, new StructuresConfig(false));

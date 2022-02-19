@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.bridge.game.PackType;
 import io.github.vampirestudios.artifice.api.ArtificeResourcePack;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
@@ -20,6 +21,7 @@ import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.Co
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.ConfiguredSurfaceBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.ConfiguredFeatureBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.PlacedFeatureBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.structure.ConfiguredStructureFeatureBuilder;
 import io.github.vampirestudios.artifice.api.resource.ArtificeResource;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.IdUtils;
@@ -127,7 +129,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
         LogManager.getLogger().info("[Artifice] Finished dumping " + getName() + " " + type.getDirectory() + ".");
     }
 
-    private void writeResourceFile(File output, ArtificeResource resource) {
+    private void writeResourceFile(File output, ArtificeResource<?> resource) {
         try {
             if (output.getParentFile().exists() || output.getParentFile().mkdirs()) {
                 BufferedWriter writer = new BufferedWriter(new FileWriter(output));
@@ -151,10 +153,12 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
         private ArtificeResourcePackBuilder() {
         }
 
+        @Override
         public void setDisplayName(String name) {
             ArtificeResourcePackImpl.this.displayName = name;
         }
 
+        @Override
         public void setDescription(String desc) {
             ArtificeResourcePackImpl.this.description = desc;
         }
@@ -174,10 +178,18 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
                 throw new IOException("Can't dump resources to " + filePath + "; permission denied");
             }
 
-            JsonObject packMeta = new JsonObjectBuilder()
-                    .add("pack_format", SharedConstants.getGameVersion().getPackVersion())
-                    .add("description", description != null ? description : "In-memory resource pack created with Artifice")
-                    .build();
+            JsonObject packMeta;
+            if (type.equals("assets")) {
+                packMeta = new JsonObjectBuilder()
+                        .add("pack_format", SharedConstants.getGameVersion().getPackVersion(PackType.RESOURCE))
+                        .add("description", description != null ? description : "In-memory resource pack created with Artifice")
+                        .build();
+            } else {
+                packMeta = new JsonObjectBuilder()
+                        .add("pack_format", SharedConstants.getGameVersion().getPackVersion(PackType.DATA))
+                        .add("description", description != null ? description : "In-memory data pack created with Artifice")
+                        .build();
+            }
 
             JsonObject languageMeta = new JsonObject();
             if (isClient()) {
@@ -197,7 +209,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
             LogManager.getLogger().info("[Artifice] Finished dumping " + getName() + " " + type + ".");
         }
 
-        private void writeResourceFile(File output, ArtificeResource resource) {
+        private void writeResourceFile(File output, ArtificeResource<?> resource) {
             try {
                 if (output.getParentFile().exists() || output.getParentFile().mkdirs()) {
                     BufferedWriter writer = new BufferedWriter(new FileWriter(output));
@@ -216,10 +228,12 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
             }
         }
 
+        @Override
         public void setVisible() {
             ArtificeResourcePackImpl.this.visible = true;
         }
 
+        @Override
         public void setOptional() {
             ArtificeResourcePackImpl.this.optional = true;
             ArtificeResourcePackImpl.this.visible = true;
@@ -232,68 +246,89 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
             ArtificeResourcePackImpl.this.overwrite = true;
         }
 
-        public void add(Identifier id, ArtificeResource resource) {
+        @Override
+        public void add(Identifier id, ArtificeResource<?> resource) {
             ArtificeResourcePackImpl.this.resources.put(id, resource);
             ArtificeResourcePackImpl.this.namespaces.add(id.getNamespace());
         }
 
+        @Override
         public void addItemModel(Identifier id, Processor<ModelBuilder> f) {
             this.add("models/item/", id, ".json", f, ModelBuilder::new);
         }
 
+        @Override
         public void addBlockModel(Identifier id, Processor<ModelBuilder> f) {
             this.add("models/block/", id, ".json", f, ModelBuilder::new);
         }
 
+        @Override
         public void addBlockState(Identifier id, Processor<BlockStateBuilder> f) {
             this.add("blockstates/", id, ".json", f, BlockStateBuilder::new);
         }
 
+        @Override
         public void addTranslations(Identifier id, Processor<TranslationBuilder> f) {
             this.add("lang/", id, ".json", f, TranslationBuilder::new);
         }
 
+        @Override
         public void addParticle(Identifier id, Processor<ParticleBuilder> f) {
             this.add("particles/", id, ".json", f, ParticleBuilder::new);
         }
 
+        @Override
         public void addItemAnimation(Identifier id, Processor<AnimationBuilder> f) {
             this.add("textures/item/", id, ".mcmeta", f, AnimationBuilder::new);
         }
 
+        @Override
         public void addBlockAnimation(Identifier id, Processor<AnimationBuilder> f) {
             this.add("textures/block/", id, ".mcmeta", f, AnimationBuilder::new);
         }
 
+        @Override
         public void addLanguage(LanguageDefinition def) {
             ArtificeResourcePackImpl.this.languages.add(def);
         }
 
         @Environment(EnvType.CLIENT)
+        @Override
         public void addLanguage(String code, String region, String name, boolean rtl) {
             this.addLanguage(new LanguageDefinition(code, region, name, rtl));
         }
 
+        @Override
         public void addAdvancement(Identifier id, Processor<AdvancementBuilder> f) {
             this.add("advancements/", id, ".json", f, AdvancementBuilder::new);
         }
 
+        @Override
         public void addDimensionType(Identifier id, Processor<DimensionTypeBuilder> f) {
             this.add("dimension_type/", id, ".json", f, DimensionTypeBuilder::new);
         }
 
+        @Override
         public void addDimension(Identifier id, Processor<DimensionBuilder> f) {
             this.add("dimension/", id, ".json", f, DimensionBuilder::new);
         }
 
+        @Override
         public void addBiome(Identifier id, Processor<BiomeBuilder> f) {
             this.add("worldgen/biome/", id, ".json", f, BiomeBuilder::new);
         }
 
+        @Override
         public void addConfiguredCarver(Identifier id, Processor<ConfiguredCarverBuilder> f) {
             this.add("worldgen/configured_carver/", id, ".json", f, ConfiguredCarverBuilder::new);
         }
 
+        @Override
+        public void addConfiguredStructureFeature(Identifier id, Processor<ConfiguredStructureFeatureBuilder> f) {
+            this.add("worldgen/configured_structure_feature/", id, ".json", f, ConfiguredStructureFeatureBuilder::new);
+        }
+
+        @Override
         public void addConfiguredFeature(Identifier id, Processor<ConfiguredFeatureBuilder> f) {
             this.add("worldgen/configured_feature/", id, ".json", f, ConfiguredFeatureBuilder::new);
         }
@@ -303,66 +338,82 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
             this.add("worldgen/placed_feature/", id, ".json", f, PlacedFeatureBuilder::new);
         }
 
+        @Override
         public void addConfiguredSurfaceBuilder(Identifier id, Processor<ConfiguredSurfaceBuilder> f) {
             this.add("worldgen/configured_surface_builder/", id, ".json", f, ConfiguredSurfaceBuilder::new);
         }
 
+        @Override
         public void addNoiseSettingsBuilder(Identifier id, Processor<NoiseSettingsBuilder> f) {
             this.add("worldgen/noise_settings/", id, ".json", f, NoiseSettingsBuilder::new);
         }
 
+        @Override
         public void addLootTable(Identifier id, Processor<LootTableBuilder> f) {
             this.add("loot_tables/", id, ".json", f, LootTableBuilder::new);
         }
 
+        @Override
         public void addItemTag(Identifier id, Processor<TagBuilder> f) {
             this.add("tags/items/", id, ".json", f, TagBuilder::new);
         }
 
+        @Override
         public void addBlockTag(Identifier id, Processor<TagBuilder> f) {
             this.add("tags/blocks/", id, ".json", f, TagBuilder::new);
         }
 
+        @Override
         public void addEntityTypeTag(Identifier id, Processor<TagBuilder> f) {
             this.add("tags/entity_types/", id, ".json", f, TagBuilder::new);
         }
 
+        @Override
         public void addFluidTag(Identifier id, Processor<TagBuilder> f) {
             this.add("tags/fluids/", id, ".json", f, TagBuilder::new);
         }
 
+        @Override
         public void addFunctionTag(Identifier id, Processor<TagBuilder> f) {
             this.add("tags/functions/", id, ".json", f, TagBuilder::new);
         }
 
+        @Override
         public void addGenericRecipe(Identifier id, Processor<GenericRecipeBuilder> f) {
             this.add("recipes/", id, ".json", f, GenericRecipeBuilder::new);
         }
 
+        @Override
         public void addShapedRecipe(Identifier id, Processor<ShapedRecipeBuilder> f) {
             this.add("recipes/", id, ".json", f, ShapedRecipeBuilder::new);
         }
 
+        @Override
         public void addShapelessRecipe(Identifier id, Processor<ShapelessRecipeBuilder> f) {
             this.add("recipes/", id, ".json", f, ShapelessRecipeBuilder::new);
         }
 
+        @Override
         public void addStonecuttingRecipe(Identifier id, Processor<StonecuttingRecipeBuilder> f) {
             this.add("recipes/", id, ".json", f, StonecuttingRecipeBuilder::new);
         }
 
+        @Override
         public void addSmeltingRecipe(Identifier id, Processor<CookingRecipeBuilder> f) {
             this.add("recipes/", id, ".json", r -> f.process(r.type(new Identifier("smelting"))), CookingRecipeBuilder::new);
         }
 
+        @Override
         public void addBlastingRecipe(Identifier id, Processor<CookingRecipeBuilder> f) {
             this.add("recipes/", id, ".json", r -> f.process(r.type(new Identifier("blasting"))), CookingRecipeBuilder::new);
         }
 
+        @Override
         public void addSmokingRecipe(Identifier id, Processor<CookingRecipeBuilder> f) {
             this.add("recipes/", id, ".json", r -> f.process(r.type(new Identifier("smoking"))), CookingRecipeBuilder::new);
         }
 
+        @Override
         public void addCampfireRecipe(Identifier id, Processor<CookingRecipeBuilder> f) {
             this.add("recipes/", id, ".json", r -> f.process(r.type(new Identifier("campfire_cooking"))), CookingRecipeBuilder::new);
         }
@@ -377,11 +428,13 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
         }
     }
 
+    @Override
     public InputStream openRoot(String fname) {
         if (fname.equals("pack.mcmeta")) return metadata.toInputStream();
         return new NullInputStream(0);
     }
 
+    @Override
     public InputStream open(ResourceType type, Identifier id) throws IOException {
         if (!contains(type, id)) throw new FileNotFoundException(id.getPath());
         return this.resources.get(id).toInputStream();
@@ -395,48 +448,59 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
         return keys;
     }
 
+    @Override
     public boolean contains(ResourceType type, Identifier id) {
         return type == this.type && this.resources.containsKey(id);
     }
 
+    @Override
     public <T> T parseMetadata(ResourceMetadataReader<T> reader) {
         return metadata.getData().has(reader.getKey())
                         ? reader.fromJson(metadata.getData().getAsJsonObject(reader.getKey()))
                         : null;
     }
 
+    @Override
     public Set<String> getNamespaces(ResourceType type) {
         return new HashSet<>(this.namespaces);
     }
 
+    @Override
     public ResourceType getType() {
         return this.type;
     }
 
+    @Override
     public boolean isOptional() {
         return this.optional;
     }
 
+    @Override
     public boolean isVisible() {
         return this.visible;
     }
 
+    @Override
     public boolean isShouldOverwrite(){
         return this.overwrite;
     }
 
+    @Override
     public void close() {
     }
 
+    @Override
     public String getName() {
         if (displayName == null) {
             switch (this.type) {
-            case CLIENT_RESOURCES:
-                Identifier aid = ArtificeRegistry.ASSETS.getId(this);
-                return displayName = aid != null ? aid.toString() : "Generated Resources";
-            case SERVER_DATA:
-                Identifier did = ArtificeRegistry.DATA.getId(this);
-                return displayName = did != null ? did.toString() : "Generated Data";
+                case CLIENT_RESOURCES -> {
+                    Identifier aid = ArtificeRegistry.ASSETS.getId(this);
+                    return displayName = aid != null ? aid.toString() : "Generated Resources";
+                }
+                case SERVER_DATA -> {
+                    Identifier did = ArtificeRegistry.DATA.getId(this);
+                    return displayName = did != null ? did.toString() : "Generated Data";
+                }
             }
         }
         return displayName;
@@ -475,7 +539,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
     }
 
     @Override
-    public <T extends ResourcePackProfile> ResourcePackProfile toServerResourcePackProfile(ResourcePackProfile.Factory factory) {
+    public ResourcePackProfile toServerResourcePackProfile(ResourcePackProfile.Factory factory) {
         return ResourcePackProfile.of(
                 identifier == null ? "null" : identifier.toString(),
                 !optional, () -> this, factory,

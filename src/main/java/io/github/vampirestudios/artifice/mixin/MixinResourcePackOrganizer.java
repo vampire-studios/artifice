@@ -1,18 +1,16 @@
 package io.github.vampirestudios.artifice.mixin;
 
-import java.util.List;
-import java.util.stream.Stream;
-
 import io.github.vampirestudios.artifice.api.virtualpack.ArtificeResourcePackContainer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screen.pack.ResourcePackOrganizer;
+import net.minecraft.resource.pack.ResourcePackProfile;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import net.minecraft.client.gui.screen.pack.ResourcePackOrganizer;
-import net.minecraft.resource.ResourcePackProfile;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import java.util.List;
+import java.util.stream.Stream;
 
 @Mixin(ResourcePackOrganizer.class)
 @Environment(EnvType.CLIENT)

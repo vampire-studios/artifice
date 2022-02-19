@@ -6,9 +6,11 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.vampirestudios.artifice.api.Artifice;
 import io.github.vampirestudios.artifice.api.ArtificeResourcePack;
 import io.github.vampirestudios.artifice.api.builder.data.dimension.ChunkGeneratorTypeBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.dimension.ChunkGeneratorTypeBuilder.FlatChunkGeneratorTypeBuilder.LayersBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.BlockStateProviderBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.SurfaceRulesBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.YOffsetBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.biome.BiomeBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.decorator.config.CountExtraDecoratorConfigBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.decorator.config.DecoratedDecoratorConfigBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config.DecoratedFeatureConfigBuilder;
@@ -25,32 +27,36 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.class_7059;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.util.registry.RegistryOps;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.biome.source.BiomeAccess;
-import net.minecraft.world.biome.source.BiomeSource;
+import net.minecraft.world.biome.source.FixedBiomeSource;
 import net.minecraft.world.biome.source.util.MultiNoiseUtil;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.gen.DensityConstants;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.Blender;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.chunk.StructuresConfig;
 import net.minecraft.world.gen.chunk.VerticalBlockSample;
 
-import java.awt.*;
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -62,8 +68,6 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 	private static final Item testBlockItem = Registry.register(Registry.ITEM, id("test_block"), new BlockItem(testBlock, itemSettings));
 	private static final RegistryKey<DimensionType> testDimension = RegistryKey.of(Registry.DIMENSION_TYPE_KEY, id("test_dimension_type_vanilla"));
 	private static final RegistryKey<DimensionType> testDimensionCustom = RegistryKey.of(Registry.DIMENSION_TYPE_KEY, id("test_dimension_type_custom"));
-	private static final RegistryKey<DimensionOptions> testDimensionKey = RegistryKey.of(Registry.DIMENSION_KEY, id("test_dimension"));
-	private static final RegistryKey<DimensionOptions> testDimensionCustomKey = RegistryKey.of(Registry.DIMENSION_KEY, id("test_dimension_custom"));
 
 	private static Identifier id(String name) {
 		return new Identifier("artifice", name);
@@ -120,27 +124,40 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 					}"""));
 
 			pack.addDimensionType(testDimension.getValue(), dimensionTypeBuilder -> dimensionTypeBuilder
-					.natural(false).hasRaids(false).respawnAnchorWorks(true).bedWorks(false).piglinSafe(false)
-					.ambientLight(6.0F).infiniburn(BlockTags.INFINIBURN_OVERWORLD.getId())
+					.isNatural(false).hasRaids(false).respawnAnchorWorks(true).bedWorks(false).piglinSafe(false)
+					.ambientLight(6.0F).infiniburn(BlockTags.INFINIBURN_OVERWORLD.id())
 					.ultrawarm(false).hasCeiling(false).hasSkylight(false).coordinate_scale(1.0).logicalHeight(832).height(832).minimumY(-512).effects("minecraft:the_end"));
 
 			pack.addDimension(id("test_dimension"), dimensionBuilder -> dimensionBuilder
 					.dimensionType(testDimension.getValue())
 					.flatGenerator(flatChunkGeneratorTypeBuilder -> flatChunkGeneratorTypeBuilder
-									.addLayer(layersBuilder -> layersBuilder.block("minecraft:bedrock").height(2))
-									.addLayer(layersBuilder -> layersBuilder.block("minecraft:stone").height(2))
-									.addLayer(layersBuilder -> layersBuilder.block("minecraft:granite").height(2))
-									.biome("minecraft:plains")
-							/*.structureManager(structureManagerBuilder ->
-									structureManagerBuilder.addStructure(Registry.STRUCTURE_FEATURE.getId(StructureFeature.MINESHAFT).toString(),
-											structureConfigBuilder -> structureConfigBuilder.salt(1999999).separation(1).spacing(2)))*/
+							.addLayer(
+									new LayersBuilder("minecraft:bedrock", 2),
+									new LayersBuilder("minecraft:deepslate", 10),
+									new LayersBuilder("minecraft:stone", 2),
+									new LayersBuilder("minecraft:granite", 2)
+							).biome("minecraft:plains")
+					)
+			);
+
+			pack.addDimension(id("test_dimension2"), dimensionBuilder -> dimensionBuilder
+					.dimensionType(testDimension.getValue())
+					.flatGenerator(flatChunkGeneratorTypeBuilder -> flatChunkGeneratorTypeBuilder
+							.lakes(false).features(true)
+							.addLayer(
+									new LayersBuilder("minecraft:bedrock", 2),
+									new LayersBuilder("minecraft:deepslate", 10),
+									new LayersBuilder("minecraft:stone", 2),
+									new LayersBuilder("minecraft:granite", 2)
+							).biome("minecraft:plains")
 					)
 			);
 
 			pack.addDimensionType(testDimensionCustom.getValue(), dimensionTypeBuilder -> dimensionTypeBuilder
-					.natural(true).hasRaids(false).respawnAnchorWorks(false).bedWorks(false).piglinSafe(false)
-					.ambientLight(0.0F).infiniburn(BlockTags.INFINIBURN_OVERWORLD.getId())
-					.ultrawarm(false).hasCeiling(false).hasSkylight(true).coordinate_scale(1.0).logicalHeight(832).height(832).minimumY(-512));
+					.isNatural(true).hasRaids(false).respawnAnchorWorks(false).bedWorks(false).piglinSafe(false)
+					.ambientLight(0.0F).infiniburn(BlockTags.INFINIBURN_OVERWORLD.id())
+					.ultrawarm(false).hasCeiling(false).hasSkylight(true).coordinate_scale(1.0).logicalHeight(512).height(512).minimumY(-256));
+
 			pack.addDimension(id("test_dimension_custom"), dimensionBuilder -> {
 				dimensionBuilder.dimensionType(testDimensionCustom.getValue());
 				dimensionBuilder.noiseGenerator(noiseChunkGeneratorTypeBuilder -> {
@@ -154,20 +171,59 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 			});
 
 			pack.addBiome(id("test_biome"), biomeBuilder -> {
-				biomeBuilder.precipitation(Biome.Precipitation.RAIN).surfaceBuilder("minecraft:grass");
-				biomeBuilder.category(Biome.Category.PLAINS);
-				biomeBuilder.depth(0.125F);
-				biomeBuilder.scale(0.05F);
-				biomeBuilder.temperature(0.8F);
-				biomeBuilder.downfall(0.4F);
-				biomeBuilder.effects(biomeEffectsBuilder -> {
-					biomeEffectsBuilder.waterColor(4159204);
-					biomeEffectsBuilder.waterFogColor(329011);
-					biomeEffectsBuilder.fogColor(12638463);
-					biomeEffectsBuilder.skyColor(4159204);
-				});
-				biomeBuilder.addAirCarvers(id("test_carver").toString());
-				//biomeBuilder.addFeaturesbyStep(GenerationStep.Feature.VEGETAL_DECORATION, id("test_decorated_feature").toString());
+				biomeBuilder.precipitation(Biome.Precipitation.RAIN)
+						.category(Biome.Category.PLAINS)
+						.temperature(0.8F).downfall(0.4F)
+						.addSpawnCosts("minecraft:bee", new BiomeBuilder.SpawnDensityBuilder(0.12, 1))
+						.addSpawnCosts("minecraft:cat", new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
+						.effects(biomeEffectsBuilder -> {
+							biomeEffectsBuilder.waterColor(4159204);
+							biomeEffectsBuilder.waterFogColor(329011);
+							biomeEffectsBuilder.fogColor(12638463);
+							biomeEffectsBuilder.skyColor(4159204);
+						}).addAirCarvers(id("test_carver").toString());
+			});
+
+			pack.addBiome(id("test_biome2"), biomeBuilder -> {
+				biomeBuilder.precipitation(Biome.Precipitation.RAIN)
+						.category(Biome.Category.DESERT)
+						.temperature(0.8F).downfall(0.4F)
+						.addSpawnCosts("minecraft:bee", new BiomeBuilder.SpawnDensityBuilder(0.12, 1))
+						.addSpawnCosts("minecraft:cat", new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
+						.effects(biomeEffectsBuilder -> {
+							biomeEffectsBuilder.waterColor(4159204);
+							biomeEffectsBuilder.waterFogColor(329011);
+							biomeEffectsBuilder.fogColor(12638463);
+							biomeEffectsBuilder.skyColor(4159204);
+						}).addAirCarvers(id("test_carver").toString());
+			});
+
+			pack.addBiome(id("test_biome3"), biomeBuilder -> {
+				biomeBuilder.precipitation(Biome.Precipitation.RAIN)
+						.category(Biome.Category.PLAINS)
+						.temperature(2.0F).downfall(0.4F)
+						.addSpawnCosts("minecraft:bee", new BiomeBuilder.SpawnDensityBuilder(0.12, 1))
+						.addSpawnCosts("minecraft:cat", new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
+						.effects(biomeEffectsBuilder -> {
+							biomeEffectsBuilder.waterColor(4159204);
+							biomeEffectsBuilder.waterFogColor(329011);
+							biomeEffectsBuilder.fogColor(12638463);
+							biomeEffectsBuilder.skyColor(4159204);
+						}).addAirCarvers(id("test_carver").toString());
+			});
+
+			pack.addBiome(id("test_biome4"), biomeBuilder -> {
+				biomeBuilder.precipitation(Biome.Precipitation.RAIN)
+						.category(Biome.Category.PLAINS)
+						.temperature(1.4F).downfall(1.0F)
+						.addSpawnCosts("minecraft:bee", new BiomeBuilder.SpawnDensityBuilder(0.12, 1))
+						.addSpawnCosts("minecraft:cat", new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
+						.effects(biomeEffectsBuilder -> {
+							biomeEffectsBuilder.waterColor(4159204);
+							biomeEffectsBuilder.waterFogColor(329011);
+							biomeEffectsBuilder.fogColor(12638463);
+							biomeEffectsBuilder.skyColor(4159204);
+						}).addAirCarvers(id("test_carver").toString());
 			});
 
 			pack.addConfiguredStructureFeature(id("test_structure"), configuredStructureFeatureBuilder -> {
@@ -186,13 +242,13 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 				configuredStructureFeatureBuilder.singleBiome("minecraft:nether_wastes");
 				configuredStructureFeatureBuilder.adoptNoise(true);
 				configuredStructureFeatureBuilder.spawnOverrides(spawnOverridesBuilder ->
-					spawnOverridesBuilder.monster(mobSpawnOverrideRuleBuilder ->
-						mobSpawnOverrideRuleBuilder.pieceBoundingBox().spawns(
-							new SpawnsBuilder("minecraft:piglin", 5, 4, 4),
-							new SpawnsBuilder("minecraft:piglin_brute", 5, 4, 4),
-							new SpawnsBuilder("minecraft:zombified_piglin", 5, 4, 4)
+						spawnOverridesBuilder.monster(mobSpawnOverrideRuleBuilder ->
+								mobSpawnOverrideRuleBuilder.pieceBoundingBox().spawns(
+										new SpawnsBuilder("minecraft:piglin", 5, 4, 4),
+										new SpawnsBuilder("minecraft:piglin_brute", 5, 4, 4),
+										new SpawnsBuilder("minecraft:zombified_piglin", 5, 4, 4)
+								)
 						)
-					)
 				);
 				configuredStructureFeatureBuilder.featureConfig(featureConfigBuilder -> {
 					featureConfigBuilder.jsonString("start_pool", "minecraft:village/desert/town_centers");
@@ -213,7 +269,7 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 									uniformHeightProviderBuilder -> uniformHeightProviderBuilder
 											.minAndMaxInclusive(0.1F, 0.9F)
 							))
-							.lavaLevel( YOffsetBuilder.aboveBottom(8))
+							.lavaLevel(YOffsetBuilder.aboveBottom(8))
 							.horizontalRadiusModifier(heightProviderBuilders -> heightProviderBuilders.uniform("horizontal_radius_modifier",
 									uniformHeightProviderBuilder -> uniformHeightProviderBuilder
 											.minAndMaxInclusive(1.7F, 2.4F)
@@ -240,7 +296,7 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 							YOffsetBuilder.aboveBottom(5),
 							YOffsetBuilder.belowTop(3)
 					)).buildTo(new JsonObject()).toString());
-/*//not even going to touch this until we get everything else working
+//not even going to touch this until we get everything else working
 			// Tested, it works now. Wasn't in 20w28a.
 			pack.addConfiguredFeature(id("test_featureee"), configuredFeatureBuilder ->
 					configuredFeatureBuilder.featureID("minecraft:tree")
@@ -248,12 +304,16 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 									treeFeatureConfigBuilder
 											.ignoreVines(true)
 											.maxWaterDepth(5)
-											.trunkProvider(simpleBlockStateProviderBuilder ->
+											.dirtProvider(simpleBlockStateProviderBuilder ->
+															simpleBlockStateProviderBuilder.state(blockStateDataBuilder ->
+																	blockStateDataBuilder.name("minecraft:dirt")),
+													new BlockStateProviderBuilder.SimpleBlockStateProviderBuilder()
+											).trunkProvider(simpleBlockStateProviderBuilder ->
 															simpleBlockStateProviderBuilder.state(blockStateDataBuilder ->
 																	blockStateDataBuilder.name("minecraft:oak_log")
 																			.setProperty("axis", "y")),
 													new BlockStateProviderBuilder.SimpleBlockStateProviderBuilder()
-											).leavesProvider(simpleBlockStateProviderBuilder ->
+											).foliageProvider(simpleBlockStateProviderBuilder ->
 													simpleBlockStateProviderBuilder.state(blockStateDataBuilder ->
 															blockStateDataBuilder.name("minecraft:spruce_leaves")
 																	.setProperty("persistent", "false")
@@ -271,8 +331,9 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 											).heightmap(Heightmap.Type.OCEAN_FLOOR), new TreeFeatureConfigBuilder()
 							));
 
+			class_7059
 			// Should be working but Minecraft coders did something wrong and the default feature is being return when it shouldn't resulting in a crash.
-			pack.addPlacedFeature(id("test_decorated_feature"), configuredFeatureBuilder -> configuredFeatureBuilder.featureID("minecraft:decorated")
+			pack.addPlacedFeature(id("test_placed_feature"), configuredFeatureBuilder -> configuredFeatureBuilder.featureID("artifice:test_featureee")
 					.featureConfig(decoratedFeatureConfigBuilder -> decoratedFeatureConfigBuilder.feature(configuredSubFeatureBuilder ->
 							configuredSubFeatureBuilder.featureID("minecraft:decorated").featureConfig(decoratedFeatureConfigBuilder1 ->
 									decoratedFeatureConfigBuilder1.feature(id("test_featureee").toString())
@@ -289,7 +350,7 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 											), new DecoratedFeatureConfigBuilder())).decorator(configuredDecoratorBuilder ->
 							configuredDecoratorBuilder.name("minecraft:count_extra")
 									.config(countExtraDecoratorConfigBuilder ->
-											countExtraDecoratorConfigBuilder.count(10).extraChance(0.2F).extraCount(2), new CountExtraDecoratorConfigBuilder())), new DecoratedFeatureConfigBuilder()));*/
+											countExtraDecoratorConfigBuilder.count(10).extraChance(0.2F).extraCount(2), new CountExtraDecoratorConfigBuilder())), new DecoratedFeatureConfigBuilder()));
 			try {
 				pack.dumpResources("testing_data", "data");
 			} catch (IOException e) {
@@ -340,20 +401,20 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 	}
 
 	public static class TestChunkGenerator extends ChunkGenerator {
-		public static final Codec<TestChunkGenerator> CODEC = RecordCodecBuilder.create((instance) ->
-				instance.group(
-								BiomeSource.CODEC.fieldOf("biome_source")
-										.forGetter((generator) -> generator.biomeSource),
-								Codec.BOOL.fieldOf("test_bool").forGetter((generator) -> generator.testBool)
-						)
+		public static final Codec<TestChunkGenerator> CODEC = RecordCodecBuilder.create(
+				instance -> method_41042(instance)
+						.and(RegistryOps.getRegistry(Registry.BIOME_KEY).forGetter(debugChunkGenerator -> debugChunkGenerator.biomeRegistry))
+						.and(Codec.BOOL.fieldOf("test_bool").forGetter((generator) -> generator.testBool))
 						.apply(instance, instance.stable(TestChunkGenerator::new))
 		);
 
 		private final boolean testBool;
+		private final Registry<Biome> biomeRegistry;
 
-		public TestChunkGenerator(BiomeSource biomeSource, boolean testBool) {
-			super(biomeSource, new StructuresConfig(false));
+		public TestChunkGenerator(Registry<class_7059> registry, Registry<Biome> registry2, boolean testBool) {
+			super(registry, Optional.empty(), new FixedBiomeSource(registry2.method_40268(BiomeKeys.PLAINS)));
 			this.testBool = testBool;
+			this.biomeRegistry = registry2;
 		}
 
 		@Override
@@ -368,7 +429,7 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 
 		@Override
 		public MultiNoiseUtil.MultiNoiseSampler getMultiNoiseSampler() {
-			return (x, y, z) -> MultiNoiseUtil.createNoiseValuePoint(1.0F, 1.0F, 1.0F, 0.5F, 0.0F, 1.0F);
+			return MultiNoiseUtil.method_40443();
 		}
 
 		@Override
@@ -388,32 +449,66 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 
 		@Override
 		public int getWorldHeight() {
-			return 256;
+			return 384;
 		}
 
 		@Override
 		public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender, StructureAccessor structureAccessor, Chunk chunk) {
-			return null;
+			List<BlockState> list = List.of(Blocks.STONE.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.BEDROCK.getDefaultState());
+			BlockPos.Mutable mutable = new BlockPos.Mutable();
+			Heightmap heightmap = chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG);
+			Heightmap heightmap2 = chunk.getHeightmap(Heightmap.Type.WORLD_SURFACE_WG);
+
+			for(int i = 0; i < Math.min(chunk.getHeight(), list.size()); ++i) {
+				BlockState blockState = list.get(i);
+				if (blockState != null) {
+					int j = chunk.getBottomY() + i;
+
+					for(int k = 0; k < 16; ++k) {
+						for(int l = 0; l < 16; ++l) {
+							chunk.setBlockState(mutable.set(k, j, l), blockState, false);
+							heightmap.trackUpdate(k, j, l, blockState);
+							heightmap2.trackUpdate(k, j, l, blockState);
+						}
+					}
+				}
+			}
+
+			return CompletableFuture.completedFuture(chunk);
 		}
 
 		@Override
 		public int getSeaLevel() {
-			return 0;
+			return 63;
 		}
 
 		@Override
 		public int getMinimumY() {
-			return 0;
+			return -64;
 		}
 
 		@Override
 		public int getHeight(int x, int z, Heightmap.Type heightmap, HeightLimitView world) {
-			return 0;
+			List<BlockState> list = List.of(Blocks.STONE.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.BEDROCK.getDefaultState());
+
+			for(int i = Math.min(list.size(), world.getTopY()) - 1; i >= 0; --i) {
+				BlockState blockState = list.get(i);
+				if (blockState != null && heightmap.getBlockPredicate().test(blockState)) {
+					return world.getBottomY() + i + 1;
+				}
+			}
+
+			return world.getBottomY();
 		}
 
 		@Override
 		public VerticalBlockSample getColumnSample(int x, int z, HeightLimitView world) {
-			return new VerticalBlockSample(10, new BlockState[0]);
+			return new VerticalBlockSample(10, new BlockState[]{Blocks.STONE.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.BEDROCK.getDefaultState()});
+		}
+
+		@Override
+		public void method_40450(List<String> list, BlockPos blockPos) {
+
 		}
 	}
 

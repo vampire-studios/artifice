@@ -12,7 +12,7 @@ public class PlacedFeatureBuilder extends TypedJsonBuilder<JsonResource<JsonObje
     }
 
     public PlacedFeatureBuilder featureID(String id) {
-        this.root.addProperty("type", id);
+        this.root.addProperty("feature", id);
         return this;
     }
 

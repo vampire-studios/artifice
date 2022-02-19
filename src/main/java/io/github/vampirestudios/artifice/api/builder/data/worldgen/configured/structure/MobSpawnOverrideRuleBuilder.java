@@ -22,13 +22,11 @@ public class MobSpawnOverrideRuleBuilder extends TypedJsonBuilder<JsonResource<J
 	public MobSpawnOverrideRuleBuilder spawns(SpawnsBuilder... spawnsBuilders) {
 		jsonArray("spawns", jsonArrayBuilder -> {
 			for (SpawnsBuilder spawnsBuilder : spawnsBuilders) {
-				jsonArrayBuilder.addObject(jsonObjectBuilder -> {
-					jsonObjectBuilder
-						.add("type", spawnsBuilder.type())
-						.add("weight", spawnsBuilder.weight())
-						.add("minCount", spawnsBuilder.minCount())
-						.add("maxCount", spawnsBuilder.maxCount());
-				});
+				jsonArrayBuilder.addObject(jsonObjectBuilder -> jsonObjectBuilder
+					.add("type", spawnsBuilder.type())
+					.add("weight", spawnsBuilder.weight())
+					.add("minCount", spawnsBuilder.minCount())
+					.add("maxCount", spawnsBuilder.maxCount()));
 			}
 		});
 		return this;

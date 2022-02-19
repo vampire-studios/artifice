@@ -27,13 +27,18 @@ public class TreeFeatureConfigBuilder extends FeatureConfigBuilder {
         return this;
     }
 
+    public <P extends BlockStateProviderBuilder> TreeFeatureConfigBuilder dirtProvider(Processor<P> providerProcessor, P instance) {
+        with("dirt_provider", JsonObject::new, jsonObject -> providerProcessor.process(instance).buildTo(jsonObject));
+        return this;
+    }
+
     public <P extends BlockStateProviderBuilder> TreeFeatureConfigBuilder trunkProvider(Processor<P> providerProcessor, P instance) {
         with("trunk_provider", JsonObject::new, jsonObject -> providerProcessor.process(instance).buildTo(jsonObject));
         return this;
     }
 
-    public <P extends BlockStateProviderBuilder> TreeFeatureConfigBuilder leavesProvider(Processor<P> providerProcessor, P instance) {
-        with("leaves_provider", JsonObject::new, jsonObject -> providerProcessor.process(instance).buildTo(jsonObject));
+    public <P extends BlockStateProviderBuilder> TreeFeatureConfigBuilder foliageProvider(Processor<P> providerProcessor, P instance) {
+        with("foliage_provider", JsonObject::new, jsonObject -> providerProcessor.process(instance).buildTo(jsonObject));
         return this;
     }
 

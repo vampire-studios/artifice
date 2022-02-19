@@ -29,7 +29,7 @@ public final class DimensionTypeBuilder extends TypedJsonBuilder<JsonResource<Js
      * @param natural
      * @return this
      */
-    public DimensionTypeBuilder natural(boolean natural) {
+    public DimensionTypeBuilder isNatural(boolean natural) {
         root.addProperty("natural", natural);
         return this;
     }
@@ -106,7 +106,7 @@ public final class DimensionTypeBuilder extends TypedJsonBuilder<JsonResource<Js
      * @return this
      */
     public DimensionTypeBuilder infiniburn(Identifier infiniburn) {
-        root.addProperty("infiniburn", infiniburn.toString());
+        root.addProperty("infiniburn", "#" + infiniburn.toString());
         return this;
     }
 

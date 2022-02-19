@@ -4,15 +4,15 @@ import io.github.vampirestudios.artifice.api.ArtificeResourcePack;
 import io.github.vampirestudios.artifice.common.ClientOnly;
 import io.github.vampirestudios.artifice.common.ClientResourcePackProfileLike;
 import io.github.vampirestudios.artifice.common.ServerResourcePackProfileLike;
-import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.resource.pack.ResourcePackProfile;
 import net.minecraft.util.Identifier;
 
 import java.util.function.Consumer;
 
 public class DynamicResourcePackFactory<T extends ArtificeResourcePack.ResourcePackBuilder> implements ClientResourcePackProfileLike, ServerResourcePackProfileLike {
 
-    private ResourceType type;
+    private final ResourceType type;
     private final Identifier identifier;
     private final Consumer<T> init;
 

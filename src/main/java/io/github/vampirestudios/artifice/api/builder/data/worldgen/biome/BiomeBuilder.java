@@ -25,16 +25,6 @@ public class BiomeBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
         }
     }
 
-    public BiomeBuilder depth(float depth) {
-        this.root.addProperty("depth", depth);
-        return this;
-    }
-
-    public BiomeBuilder scale(float scale) {
-        this.root.addProperty("scale", scale);
-        return this;
-    }
-
     public BiomeBuilder temperature(float temperature) {
         this.root.addProperty("temperature", temperature);
         return this;
@@ -47,11 +37,6 @@ public class BiomeBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
 
     public BiomeBuilder parent(String parent) {
         this.root.addProperty("parent", parent);
-        return this;
-    }
-
-    public BiomeBuilder surfaceBuilder(String surface_builder) {
-        this.root.addProperty("surface_builder", surface_builder);
         return this;
     }
 
@@ -70,8 +55,11 @@ public class BiomeBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
         return this;
     }
 
-    public BiomeBuilder addSpawnCosts(String entityID, Processor<SpawnDensityBuilder> spawnDensityBuilderProcessor) {
-        with(entityID, JsonObject::new, spawnDensityBuilder -> spawnDensityBuilderProcessor.process(new SpawnDensityBuilder()).buildTo(spawnDensityBuilder));
+    public BiomeBuilder addSpawnCosts(String entityID, SpawnDensityBuilder spawnDensityBuilderProcessor) {
+        with(entityID, JsonObject::new, spawnDensityBuilder -> {
+            spawnDensityBuilder.addProperty("energy_budget", spawnDensityBuilderProcessor.energyBudget);
+            spawnDensityBuilder.addProperty("charge", spawnDensityBuilderProcessor.charge);
+        });
         return this;
     }
 
@@ -99,7 +87,7 @@ public class BiomeBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
         return this;
     }
 
-    public BiomeBuilder addFeaturesbyStep(GenerationStep.Feature step, String... featureIDs) {
+    public BiomeBuilder addFeaturesByStep(GenerationStep.Feature step, String... featureIDs) {
         for (String featureID : featureIDs)
             this.root.getAsJsonArray("features").get(step.ordinal()).getAsJsonArray().add(featureID);
         return this;
@@ -110,20 +98,5 @@ public class BiomeBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
         return this;
     }
 
-    public static class SpawnDensityBuilder extends TypedJsonBuilder<JsonObject> {
-
-        public SpawnDensityBuilder() {
-            super(new JsonObject(), j->j);
-        }
-
-        public SpawnDensityBuilder energyBudget(double energy_budget) {
-            this.root.addProperty("energy_budget", energy_budget);
-            return this;
-        }
-
-        public SpawnDensityBuilder charge(double charge) {
-            this.root.addProperty("charge", charge);
-            return this;
-        }
-    }
+    public record SpawnDensityBuilder(double energyBudget, double charge){}
 }

@@ -9,16 +9,16 @@ public class FeatureSizeBuilder extends TypedJsonBuilder<JsonObject> {
         super(new JsonObject(), j->j);
     }
 
-    public <S extends FeatureSizeBuilder> S type(String type) {
+    public FeatureSizeBuilder type(String type) {
         this.root.addProperty("type", type);
-        return (S) this;
+        return this;
     }
 
-    public <S extends FeatureSizeBuilder> S minClippedHeight(int minClippedHeight) {
+    public FeatureSizeBuilder minClippedHeight(int minClippedHeight) {
         if (minClippedHeight > 80) throw new IllegalArgumentException("minClippedHeight can't be higher than 80! Found " + minClippedHeight);
         if (minClippedHeight < 0) throw new IllegalArgumentException("minClippedHeight can't be higher than 0! Found " + minClippedHeight);
         this.root.addProperty("min_clipped_height", minClippedHeight);
-        return (S) this;
+        return this;
     }
 
     public static class TwoLayersFeatureSizeBuilder extends FeatureSizeBuilder {

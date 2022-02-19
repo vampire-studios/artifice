@@ -13,6 +13,7 @@ import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.Co
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.ConfiguredSurfaceBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.ConfiguredFeatureBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.PlacedFeatureBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.structure.ConfiguredStructureFeatureBuilder;
 import io.github.vampirestudios.artifice.api.resource.ArtificeResource;
 import io.github.vampirestudios.artifice.api.util.Processor;
 import io.github.vampirestudios.artifice.api.virtualpack.ArtificeResourcePackContainer;
@@ -23,10 +24,10 @@ import io.github.vampirestudios.artifice.impl.ArtificeResourcePackImpl;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.resource.language.LanguageDefinition;
-import net.minecraft.resource.ResourcePack;
-import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.resource.ResourceType;
-import net.minecraft.resource.VanillaDataPackProvider;
+import net.minecraft.resource.pack.ResourcePack;
+import net.minecraft.resource.pack.ResourcePackProfile;
+import net.minecraft.resource.pack.VanillaDataPackProvider;
 import net.minecraft.util.Identifier;
 
 import java.io.IOException;
@@ -144,7 +145,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id       The resource path.
          * @param resource The resource to add.
          */
-        void add(Identifier id, ArtificeResource resource);
+        void add(Identifier id, ArtificeResource<?> resource);
 
         /**
          * Set this pack's display name. Defaults to the pack's ID if not set.
@@ -304,6 +305,14 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param f A callback which will be passed an {@link ConfiguredCarverBuilder} to create the carver.
          */
         void addConfiguredCarver(Identifier id, Processor<ConfiguredCarverBuilder> f);
+
+        /**
+         * Add a Carver with the given ID.
+         *
+         * @param id The ID of the carver, which will be converted into the correct path.
+         * @param f A callback which will be passed an {@link ConfiguredStructureFeatureBuilder} to create the carver.
+         */
+        void addConfiguredStructureFeature(Identifier id, Processor<ConfiguredStructureFeatureBuilder> f);
 
         /**
          * Add a Feature with the given ID.

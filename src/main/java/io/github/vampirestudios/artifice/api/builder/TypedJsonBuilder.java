@@ -67,6 +67,11 @@ public abstract class TypedJsonBuilder<T> {
         return this;
     }
 
+    public TypedJsonBuilder<T> jsonArray(JsonObject root, String name, Processor<JsonArrayBuilder> settings) {
+        root.add(name, settings.process(new JsonArrayBuilder()).build());
+        return this;
+    }
+
     protected JsonArray arrayOf(boolean... values) {
         JsonArray array = new JsonArray();
         for(boolean i : values) array.add(i);

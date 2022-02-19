@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
 
 public class FeatureConfigBuilder extends TypedJsonBuilder<JsonObject> {
-
     public FeatureConfigBuilder() {
         super(new JsonObject(), j->j);
     }

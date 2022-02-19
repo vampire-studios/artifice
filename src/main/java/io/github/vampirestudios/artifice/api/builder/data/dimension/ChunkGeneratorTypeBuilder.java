@@ -1,6 +1,5 @@
 package io.github.vampirestudios.artifice.api.builder.data.dimension;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
 import io.github.vampirestudios.artifice.api.util.Processor;
@@ -62,8 +61,8 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonBuilder<JsonObject> {
 
         /**
          * Set Noise Settings to Id.
-         * @param noiseSettingsID
-         * @return
+         * @param noiseSettingsID the identifier
+         * @return this
          */
         public NoiseChunkGeneratorTypeBuilder noiseSettings(String noiseSettingsID) {
             this.root.addProperty("settings", noiseSettingsID);
@@ -73,7 +72,7 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonBuilder<JsonObject> {
         /**
          * Build a vanilla layered biome source.
          * @param biomeSourceBuilder
-         * @return
+         * @return this
          */
         public NoiseChunkGeneratorTypeBuilder vanillaLayeredBiomeSource(Processor<BiomeSourceBuilder.VanillaLayeredBiomeSourceBuilder> biomeSourceBuilder) {
             biomeSource(biomeSourceBuilder, new BiomeSourceBuilder.VanillaLayeredBiomeSourceBuilder());
@@ -83,7 +82,7 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonBuilder<JsonObject> {
         /**
          * Build a multi-noise biome source.
          * @param biomeSourceBuilder
-         * @return
+         * @return this
          */
         public NoiseChunkGeneratorTypeBuilder multiNoiseBiomeSource(Processor<BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder> biomeSourceBuilder) {
             biomeSource(biomeSourceBuilder, new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder());
@@ -93,7 +92,7 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonBuilder<JsonObject> {
         /**
          * Build a checkerboard biome source.
          * @param biomeSourceBuilder
-         * @return
+         * @return this
          */
         public NoiseChunkGeneratorTypeBuilder checkerboardBiomeSource(Processor<BiomeSourceBuilder.CheckerboardBiomeSourceBuilder> biomeSourceBuilder) {
             biomeSource(biomeSourceBuilder, new BiomeSourceBuilder.CheckerboardBiomeSourceBuilder());
@@ -103,7 +102,7 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonBuilder<JsonObject> {
         /**
          * Build a fixed biome source.
          * @param biomeSourceBuilder
-         * @return
+         * @return this
          */
         public NoiseChunkGeneratorTypeBuilder fixedBiomeSource(Processor<BiomeSourceBuilder.FixedBiomeSourceBuilder> biomeSourceBuilder) {
             biomeSource(biomeSourceBuilder, new BiomeSourceBuilder.FixedBiomeSourceBuilder());
@@ -112,8 +111,8 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonBuilder<JsonObject> {
 
         /**
          * Build a simple biome source.
-         * @param id
-         * @return
+         * @param id the identifier of the biome source
+         * @return this
          */
         public NoiseChunkGeneratorTypeBuilder simpleBiomeSource(String id) {
             this.root.addProperty("biome_source", id);
@@ -139,8 +138,7 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonBuilder<JsonObject> {
         }
 
         /**
-         * Set the biome to biomeId.
-         * @param lakes the biome id.
+         * Defines if the generator should generate lakes  or not
          * @return this
          */
         public FlatChunkGeneratorTypeBuilder lakes(boolean lakes) {
@@ -149,8 +147,7 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonBuilder<JsonObject> {
         }
 
         /**
-         * Set the biome to biomeId.
-         * @param biomeId the biome id.
+         * Defines if the generator should generate features or not
          * @return this
          */
         public FlatChunkGeneratorTypeBuilder features(boolean features) {
@@ -158,43 +155,24 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonBuilder<JsonObject> {
             return this;
         }
 
+
         /**
          * Add a block layer.
-         * @param layersBuilder
-         * @return
+         * @param layersBuilder builder for each layer
+         * @return this
          */
-        public FlatChunkGeneratorTypeBuilder addLayer(Processor<LayersBuilder> layersBuilder) {
-            with(this.root.getAsJsonObject("settings"),"layers", JsonArray::new, jsonElements -> jsonElements.add(layersBuilder.process(new LayersBuilder()).buildTo(new JsonObject())));
+        public FlatChunkGeneratorTypeBuilder addLayer(LayersBuilder... layersBuilder) {
+            jsonArray(this.root.getAsJsonObject("settings"), "layers", jsonArrayBuilder -> {
+                for (LayersBuilder spawnsBuilder : layersBuilder) {
+                    jsonArrayBuilder.addObject(jsonObjectBuilder -> jsonObjectBuilder
+                            .add("block", spawnsBuilder.block())
+                            .add("height", spawnsBuilder.height())
+                    );
+                }
+            });
             return this;
         }
 
-        public static class LayersBuilder extends TypedJsonBuilder<JsonObject> {
-
-            protected LayersBuilder() {
-                super(new JsonObject(), j->j);
-            }
-
-            /**
-             * Set the height of the layer.
-             * @param height
-             * @return
-             */
-            public LayersBuilder height(int height) {
-                if (height > 255) throw new IllegalArgumentException("Height can't be higher than 255! Found " + height);
-                if (height < 0) throw new IllegalArgumentException("Height can't be smaller than 0! Found " + height);
-                this.root.addProperty("height", height);
-                return this;
-            }
-
-            /**
-             * Set the block of the layer.
-             * @param blockId
-             * @return
-             */
-            public LayersBuilder block(String blockId) {
-                this.root.addProperty("block", blockId);
-                return this;
-            }
-        }
+        public record LayersBuilder(String block, int height){}
     }
 }

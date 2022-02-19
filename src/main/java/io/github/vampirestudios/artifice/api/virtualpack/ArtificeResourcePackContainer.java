@@ -2,11 +2,9 @@ package io.github.vampirestudios.artifice.api.virtualpack;
 
 import io.github.vampirestudios.artifice.api.ArtificeResourcePack;
 import io.github.vampirestudios.artifice.impl.ArtificeResourcePackImpl;
-
-import net.minecraft.resource.ResourcePackProfile;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.resource.pack.ResourcePackProfile;
 
 /**
  * A wrapper around {@link ResourcePackProfile} exposing optionality/visibility.
@@ -35,15 +33,10 @@ public class ArtificeResourcePackContainer extends ResourcePackProfile {
 
     public ArtificeResourcePackContainer(boolean optional, boolean visible, ResourcePackProfile wrapping) {
         super(
-                        wrapping.getName(),
-                        !optional,
-                        wrapping::createResourcePack,
-                        wrapping.getDisplayName(),
-                        wrapping.getDescription(),
-                        wrapping.getCompatibility(),
-                        wrapping.getInitialPosition(),
-                        wrapping.isPinned(),
-                        ArtificeResourcePackImpl.ARTIFICE_RESOURCE_PACK_SOURCE
+            wrapping.getName(), !optional, wrapping::createResourcePack,
+            wrapping.getDisplayName(), wrapping.getDescription(),
+            wrapping.getCompatibility(), wrapping.getInitialPosition(),
+            wrapping.isPinned(), ArtificeResourcePackImpl.ARTIFICE_RESOURCE_PACK_SOURCE
         );
 
         this.optional = optional;

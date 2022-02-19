@@ -1,31 +1,24 @@
 package io.github.vampirestudios.artifice.common;
 
-import com.mojang.serialization.Lifecycle;
-
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.MutableRegistry;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.util.registry.SimpleRegistry;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 public class ArtificeRegistry {
     /**
      * The {@link Registry} for client-side resource packs.
      */
     @Environment(EnvType.CLIENT)
-    public static final MutableRegistry<ClientResourcePackProfileLike> ASSETS = new SimpleRegistry<>(
-                    RegistryKey.ofRegistry(new Identifier("artifice", "common_assets")),
-                    Lifecycle.stable()
-    );
+    public static final Registry<ClientResourcePackProfileLike> ASSETS = FabricRegistryBuilder.createSimple(
+        ClientResourcePackProfileLike.class, new Identifier("artifice", "common_assets")
+    ).buildAndRegister();
+
     /**
      * The {@link Registry} for server-side resource packs.
      */
-    public static final MutableRegistry<ServerResourcePackProfileLike> DATA = Registry.register((Registry) Registry.REGISTRIES,
-                    new Identifier("artifice", "common_data_packs"), new SimpleRegistry<>(
-                    RegistryKey.ofRegistry(new Identifier("artifice", "data")),
-                    Lifecycle.stable()
-    ));
+    public static final Registry<ServerResourcePackProfileLike> DATA = FabricRegistryBuilder.createSimple(
+            ServerResourcePackProfileLike.class, new Identifier("artifice", "common_data")
+    ).buildAndRegister();
 }

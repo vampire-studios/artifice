@@ -4,8 +4,8 @@ import io.github.vampirestudios.artifice.api.virtualpack.ArtificeResourcePackCon
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.resource.ResourcePackManager;
-import net.minecraft.resource.ResourcePackProfile;
+import net.minecraft.resource.pack.ResourcePackManager;
+import net.minecraft.resource.pack.ResourcePackProfile;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -22,7 +22,7 @@ public abstract class MixinMinecraftClient {
 	}*/
 
 	@Redirect(method = "<init>", at = @At(value = "INVOKE",
-					target = "Lnet/minecraft/resource/ResourcePackManager;scanPacks()V"))
+					target = "Lnet/minecraft/resource/pack/ResourcePackManager;scanPacks()V"))
 	private void enableNonOptional(ResourcePackManager resourcePackManager) {
 		Collection<ResourcePackProfile> enabled = resourcePackManager.getEnabledProfiles();
 		for (ResourcePackProfile profile : resourcePackManager.getProfiles()) {

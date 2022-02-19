@@ -4,14 +4,16 @@ import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
+import java.util.Map;
+
 public class HeightProviderBuilders extends TypedJsonBuilder<JsonObject> {
 
 	public HeightProviderBuilders() {
 		super(new JsonObject(), j->j);
 	}
 
-	public HeightProviderBuilders constant(String name, Processor<YOffsetBuilder> processor) {
-		with(name, JsonObject::new, jsonObject -> processor.process(new YOffsetBuilder()).buildTo(this.root));
+	public HeightProviderBuilders constant(String name, Map.Entry<String, Integer> obj) {
+		with(name, JsonObject::new, jsonObject -> this.root.addProperty(obj.getKey(),obj.getValue()));
 		return this;
 	}
 
@@ -45,13 +47,13 @@ public class HeightProviderBuilders extends TypedJsonBuilder<JsonObject> {
 			if(hasFloatValues) this.root.add("value", new JsonObject());
 		}
 
-		public UniformHeightProviderBuilder minInclusive(Processor<YOffsetBuilder> processor) {
-			with("min_inclusive", JsonObject::new, jsonObject -> processor.process(new YOffsetBuilder()).buildTo(jsonObject));
+		public UniformHeightProviderBuilder minInclusive(Map.Entry<String, Integer> obj) {
+			with("min_inclusive", JsonObject::new, jsonObject -> jsonObject.addProperty(obj.getKey(),obj.getValue()));
 			return this;
 		}
 
-		public UniformHeightProviderBuilder maxInclusive(Processor<YOffsetBuilder> processor) {
-			with("max_inclusive", JsonObject::new, jsonObject -> processor.process(new YOffsetBuilder()).buildTo(jsonObject));
+		public UniformHeightProviderBuilder maxInclusive(Map.Entry<String, Integer> obj) {
+			with("max_inclusive", JsonObject::new, jsonObject -> jsonObject.addProperty(obj.getKey(),obj.getValue()));
 			return this;
 		}
 

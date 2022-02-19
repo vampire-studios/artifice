@@ -1,27 +1,19 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen;
 
-import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import java.util.Map;
 
-public class YOffsetBuilder extends TypedJsonBuilder<JsonObject> {
+public class YOffsetBuilder {
 
-	public YOffsetBuilder() {
-		super(new JsonObject(), j->j);
+	public static Map.Entry<String, Integer> absolute(int offset) {
+		return Map.entry("absolute",offset);
 	}
 
-	public YOffsetBuilder absolute(int offset) {
-		this.root.addProperty("absolute", offset);
-		return this;
+	public static Map.Entry<String, Integer> aboveBottom(int offset) {
+		return Map.entry("above_bottom",offset);
 	}
 
-	public YOffsetBuilder aboveBottom(int offset) {
-		this.root.addProperty("above_bottom", offset);
-		return this;
-	}
-
-	public YOffsetBuilder belowTop(int offset) {
-		this.root.addProperty("below_top", offset);
-		return this;
+	public static Map.Entry<String, Integer> belowTop(int offset) {
+		return Map.entry("below_top",offset);
 	}
 
 }

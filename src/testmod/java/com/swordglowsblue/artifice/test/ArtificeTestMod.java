@@ -1,11 +1,14 @@
 package com.swordglowsblue.artifice.test;
 
+import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.vampirestudios.artifice.api.Artifice;
 import io.github.vampirestudios.artifice.api.ArtificeResourcePack;
 import io.github.vampirestudios.artifice.api.builder.data.dimension.ChunkGeneratorTypeBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.BlockStateProviderBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.SurfaceRulesBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.YOffsetBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.decorator.config.CountExtraDecoratorConfigBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.decorator.config.DecoratedDecoratorConfigBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config.DecoratedFeatureConfigBuilder;
@@ -172,14 +175,14 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 							.type("minecraft:cave")
 							.y(heightProviderBuilders -> heightProviderBuilders.uniform("y",
 									uniformHeightProviderBuilder -> uniformHeightProviderBuilder
-											.minInclusive(yOffsetBuilder -> yOffsetBuilder.aboveBottom(8))
-											.maxInclusive(yOffsetBuilder -> yOffsetBuilder.absolute(180))
+											.minInclusive(YOffsetBuilder.aboveBottom(8))
+											.maxInclusive(YOffsetBuilder.absolute(180))
 							))
 							.yScale(heightProviderBuilders -> heightProviderBuilders.uniform("yScale",
 									uniformHeightProviderBuilder -> uniformHeightProviderBuilder
 											.minAndMaxInclusive(0.1F, 0.9F)
 							))
-							.lavaLevel(yOffsetBuilder -> yOffsetBuilder.aboveBottom(8))
+							.lavaLevel( YOffsetBuilder.aboveBottom(8))
 							.horizontalRadiusModifier(heightProviderBuilders -> heightProviderBuilders.uniform("horizontal_radius_modifier",
 									uniformHeightProviderBuilder -> uniformHeightProviderBuilder
 											.minAndMaxInclusive(1.7F, 2.4F)
@@ -200,6 +203,12 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 							stateDataBuilder.name("minecraft:lava")).seaLevel(65).legacyRandomSource(false).noodleCavesEnabled(false)
 							.oreVeinsEnabled(true).noiseConfig(noiseConfigBuilder -> noiseConfigBuilder)
 			);*/
+			System.out.println(new SurfaceRulesBuilder().sequence(surfaceRulesBuilder ->
+					surfaceRulesBuilder.verticalGradient(
+							"aaaaa",
+							YOffsetBuilder.aboveBottom(5),
+							YOffsetBuilder.belowTop(3)
+					)).buildTo(new JsonObject()).toString());
 /*//not even going to touch this until we get everything else working
 			// Tested, it works now. Wasn't in 20w28a.
 			pack.addConfiguredFeature(id("test_featureee"), configuredFeatureBuilder ->

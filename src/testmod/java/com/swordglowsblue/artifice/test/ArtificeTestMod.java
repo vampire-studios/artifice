@@ -291,7 +291,7 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 							stateDataBuilder.name("minecraft:lava")).seaLevel(65).legacyRandomSource(false).noodleCavesEnabled(false)
 							.oreVeinsEnabled(true).noiseConfig(noiseConfigBuilder -> noiseConfigBuilder)
 			);*/
-			System.out.println(new SurfaceRulesBuilder().sequence(surfaceRulesBuilder ->
+			/*System.out.println(new SurfaceRulesBuilder().sequence(surfaceRulesBuilder ->
 					surfaceRulesBuilder.condition(
 							surfaceRulesBuilder1 -> surfaceRulesBuilder1.verticalGradient(
 									"bebrock",
@@ -319,7 +319,7 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 									)
 					)
 
-			).buildTo(new JsonObject()).toString());
+			).buildTo(new JsonObject()).toString());*/
 /*//not even going to touch this until we get everything else working
 			// Tested, it works now. Wasn't in 20w28a.
 			pack.addConfiguredFeature(id("test_featureee"), configuredFeatureBuilder ->

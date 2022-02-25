@@ -3,7 +3,7 @@ package io.github.vampirestudios.artifice.api.builder.data.dimension;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
+import io.github.vampirestudios.artifice.api.util.Either;
 
 public class NoiseConfigBuilder extends TypedJsonBuilder<JsonObject> {
     public NoiseConfigBuilder() {
@@ -125,25 +125,34 @@ public class NoiseConfigBuilder extends TypedJsonBuilder<JsonObject> {
         return this.slideConfig("bottom_slide", target, size, offset);
     }
 
-    public NoiseConfigBuilder terrainShaper(double offset, double factor, double jaggedness) {
+    //todo a better system for this
+    private NoiseConfigBuilder terrainShaper(Object offset, Object factor, Object jaggedness,int differentiator) {
         JsonObject obj = new JsonObject();
-        this.root.addProperty("offset", offset);
-        this.root.addProperty("factor", factor);
-        this.root.addProperty("jaggedness", jaggedness);
+        if(offset instanceof JsonObject) obj.add("offset", (JsonObject)offset);
+        else if (offset instanceof Double) obj.addProperty("offset",(double)offset);
+        else throw new IllegalArgumentException("offset must be spline or double");
+
+        if(factor instanceof JsonObject) obj.add("factor", (JsonObject)factor);
+        else if (factor instanceof Double) obj.addProperty("factor",(double)factor);
+        else throw new IllegalArgumentException("factor must be spline or double");
+
+        if(jaggedness instanceof JsonObject) obj.add("jaggedness", (JsonObject)jaggedness);
+        else if (jaggedness instanceof Double) obj.addProperty("jaggedness",(double)jaggedness);
+        else throw new IllegalArgumentException("jaggedness must be spline or double");
+
         this.root.add("terrain_shaper",obj);
         return this;
     }
+    private NoiseConfigBuilder terrainShaper(JsonObject offset, JsonObject factor, JsonObject jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
+    private NoiseConfigBuilder terrainShaper(double offset, double factor, double jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
+    private NoiseConfigBuilder terrainShaper(double offset, JsonObject factor, JsonObject jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
+    private NoiseConfigBuilder terrainShaper(JsonObject offset, double factor, JsonObject jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
+    private NoiseConfigBuilder terrainShaper(JsonObject offset, JsonObject factor, double jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
+    private NoiseConfigBuilder terrainShaper(double offset, JsonObject factor, double jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
+    private NoiseConfigBuilder terrainShaper(JsonObject offset, double factor, double jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
+    private NoiseConfigBuilder terrainShaper(double offset, double factor, JsonObject jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
 
-    public NoiseConfigBuilder terrainShaper(JsonObject offset, JsonObject factor, JsonObject jaggedness) {
-        JsonObject obj = new JsonObject();
-        this.root.add("offset", offset);
-        this.root.add("factor", factor);
-        this.root.add("jaggedness", jaggedness);
-        this.root.add("terrain_shaper",obj);
-        return this;
-    }
-
-    private JsonObject spline(String noise, JsonObject... points) {
+    public JsonObject spline(String noise, JsonObject... points) {
         JsonObject obj = new JsonObject();
         obj.addProperty("coordinate", noise);
         JsonArray ary = new JsonArray();
@@ -154,20 +163,19 @@ public class NoiseConfigBuilder extends TypedJsonBuilder<JsonObject> {
         return obj;
     }
 
-    private JsonObject point(double location, double derivative, double value) {
+    private JsonObject point(double location, double derivative, Either<JsonObject,Double> value) {
         JsonObject obj = new JsonObject();
         obj.addProperty("location", location);
         obj.addProperty("derivative", derivative);
-        obj.addProperty("value", value);
+        if(value.isLeft())obj.add("value", value.getLeft());
+        else obj.addProperty("value",value.getRight());
         return obj;
     }
-
-    private JsonObject point(double location, double derivative, JsonObject value) {
-        JsonObject obj = new JsonObject();
-        obj.addProperty("location", location);
-        obj.addProperty("derivative", derivative);
-        obj.add("value", value);
-        return obj;
+    JsonObject point(double location, double derivative, JsonObject value){
+        return point(location,derivative,Either.left(value));
+    }
+    JsonObject point(double location, double derivative, double value){
+        return point(location,derivative,Either.right(value));
     }
 
 }

@@ -92,11 +92,23 @@ public class SurfaceRulesBuilder extends TypedJsonBuilder<JsonObject> {
         return this;
     }
 
+    /*
+     * @Deprecated in 1.18.2
+     */
     public SurfaceRulesBuilder stoneDepth(String surfaceType, int offset, boolean addSurfaceDepth, boolean addSurfaceSecondaryDepth) {
         root.addProperty("surface_type",surfaceType);
         root.addProperty("offset",offset);
         root.addProperty("add_Surface_depth",addSurfaceDepth);
         root.addProperty("add_surface_secondary_depth",addSurfaceSecondaryDepth);
+        root.addProperty("type","minecraft:stone_depth");
+        return this;
+    }
+
+    public SurfaceRulesBuilder stoneDepth(String surfaceType, int offset, boolean addSurfaceDepth, int secondaryDepthRange) {
+        root.addProperty("surface_type",surfaceType);
+        root.addProperty("offset",offset);
+        root.addProperty("add_Surface_depth",addSurfaceDepth);
+        root.addProperty("secondary_depth_range",secondaryDepthRange);
         root.addProperty("type","minecraft:stone_depth");
         return this;
     }

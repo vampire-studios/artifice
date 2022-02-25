@@ -163,19 +163,20 @@ public class NoiseConfigBuilder extends TypedJsonBuilder<JsonObject> {
         return obj;
     }
 
-    private JsonObject point(double location, double derivative, Either<JsonObject,Double> value) {
+    private JsonObject point(double location, double derivative, Object value, int aa) {
         JsonObject obj = new JsonObject();
         obj.addProperty("location", location);
         obj.addProperty("derivative", derivative);
-        if(value.isLeft())obj.add("value", value.getLeft());
-        else obj.addProperty("value",value.getRight());
+        if(value instanceof JsonObject)obj.add("value", (JsonObject)value);
+        else if(value instanceof Double) obj.addProperty("value", (double)value);
+        else throw new IllegalArgumentException("value must be spline or double");
         return obj;
     }
     JsonObject point(double location, double derivative, JsonObject value){
-        return point(location,derivative,Either.left(value));
+        return point(location,derivative,value,0);
     }
     JsonObject point(double location, double derivative, double value){
-        return point(location,derivative,Either.right(value));
+        return point(location,derivative,value,0);
     }
 
 }

@@ -3,7 +3,6 @@ package io.github.vampirestudios.artifice.api.builder.data.dimension;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
-import io.github.vampirestudios.artifice.api.util.Either;
 
 public class NoiseConfigBuilder extends TypedJsonBuilder<JsonObject> {
     public NoiseConfigBuilder() {

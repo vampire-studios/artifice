@@ -38,14 +38,6 @@ public class NoiseConfigBuilder extends TypedJsonBuilder<JsonObject> {
         this.root.addProperty("density_factor", densityFactor);
         return this;
     }
-    
-    /**
-     * @deprecated use the double version instead
-     */
-    @Deprecated
-    public NoiseConfigBuilder densityOffset(int densityOffset) {
-        return this.densityOffset((double) densityOffset);
-    }
 
     public NoiseConfigBuilder densityOffset(double densityOffset) {
         if (densityOffset > 1) throw new IllegalArgumentException("densityOffset can't be higher than 1! Found " + densityOffset);
@@ -61,16 +53,6 @@ public class NoiseConfigBuilder extends TypedJsonBuilder<JsonObject> {
 
     public NoiseConfigBuilder randomDensityOffset(boolean randomDensityOffset) {
         this.root.addProperty("random_density_offset", randomDensityOffset);
-        return this;
-    }
-
-    public NoiseConfigBuilder islandNoiseOverride(boolean islandNoiseOverride) {
-        this.root.addProperty("island_noise_override", islandNoiseOverride);
-        return this;
-    }
-
-    public NoiseConfigBuilder amplified(boolean amplified) {
-        this.root.addProperty("amplified", amplified);
         return this;
     }
 

@@ -1,24 +1,14 @@
 package com.swordglowsblue.artifice.test;
 
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.vampirestudios.artifice.api.Artifice;
 import io.github.vampirestudios.artifice.api.ArtificeResourcePack;
 import io.github.vampirestudios.artifice.api.builder.data.dimension.ChunkGeneratorTypeBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.dimension.ChunkGeneratorTypeBuilder.FlatChunkGeneratorTypeBuilder.LayersBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.BlockStateProviderBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.SurfaceRulesBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.YOffsetBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.biome.BiomeBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.decorator.config.CountExtraDecoratorConfigBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.decorator.config.DecoratedDecoratorConfigBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config.DecoratedFeatureConfigBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config.TreeFeatureConfigBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.structure.SpawnsBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.FeatureSizeBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.FoliagePlacerBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.TrunkPlacerBuilder;
 import io.github.vampirestudios.artifice.api.resource.StringResource;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -47,10 +37,8 @@ import net.minecraft.world.biome.source.FixedBiomeSource;
 import net.minecraft.world.biome.source.util.MultiNoiseUtil;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.gen.DensityConstants;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.StructureAccessor;
-import net.minecraft.world.gen.YOffset;
 import net.minecraft.world.gen.chunk.Blender;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.VerticalBlockSample;
@@ -320,9 +308,9 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 					)
 
 			).buildTo(new JsonObject()).toString());*/
-/*//not even going to touch this until we get everything else working
+			//not even going to touch this until we get everything else working
 			// Tested, it works now. Wasn't in 20w28a.
-			pack.addConfiguredFeature(id("test_featureee"), configuredFeatureBuilder ->
+/*			pack.addConfiguredFeature(id("test_featureee"), configuredFeatureBuilder ->
 					configuredFeatureBuilder.featureID("minecraft:tree")
 							.featureConfig(treeFeatureConfigBuilder ->
 									treeFeatureConfigBuilder
@@ -354,8 +342,6 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 													new FeatureSizeBuilder.TwoLayersFeatureSizeBuilder()
 											).heightmap(Heightmap.Type.OCEAN_FLOOR), new TreeFeatureConfigBuilder()
 							));
-
-			class_7059
 			// Should be working but Minecraft coders did something wrong and the default feature is being return when it shouldn't resulting in a crash.
 			pack.addPlacedFeature(id("test_placed_feature"), configuredFeatureBuilder -> configuredFeatureBuilder.featureID("artifice:test_featureee")
 					.featureConfig(decoratedFeatureConfigBuilder -> decoratedFeatureConfigBuilder.feature(configuredSubFeatureBuilder ->
@@ -374,7 +360,7 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 											), new DecoratedFeatureConfigBuilder())).decorator(configuredDecoratorBuilder ->
 							configuredDecoratorBuilder.name("minecraft:count_extra")
 									.config(countExtraDecoratorConfigBuilder ->
-											countExtraDecoratorConfigBuilder.count(10).extraChance(0.2F).extraCount(2), new CountExtraDecoratorConfigBuilder())), new DecoratedFeatureConfigBuilder()));
+											countExtraDecoratorConfigBuilder.count(10).extraChance(0.2F).extraCount(2), new CountExtraDecoratorConfigBuilder())), new DecoratedFeatureConfigBuilder()));*/
 			try {
 				pack.dumpResources("testing_data", "data");
 			} catch (IOException e) {
@@ -436,7 +422,7 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 		private final Registry<Biome> biomeRegistry;
 
 		public TestChunkGenerator(Registry<class_7059> registry, Registry<Biome> registry2, boolean testBool) {
-			super(registry, Optional.empty(), new FixedBiomeSource(registry2.method_40268(BiomeKeys.PLAINS)));
+			super(registry, Optional.empty(), new FixedBiomeSource(registry2.getOrCreateHolder(BiomeKeys.PLAINS)));
 			this.testBool = testBool;
 			this.biomeRegistry = registry2;
 		}

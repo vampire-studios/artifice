@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.dimension.NoiseConfigBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.dimension.StructureManagerBuilder;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
@@ -14,29 +13,7 @@ public class NoiseSettingsBuilder extends TypedJsonBuilder<JsonResource<JsonObje
     }
 
     /**
-     * Set the bedrock roof position. deprecated?
-     * @param bedrockRoofPosition
-     * @return
-     */
-    public NoiseSettingsBuilder bedrockRoofPosition(int bedrockRoofPosition) {
-        this.root.addProperty("bedrock_roof_position", bedrockRoofPosition);
-        return this;
-    }
-
-    /**
-     * Set the bedrock floor position. deprecated?
-     * @param bedrockFloorPosition
-     * @return
-     */
-    public NoiseSettingsBuilder bedrockFloorPosition(int bedrockFloorPosition) {
-        this.root.addProperty("bedrock_floor_position", bedrockFloorPosition);
-        return this;
-    }
-
-    /**
      * Set the sea level.
-     * @param seaLevel
-     * @return
      */
     public NoiseSettingsBuilder seaLevel(int seaLevel) {
         this.root.addProperty("sea_level", seaLevel);
@@ -61,16 +38,6 @@ public class NoiseSettingsBuilder extends TypedJsonBuilder<JsonResource<JsonObje
         return this;
     }
 
-    public NoiseSettingsBuilder noiseCavesEnabled(boolean noiseCavesEnabled) {
-        this.root.addProperty("noise_caves_enabled", noiseCavesEnabled);
-        return this;
-    }
-
-    public NoiseSettingsBuilder noodleCavesEnabled(boolean noodleCavesEnabled) {
-        this.root.addProperty("noodle_caves_enabled", noodleCavesEnabled);
-        return this;
-    }
-
     public NoiseSettingsBuilder oreVeinsEnabled(boolean oreVeinsEnabled) {
         this.root.addProperty("ore_veins_enabled", oreVeinsEnabled);
         return this;
@@ -81,55 +48,30 @@ public class NoiseSettingsBuilder extends TypedJsonBuilder<JsonResource<JsonObje
         return this;
     }
 
-    @Deprecated
-    public NoiseSettingsBuilder grimstoneEnabled(boolean grimstoneEnabled) {
-        this.root.addProperty("grimstone_enabled", grimstoneEnabled);
-        return this;
-    }
-
     /**
      * Set a block state.
-     * @param id
-     * @param blockStateBuilderProcessor
-     * @return
      */
-    public NoiseSettingsBuilder setBlockState(String id, Processor<StateDataBuilder> blockStateBuilderProcessor) {
-        with(id, JsonObject::new, jsonObject -> blockStateBuilderProcessor.process(new StateDataBuilder()).buildTo(jsonObject));
+    public NoiseSettingsBuilder setBlockState(String id, StateDataBuilder stateDataBuilder) {
+        this.root.add(id, stateDataBuilder.build());
         return this;
     }
 
     /**
      * Build default block.
-     * @param blockStateBuilderProcessor
-     * @return
      */
-    public NoiseSettingsBuilder defaultBlock(Processor<StateDataBuilder> blockStateBuilderProcessor) {
-        return this.setBlockState("default_block", blockStateBuilderProcessor);
+    public NoiseSettingsBuilder defaultBlock(StateDataBuilder stateDataBuilder) {
+        return this.setBlockState("default_block", stateDataBuilder);
     }
 
     /**
      * Build default fluid.
-     * @param blockStateBuilderProcessor
-     * @return
      */
-    public NoiseSettingsBuilder defaultFluid(Processor<StateDataBuilder> blockStateBuilderProcessor) {
-        return this.setBlockState("default_fluid", blockStateBuilderProcessor);
-    }
-
-    /**
-     * Build structure manager.
-     * @param structureManagerBuilder
-     * @return
-     */
-    public NoiseSettingsBuilder structureManager(Processor<StructureManagerBuilder> structureManagerBuilder) {
-        with("structures", JsonObject::new, jsonObject -> structureManagerBuilder.process(new StructureManagerBuilder()).buildTo(jsonObject));
-        return this;
+    public NoiseSettingsBuilder defaultFluid(StateDataBuilder stateDataBuilder) {
+        return this.setBlockState("default_fluid", stateDataBuilder);
     }
 
     /**
      * Build surface rules.
-     * @param surfaceRulesBuilder
-     * @return this
      */
     public NoiseSettingsBuilder surfaceRules(Processor<SurfaceRulesBuilder> surfaceRulesBuilder) {
         with("surface_rule", JsonObject::new, jsonObject -> surfaceRulesBuilder.process(new SurfaceRulesBuilder()).buildTo(jsonObject));

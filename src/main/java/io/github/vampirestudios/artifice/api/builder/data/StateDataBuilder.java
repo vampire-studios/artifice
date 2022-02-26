@@ -5,7 +5,7 @@ import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
 
 public class StateDataBuilder extends TypedJsonBuilder<JsonObject> {
 
-    private JsonObject jsonObject = new JsonObject();
+    private final JsonObject jsonObject = new JsonObject();
 
     public StateDataBuilder() {
         super(new JsonObject(), j->j);
@@ -13,8 +13,6 @@ public class StateDataBuilder extends TypedJsonBuilder<JsonObject> {
 
     /**
      * Set the id of the block.
-     * @param id
-     * @return
      */
     public StateDataBuilder name(String id) {
         this.root.addProperty("Name", id);
@@ -23,9 +21,6 @@ public class StateDataBuilder extends TypedJsonBuilder<JsonObject> {
 
     /**
      * Set a property to a state.
-     * @param property
-     * @param state
-     * @return
      */
     public StateDataBuilder setProperty(String property, String state) {
         this.jsonObject.addProperty(property, state);

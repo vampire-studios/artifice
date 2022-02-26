@@ -50,6 +50,7 @@ import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.DensityConstants;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.StructureAccessor;
+import net.minecraft.world.gen.YOffset;
 import net.minecraft.world.gen.chunk.Blender;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.VerticalBlockSample;
@@ -86,7 +87,7 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 					  "pattern": [
 					    "##",
 					    "##",
-					    "#  "
+					    "# "
 					  ],
 					  "key": {
 					    "#": {
@@ -290,13 +291,36 @@ public class ArtificeTestMod implements ModInitializer, ClientModInitializer {
 							stateDataBuilder.name("minecraft:lava")).seaLevel(65).legacyRandomSource(false).noodleCavesEnabled(false)
 							.oreVeinsEnabled(true).noiseConfig(noiseConfigBuilder -> noiseConfigBuilder)
 			);*/
-			System.out.println(new SurfaceRulesBuilder().sequence(surfaceRulesBuilder ->
-					surfaceRulesBuilder.verticalGradient(
-							"aaaaa",
-							YOffsetBuilder.aboveBottom(5),
-							YOffsetBuilder.belowTop(3)
-					)).buildTo(new JsonObject()).toString());
-//not even going to touch this until we get everything else working
+			/*System.out.println(new SurfaceRulesBuilder().sequence(surfaceRulesBuilder ->
+					surfaceRulesBuilder.condition(
+							surfaceRulesBuilder1 -> surfaceRulesBuilder1.verticalGradient(
+									"bebrock",
+									YOffsetBuilder.aboveBottom(0),
+									YOffsetBuilder.aboveBottom(5)
+									),
+							surfaceRulesBuilder1 -> surfaceRulesBuilder1.block(stateDataBuilder -> stateDataBuilder.name("minecraft:bedrock"))
+					), surfaceRulesBuilder ->
+					surfaceRulesBuilder.condition(
+							surfaceRulesBuilder1 -> surfaceRulesBuilder1.verticalGradient(
+									"woollenpjs",
+									YOffsetBuilder.belowTop(80),
+									YOffsetBuilder.aboveBottom(22)
+							),
+							surfaceRulesBuilder1 -> surfaceRulesBuilder1.block(stateDataBuilder -> stateDataBuilder.name("minecraft:cyan_wool"))
+					), surfaceRulesBuilder ->
+					surfaceRulesBuilder.condition(
+							surfaceRulesBuilder1 -> surfaceRulesBuilder1.aboveMainSurface(),
+							surfaceRulesBuilder1 -> surfaceRulesBuilder1.sequence(surfaceRulesBuilder2 ->
+									surfaceRulesBuilder2.condition(
+											surfaceRulesBuilder3 -> surfaceRulesBuilder3.biome(id("test_biome").toString()),
+											surfaceRulesBuilder3 -> surfaceRulesBuilder3.block(stateDataBuilder -> stateDataBuilder.name("artifice:test_block"))
+									),
+									surfaceRulesBuilder2 -> surfaceRulesBuilder2.block(stateDataBuilder -> stateDataBuilder.name("minecraft:grass_block"))
+									)
+					)
+
+			).buildTo(new JsonObject()).toString());*/
+/*//not even going to touch this until we get everything else working
 			// Tested, it works now. Wasn't in 20w28a.
 			pack.addConfiguredFeature(id("test_featureee"), configuredFeatureBuilder ->
 					configuredFeatureBuilder.featureID("minecraft:tree")

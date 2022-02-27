@@ -1,7 +1,7 @@
 package io.github.vampirestudios.artifice.common;
 
-import net.minecraft.resource.pack.ResourcePackProfile;
+import net.minecraft.server.packs.repository.Pack;
 
 public interface ServerResourcePackProfileLike {
-    <T extends ResourcePackProfile> ResourcePackProfile toServerResourcePackProfile(ResourcePackProfile.Factory factory);
+    <T extends Pack> Pack toServerResourcePackProfile(Pack.PackConstructor factory);
 }

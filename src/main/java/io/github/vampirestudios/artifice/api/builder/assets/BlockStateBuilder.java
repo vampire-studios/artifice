@@ -8,7 +8,7 @@ import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.Processor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Builder for a blockstate definition file ({@code namespace:blockstates/blockid.json}).
@@ -78,7 +78,7 @@ public final class BlockStateBuilder extends TypedJsonBuilder<JsonResource<JsonO
          * @param id The model ID ({@code namespace:block|item/modelid}).
          * @return this
          */
-        public Variant model(Identifier id) {
+        public Variant model(ResourceLocation id) {
             root.addProperty("model", id.toString());
             return this;
         }

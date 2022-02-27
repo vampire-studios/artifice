@@ -4,9 +4,13 @@
   "version": "${version}",
 
   "name": "Artifice",
-  "description": "Library for programmatically generated resource files.",
-  "authors": [ "swordglowsblue","Fudge", "Vampire Studios"],
+  "description": "A library for internal/virtual datapacks and resource packs",
 
+  "authors": [
+    "swordglowsblue",
+    "Fudge",
+    "Vampire Studios"
+  ],
   "contact": {
     "homepage": "https://github.com/vampire-studios/artifice",
     "sources": "https://github.com/vampire-studios/artifice",
@@ -17,10 +21,14 @@
   "icon": "assets/artifice/icon.png",
 
   "mixins": [ "artifice.mixins.json" ],
+  "accessWidener": "artifice.accesswidener",
+
   "depends": {
-    "minecraft": "1.18.x",
-    "fabricloader": ">=0.12.12"
+    "minecraft": ">=1.18",
+    "fabricloader": ">=0.13.3",
+    "java": "17"
   },
+
   "custom": {
     "modmenu:api": true
   }

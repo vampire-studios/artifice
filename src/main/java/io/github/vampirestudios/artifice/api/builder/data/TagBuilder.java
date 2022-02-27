@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Builder for tag files ({@code namespace:tags/type/tagid.json}).
@@ -28,7 +28,7 @@ public final class TagBuilder extends TypedJsonBuilder<JsonResource<JsonObject>>
      * @param id The value ID.
      * @return this
      */
-    public TagBuilder value(Identifier id) {
+    public TagBuilder value(ResourceLocation id) {
         with("values", JsonArray::new, values -> values.add(id.toString()));
         return this;
     }
@@ -38,8 +38,8 @@ public final class TagBuilder extends TypedJsonBuilder<JsonResource<JsonObject>>
      * @param ids The value IDs.
      * @return this
      */
-    public TagBuilder values(Identifier... ids) {
-        with("values", JsonArray::new, values -> { for(Identifier id : ids) values.add(id.toString()); });
+    public TagBuilder values(ResourceLocation... ids) {
+        with("values", JsonArray::new, values -> { for(ResourceLocation id : ids) values.add(id.toString()); });
         return this;
     }
 
@@ -48,7 +48,7 @@ public final class TagBuilder extends TypedJsonBuilder<JsonResource<JsonObject>>
      * @param tagId The tag ID.
      * @return this
      */
-    public TagBuilder include(Identifier tagId) {
+    public TagBuilder include(ResourceLocation tagId) {
         with("values", JsonArray::new, values -> values.add("#"+tagId.toString()));
         return this;
     }

@@ -8,7 +8,7 @@ import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.FoliagePl
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.TreeDecoratorBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.TrunkPlacerBuilder;
 import io.github.vampirestudios.artifice.api.util.Processor;
-import net.minecraft.world.Heightmap;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 public class TreeFeatureConfigBuilder extends FeatureConfigBuilder {
 
@@ -62,8 +62,8 @@ public class TreeFeatureConfigBuilder extends FeatureConfigBuilder {
         return this;
     }
 
-    public TreeFeatureConfigBuilder heightmap(Heightmap.Type type) {
-        this.root.addProperty("heightmap", type.getName());
+    public TreeFeatureConfigBuilder heightmap(Heightmap.Types type) {
+        this.root.addProperty("heightmap", type.getSerializationKey());
         return this;
     }
 }

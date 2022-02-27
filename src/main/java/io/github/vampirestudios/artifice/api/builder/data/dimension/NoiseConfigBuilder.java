@@ -124,14 +124,14 @@ public class NoiseConfigBuilder extends TypedJsonBuilder<JsonObject> {
         this.root.add("terrain_shaper",obj);
         return this;
     }
-    private NoiseConfigBuilder terrainShaper(JsonObject offset, JsonObject factor, JsonObject jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
-    private NoiseConfigBuilder terrainShaper(double offset, double factor, double jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
-    private NoiseConfigBuilder terrainShaper(double offset, JsonObject factor, JsonObject jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
-    private NoiseConfigBuilder terrainShaper(JsonObject offset, double factor, JsonObject jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
-    private NoiseConfigBuilder terrainShaper(JsonObject offset, JsonObject factor, double jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
-    private NoiseConfigBuilder terrainShaper(double offset, JsonObject factor, double jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
-    private NoiseConfigBuilder terrainShaper(JsonObject offset, double factor, double jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
-    private NoiseConfigBuilder terrainShaper(double offset, double factor, JsonObject jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
+    public NoiseConfigBuilder terrainShaper(JsonObject offset, JsonObject factor, JsonObject jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
+    public NoiseConfigBuilder terrainShaper(double offset, double factor, double jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
+    public NoiseConfigBuilder terrainShaper(double offset, JsonObject factor, JsonObject jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
+    public NoiseConfigBuilder terrainShaper(JsonObject offset, double factor, JsonObject jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
+    public NoiseConfigBuilder terrainShaper(JsonObject offset, JsonObject factor, double jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
+    public NoiseConfigBuilder terrainShaper(double offset, JsonObject factor, double jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
+    public NoiseConfigBuilder terrainShaper(JsonObject offset, double factor, double jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
+    public NoiseConfigBuilder terrainShaper(double offset, double factor, JsonObject jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
 
     public JsonObject spline(String noise, JsonObject... points) {
         JsonObject obj = new JsonObject();
@@ -144,7 +144,7 @@ public class NoiseConfigBuilder extends TypedJsonBuilder<JsonObject> {
         return obj;
     }
 
-    private JsonObject point(double location, double derivative, Object value, int aa) {
+    public JsonObject point(double location, double derivative, Object value, int aa) {
         JsonObject obj = new JsonObject();
         obj.addProperty("location", location);
         obj.addProperty("derivative", derivative);
@@ -153,10 +153,10 @@ public class NoiseConfigBuilder extends TypedJsonBuilder<JsonObject> {
         else throw new IllegalArgumentException("value must be spline or double");
         return obj;
     }
-    JsonObject point(double location, double derivative, JsonObject value){
+    public JsonObject point(double location, double derivative, JsonObject value){
         return point(location,derivative,value,0);
     }
-    JsonObject point(double location, double derivative, double value){
+    public JsonObject point(double location, double derivative, double value){
         return point(location,derivative,value,0);
     }
 

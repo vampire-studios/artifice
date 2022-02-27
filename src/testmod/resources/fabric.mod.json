@@ -3,13 +3,18 @@
   "id": "artifice-testmod",
   "version": "${version}",
 
-  "name": "Artifice Test Mod",
+  "name": "Artifice: Test Mod",
   "description": "Test mod for Artifice",
-  "authors": [ "swordglowsblue" ],
+  "authors": [
+    "swordglowsblue",
+    "Fudge",
+    "Vampire Studios"
+  ],
 
   "contact": {
-    "homepage": "https://minecraft.curseforge.com/projects/artifice",
-    "sources": "https://github.com/swordglowsblue/artifice"
+    "homepage": "https://github.com/vampire-studios/artifice",
+    "sources": "https://github.com/vampire-studios/artifice",
+    "issues": "https://github.com/vampire-studios/artifice/issues"
   },
 
   "license": "MIT",
@@ -17,11 +22,13 @@
 
   "entrypoints": {
     "main": [ "com.swordglowsblue.artifice.test.ArtificeTestMod" ],
-    "client": [ "com.swordglowsblue.artifice.test.ArtificeTestMod" ]
+    "client": [ "com.swordglowsblue.artifice.test.ArtificeTestClientMod" ]
   },
 
   "depends": {
-    "fabricloader": ">=0.4.0",
-    "artifice": "*"
+    "minecraft": ">=1.18",
+    "fabricloader": ">=0.13.3",
+    "artifice": "*",
+    "java": "17"
   }
 }

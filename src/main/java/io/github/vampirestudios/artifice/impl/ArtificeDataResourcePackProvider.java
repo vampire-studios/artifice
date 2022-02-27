@@ -1,17 +1,16 @@
 package io.github.vampirestudios.artifice.impl;
 
 import io.github.vampirestudios.artifice.common.ArtificeRegistry;
-import net.minecraft.resource.pack.ResourcePackProfile;
-import net.minecraft.resource.pack.ResourcePackProvider;
-import net.minecraft.util.Identifier;
-
 import java.util.Objects;
 import java.util.function.Consumer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.server.packs.repository.RepositorySource;
 
-public final class ArtificeDataResourcePackProvider implements ResourcePackProvider {
+public final class ArtificeDataResourcePackProvider implements RepositorySource {
     @Override
-    public void register(Consumer<ResourcePackProfile> consumer, ResourcePackProfile.Factory factory) {
-        for (Identifier id : ArtificeRegistry.DATA.getIds()) {
+    public void loadPacks(Consumer<Pack> consumer, Pack.PackConstructor factory) {
+        for (ResourceLocation id : ArtificeRegistry.DATA.keySet()) {
             consumer.accept(Objects.requireNonNull(ArtificeRegistry.DATA.get(id)).toServerResourcePackProfile(factory));
         }
     }

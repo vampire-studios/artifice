@@ -2,7 +2,7 @@ package io.github.vampirestudios.artifice.api.builder.data.recipe;
 
 import com.google.gson.JsonArray;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Bulder for a recipe ingredient option list.
@@ -20,7 +20,7 @@ public final class MultiIngredientBuilder {
      * @param id The item ID.
      * @return this
      */
-    public MultiIngredientBuilder item(Identifier id) {
+    public MultiIngredientBuilder item(ResourceLocation id) {
         ingredients.add(new JsonObjectBuilder().add("item", id.toString()).build());
         return this;
     }
@@ -30,7 +30,7 @@ public final class MultiIngredientBuilder {
      * @param id The tag ID.
      * @return this
      */
-    public MultiIngredientBuilder tag(Identifier id) {
+    public MultiIngredientBuilder tag(ResourceLocation id) {
         ingredients.add(new JsonObjectBuilder().add("tag", id.toString()).build());
         return this;
     }

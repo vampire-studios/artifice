@@ -2,7 +2,7 @@ package io.github.vampirestudios.artifice.api.builder.data.recipe;
 
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
 import io.github.vampirestudios.artifice.api.util.Processor;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Builder for cooking recipes ({@code namespace:recipes/id.json}).
@@ -15,7 +15,7 @@ public final class CookingRecipeBuilder extends RecipeBuilder<CookingRecipeBuild
      * @param id The item ID.
      * @return this
      */
-    public CookingRecipeBuilder ingredientItem(Identifier id) {
+    public CookingRecipeBuilder ingredientItem(ResourceLocation id) {
         root.add("ingredient", new JsonObjectBuilder().add("item", id.toString()).build());
         return this;
     }
@@ -25,7 +25,7 @@ public final class CookingRecipeBuilder extends RecipeBuilder<CookingRecipeBuild
      * @param id The tag ID.
      * @return this
      */
-    public CookingRecipeBuilder ingredientTag(Identifier id) {
+    public CookingRecipeBuilder ingredientTag(ResourceLocation id) {
         root.add("ingredient", new JsonObjectBuilder().add("tag", id.toString()).build());
         return this;
     }
@@ -45,7 +45,7 @@ public final class CookingRecipeBuilder extends RecipeBuilder<CookingRecipeBuild
      * @param id The item ID.
      * @return this
      */
-    public CookingRecipeBuilder result(Identifier id) {
+    public CookingRecipeBuilder result(ResourceLocation id) {
         root.addProperty("result", id.toString());
         return this;
     }

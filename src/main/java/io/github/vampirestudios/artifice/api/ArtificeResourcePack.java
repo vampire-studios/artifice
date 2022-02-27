@@ -23,13 +23,12 @@ import io.github.vampirestudios.artifice.common.ServerResourcePackProfileLike;
 import io.github.vampirestudios.artifice.impl.ArtificeResourcePackImpl;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.resource.language.LanguageDefinition;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.resource.pack.ResourcePack;
-import net.minecraft.resource.pack.ResourcePackProfile;
-import net.minecraft.resource.pack.VanillaDataPackProvider;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.client.resources.language.LanguageInfo;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackResources;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.server.packs.repository.ServerPacksSource;
 import java.io.IOException;
 import java.util.function.Consumer;
 
@@ -38,11 +37,11 @@ import java.util.function.Consumer;
  * as a virtual resource pack with {@link Artifice#registerAssets} or {@link Artifice#registerData}.
  */
 @SuppressWarnings( {"DeprecatedIsStillUsed"})
-public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackProfileLike, ClientResourcePackProfileLike {
+public interface ArtificeResourcePack extends PackResources, ServerResourcePackProfileLike, ClientResourcePackProfileLike {
     /**
-     * @return The {@link ResourceType} this pack contains.
+     * @return The {@link PackType} this pack contains.
      */
-    ResourceType getType();
+    PackType getType();
 
     /**
      * @return Whether this pack is set as optional
@@ -70,46 +69,46 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
     boolean isShouldOverwrite();
 
     /**
-     * Create a client-side {@link ResourcePackProfile} for this pack.
+     * Create a client-side {@link Pack} for this pack.
      *
-     * @param factory The factory function passed to {@link VanillaDataPackProvider#register(Consumer, ResourcePackProfile.Factory)}.
+     * @param factory The factory function passed to {@link ServerPacksSource#loadPacks(Consumer, Pack.PackConstructor)}.
      * @return The created container.
      */
     @Override
     @Environment(EnvType.CLIENT)
-    default <T extends ResourcePackProfile> ClientOnly<ResourcePackProfile> toClientResourcePackProfile(ResourcePackProfile.Factory factory) {
+    default <T extends Pack> ClientOnly<Pack> toClientResourcePackProfile(Pack.PackConstructor factory) {
         return new ClientOnly<>(getAssetsContainer(factory));
     }
 
     /**
-     * Create a server-side {@link ResourcePackProfile} for this pack.
+     * Create a server-side {@link Pack} for this pack.
      *
-     * @param factory The factory function passed to {@link VanillaDataPackProvider#register}.
+     * @param factory The factory function passed to {@link ServerPacksSource#loadPacks}.
      * @return The created container.
      */
     @Override
-    default <T extends ResourcePackProfile> ResourcePackProfile toServerResourcePackProfile(ResourcePackProfile.Factory factory) {
+    default <T extends Pack> Pack toServerResourcePackProfile(Pack.PackConstructor factory) {
         return getDataContainer(factory);
     }
 
     /**
-     * @param factory The factory function passed to {@link VanillaDataPackProvider#register(Consumer, ResourcePackProfile.Factory)}.
+     * @param factory The factory function passed to {@link ServerPacksSource#loadPacks(Consumer, Pack.PackConstructor)}.
      * @return The created container.
-     * @deprecated use {@link ArtificeResourcePack#toClientResourcePackProfile(ResourcePackProfile.Factory)}
-     * Create a client-side {@link ResourcePackProfile} for this pack.
+     * @deprecated use {@link ArtificeResourcePack#toClientResourcePackProfile(Pack.PackConstructor)}
+     * Create a client-side {@link Pack} for this pack.
      */
     @Environment(EnvType.CLIENT)
     @Deprecated
-    ArtificeResourcePackContainer getAssetsContainer(ResourcePackProfile.Factory factory);
+    ArtificeResourcePackContainer getAssetsContainer(Pack.PackConstructor factory);
 
     /**
-     * @param factory The factory function passed to {@link VanillaDataPackProvider#register}.
+     * @param factory The factory function passed to {@link ServerPacksSource#loadPacks}.
      * @return The created container.
-     * @deprecated use {@link ArtificeResourcePack#toServerResourcePackProfile(ResourcePackProfile.Factory)}
-     * Create a server-side {@link ResourcePackProfile} for this pack.
+     * @deprecated use {@link ArtificeResourcePack#toServerResourcePackProfile(Pack.PackConstructor)}
+     * Create a server-side {@link Pack} for this pack.
      */
     @Deprecated
-    ResourcePackProfile getDataContainer(ResourcePackProfile.Factory factory);
+    Pack getDataContainer(Pack.PackConstructor factory);
 
     /**
      * @deprecated  use {@link }
@@ -121,7 +120,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
     @Deprecated
     @Environment(EnvType.CLIENT)
     static ArtificeResourcePack ofAssets(Processor<ClientResourcePackBuilder> register) {
-        return new ArtificeResourcePackImpl(ResourceType.CLIENT_RESOURCES, null, register);
+        return new ArtificeResourcePackImpl(PackType.CLIENT_RESOURCES, null, register);
     }
 
     /**
@@ -132,7 +131,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
      */
     @Deprecated
     static ArtificeResourcePack ofData(Processor<ServerResourcePackBuilder> register) {
-        return new ArtificeResourcePackImpl(ResourceType.SERVER_DATA, null, register);
+        return new ArtificeResourcePackImpl(PackType.SERVER_DATA, null, register);
     }
 
     /**
@@ -145,7 +144,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id       The resource path.
          * @param resource The resource to add.
          */
-        void add(Identifier id, ArtificeResource<?> resource);
+        void add(ResourceLocation id, ArtificeResource<?> resource);
 
         /**
          * Set this pack's display name. Defaults to the pack's ID if not set.
@@ -187,7 +186,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id An item ID, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link ModelBuilder} to create the item model.
          */
-        void addItemModel(Identifier id, Processor<ModelBuilder> f);
+        void addItemModel(ResourceLocation id, Processor<ModelBuilder> f);
 
         /**
          * Add a block model for the given block ID.
@@ -195,7 +194,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id A block ID, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link ModelBuilder} to create the block model.
          */
-        void addBlockModel(Identifier id, Processor<ModelBuilder> f);
+        void addBlockModel(ResourceLocation id, Processor<ModelBuilder> f);
 
         /**
          * Add a blockstate definition for the given block ID.
@@ -203,7 +202,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id A block ID, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link BlockStateBuilder} to create the blockstate definition.
          */
-        void addBlockState(Identifier id, Processor<BlockStateBuilder> f);
+        void addBlockState(ResourceLocation id, Processor<BlockStateBuilder> f);
 
         /**
          * Add a translation file for the given language.
@@ -211,7 +210,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The namespace and language code of the desired language.
          * @param f  A callback which will be passed a {@link TranslationBuilder} to create the language file.
          */
-        void addTranslations(Identifier id, Processor<TranslationBuilder> f);
+        void addTranslations(ResourceLocation id, Processor<TranslationBuilder> f);
 
         /**
          * Add a particle definition for the given particle ID.
@@ -219,7 +218,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id A particle ID, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link ParticleBuilder} to create the particle definition.
          */
-        void addParticle(Identifier id, Processor<ParticleBuilder> f);
+        void addParticle(ResourceLocation id, Processor<ParticleBuilder> f);
 
         /**
          * Add a texture animation for the given item ID.
@@ -227,7 +226,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id An item ID, which will be converted into the correct path.
          * @param f  A callback which will be passed an {@link AnimationBuilder} to create the texture animation.
          */
-        void addItemAnimation(Identifier id, Processor<AnimationBuilder> f);
+        void addItemAnimation(ResourceLocation id, Processor<AnimationBuilder> f);
 
         /**
          * Add a texture animation for the given block ID.
@@ -235,14 +234,14 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id A block ID, which will be converted into the correct path.
          * @param f  A callback which will be passed an {@link AnimationBuilder} to create the texture animation.
          */
-        void addBlockAnimation(Identifier id, Processor<AnimationBuilder> f);
+        void addBlockAnimation(ResourceLocation id, Processor<AnimationBuilder> f);
 
         /**
          * Add a custom language. Translations must be added separately with {@link ClientResourcePackBuilder#addTranslations}.
          *
-         * @param def A {@link LanguageDefinition} for the desired language.
+         * @param def A {@link LanguageInfo} for the desired language.
          */
-        void addLanguage(LanguageDefinition def);
+        void addLanguage(LanguageInfo def);
 
         /**
          * Add a custom language. Translations must be added separately with {@link ClientResourcePackBuilder#addTranslations}.
@@ -272,7 +271,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the advancement, which will be converted into the correct path.
          * @param f  A callback which will be passed an {@link AdvancementBuilder} to create the advancement.
          */
-        void addAdvancement(Identifier id, Processor<AdvancementBuilder> f);
+        void addAdvancement(ResourceLocation id, Processor<AdvancementBuilder> f);
 
         /**
          * Add a Dimension Type with the given ID.
@@ -280,7 +279,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the dimension type, which will be converted into the correct path.
          * @param f A callback which will be passed an {@link DimensionTypeBuilder} to create the dimension type.
          */
-        void addDimensionType(Identifier id, Processor<DimensionTypeBuilder> f);
+        void addDimensionType(ResourceLocation id, Processor<DimensionTypeBuilder> f);
 
         /**
          * Add a Dimension with the given ID.
@@ -288,7 +287,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the dimension, which will be converted into the correct path.
          * @param f A callback which will be passed an {@link DimensionBuilder} to create the dimension.
          */
-        void addDimension(Identifier id, Processor<DimensionBuilder> f);
+        void addDimension(ResourceLocation id, Processor<DimensionBuilder> f);
 
         /**
          * Add a Biome with the given ID.
@@ -296,7 +295,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the biome, which will be converted into the correct path.
          * @param f A callback which will be passed an {@link BiomeBuilder} to create the biome.
          */
-        void addBiome(Identifier id, Processor<BiomeBuilder> f);
+        void addBiome(ResourceLocation id, Processor<BiomeBuilder> f);
 
         /**
          * Add a Carver with the given ID.
@@ -304,7 +303,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the carver, which will be converted into the correct path.
          * @param f A callback which will be passed an {@link ConfiguredCarverBuilder} to create the carver.
          */
-        void addConfiguredCarver(Identifier id, Processor<ConfiguredCarverBuilder> f);
+        void addConfiguredCarver(ResourceLocation id, Processor<ConfiguredCarverBuilder> f);
 
         /**
          * Add a Carver with the given ID.
@@ -312,7 +311,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the carver, which will be converted into the correct path.
          * @param f A callback which will be passed an {@link ConfiguredStructureFeatureBuilder} to create the carver.
          */
-        void addConfiguredStructureFeature(Identifier id, Processor<ConfiguredStructureFeatureBuilder> f);
+        void addConfiguredStructureFeature(ResourceLocation id, Processor<ConfiguredStructureFeatureBuilder> f);
 
         /**
          * Add a Feature with the given ID.
@@ -320,7 +319,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the feature, which will be converted into the correct path.
          * @param f A callback which will be passed an {@link ConfiguredFeatureBuilder} to create the feature.
          */
-        void addConfiguredFeature(Identifier id, Processor<ConfiguredFeatureBuilder> f);
+        void addConfiguredFeature(ResourceLocation id, Processor<ConfiguredFeatureBuilder> f);
 
         /**
          * Add a Feature with the given ID.
@@ -328,7 +327,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the feature, which will be converted into the correct path.
          * @param f A callback which will be passed an {@link PlacedFeatureBuilder} to create the feature.
          */
-        void addPlacedFeature(Identifier id, Processor<PlacedFeatureBuilder> f);
+        void addPlacedFeature(ResourceLocation id, Processor<PlacedFeatureBuilder> f);
 
         /**
          * Add a ConfiguredSurfaceBuilder with the given ID.
@@ -337,7 +336,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param f A callback which will be passed an {@link ConfiguredSurfaceBuilder}
          *          to create the configured surface .
          */
-        void addConfiguredSurfaceBuilder(Identifier id, Processor<ConfiguredSurfaceBuilder> f);
+        void addConfiguredSurfaceBuilder(ResourceLocation id, Processor<ConfiguredSurfaceBuilder> f);
 
         /**
          * Add a NoiseSettingsBuilder with the given ID.
@@ -346,7 +345,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param f A callback which will be passed an {@link NoiseSettingsBuilder}
          *          to create the noise settings .
          */
-        void addNoiseSettingsBuilder(Identifier id, Processor<NoiseSettingsBuilder> f);
+        void addNoiseSettingsBuilder(ResourceLocation id, Processor<NoiseSettingsBuilder> f);
 
         /**
          * Add a loot table with the given ID.
@@ -354,7 +353,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the loot table, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link LootTableBuilder} to create the loot table.
          */
-        void addLootTable(Identifier id, Processor<LootTableBuilder> f);
+        void addLootTable(ResourceLocation id, Processor<LootTableBuilder> f);
 
         /**
          * Add an item tag with the given ID.
@@ -362,7 +361,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the tag, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
          */
-        void addItemTag(Identifier id, Processor<TagBuilder> f);
+        void addItemTag(ResourceLocation id, Processor<TagBuilder> f);
 
         /**
          * Add a block tag with the given ID.
@@ -370,7 +369,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the tag, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
          */
-        void addBlockTag(Identifier id, Processor<TagBuilder> f);
+        void addBlockTag(ResourceLocation id, Processor<TagBuilder> f);
 
         /**
          * Add an entity type tag with the given ID.
@@ -378,7 +377,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the tag, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
          */
-        void addEntityTypeTag(Identifier id, Processor<TagBuilder> f);
+        void addEntityTypeTag(ResourceLocation id, Processor<TagBuilder> f);
 
         /**
          * Add a fluid tag with the given ID.
@@ -386,7 +385,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the tag, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
          */
-        void addFluidTag(Identifier id, Processor<TagBuilder> f);
+        void addFluidTag(ResourceLocation id, Processor<TagBuilder> f);
 
         /**
          * Add a function tag with the given ID.
@@ -394,7 +393,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the tag, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
          */
-        void addFunctionTag(Identifier id, Processor<TagBuilder> f);
+        void addFunctionTag(ResourceLocation id, Processor<TagBuilder> f);
 
         /**
          * Add a recipe with the given ID.
@@ -402,7 +401,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the recipe, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link GenericRecipeBuilder} to create the recipe.
          */
-        void addGenericRecipe(Identifier id, Processor<GenericRecipeBuilder> f);
+        void addGenericRecipe(ResourceLocation id, Processor<GenericRecipeBuilder> f);
 
         /**
          * Add a shaped crafting recipe with the given ID.
@@ -410,7 +409,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the recipe, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link ShapedRecipeBuilder} to create the recipe.
          */
-        void addShapedRecipe(Identifier id, Processor<ShapedRecipeBuilder> f);
+        void addShapedRecipe(ResourceLocation id, Processor<ShapedRecipeBuilder> f);
 
         /**
          * Add a shapeless crafting recipe with the given ID.
@@ -418,7 +417,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the recipe, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link ShapelessRecipeBuilder} to create the recipe.
          */
-        void addShapelessRecipe(Identifier id, Processor<ShapelessRecipeBuilder> f);
+        void addShapelessRecipe(ResourceLocation id, Processor<ShapelessRecipeBuilder> f);
 
         /**
          * Add a stonecutter recipe with the given ID.
@@ -426,7 +425,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the recipe, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link StonecuttingRecipeBuilder} to create the recipe.
          */
-        void addStonecuttingRecipe(Identifier id, Processor<StonecuttingRecipeBuilder> f);
+        void addStonecuttingRecipe(ResourceLocation id, Processor<StonecuttingRecipeBuilder> f);
 
         /**
          * Add a smelting recipe with the given ID.
@@ -434,7 +433,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the recipe, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link CookingRecipeBuilder} to create the recipe.
          */
-        void addSmeltingRecipe(Identifier id, Processor<CookingRecipeBuilder> f);
+        void addSmeltingRecipe(ResourceLocation id, Processor<CookingRecipeBuilder> f);
 
         /**
          * Add a blast furnace recipe with the given ID.
@@ -442,7 +441,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the recipe, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link CookingRecipeBuilder} to create the recipe.
          */
-        void addBlastingRecipe(Identifier id, Processor<CookingRecipeBuilder> f);
+        void addBlastingRecipe(ResourceLocation id, Processor<CookingRecipeBuilder> f);
 
         /**
          * Add a smoker recipe with the given ID.
@@ -450,7 +449,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the recipe, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link CookingRecipeBuilder} to create the recipe.
          */
-        void addSmokingRecipe(Identifier id, Processor<CookingRecipeBuilder> f);
+        void addSmokingRecipe(ResourceLocation id, Processor<CookingRecipeBuilder> f);
 
         /**
          * Add a campfire recipe with the given ID.
@@ -458,7 +457,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the recipe, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link CookingRecipeBuilder} to create the recipe.
          */
-        void addCampfireRecipe(Identifier id, Processor<CookingRecipeBuilder> f);
+        void addCampfireRecipe(ResourceLocation id, Processor<CookingRecipeBuilder> f);
 
         /**
          * Add a smithing table recipe with the given ID.
@@ -466,6 +465,6 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the recipe, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link CookingRecipeBuilder} to create the recipe.
          */
-        void addSmithingRecipe(Identifier id, Processor<SmithingRecipeBuilder> f);
+        void addSmithingRecipe(ResourceLocation id, Processor<SmithingRecipeBuilder> f);
     }
 }

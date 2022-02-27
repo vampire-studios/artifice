@@ -34,12 +34,11 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.SharedConstants;
-import net.minecraft.client.resource.language.LanguageDefinition;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.resource.pack.ResourcePackProfile;
-import net.minecraft.resource.pack.ResourcePackSource;
-import net.minecraft.resource.pack.metadata.ResourceMetadataReader;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.resources.language.LanguageInfo;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.server.packs.repository.PackSource;
 import org.apache.commons.io.input.NullInputStream;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
@@ -51,12 +50,12 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class ArtificeResourcePackImpl implements ArtificeResourcePack {
-    private final ResourceType type;
+    private final net.minecraft.server.packs.PackType type;
     @Nullable
-    private final Identifier identifier;
+    private final ResourceLocation identifier;
     private final Set<String> namespaces = new HashSet<>();
-    private final Map<Identifier, ArtificeResource> resources = new HashMap<>();
-    private final Set<LanguageDefinition> languages = new HashSet<>();
+    private final Map<ResourceLocation, ArtificeResource> resources = new HashMap<>();
+    private final Set<LanguageInfo> languages = new HashSet<>();
     private final JsonResource<JsonObject> metadata;
 
     private String description;
@@ -66,13 +65,13 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
     private boolean overwrite;
 
     @SuppressWarnings("unchecked")
-    public <T extends ResourcePackBuilder> ArtificeResourcePackImpl(ResourceType type, Identifier identifier, Consumer<T> registerResources) {
+    public <T extends ResourcePackBuilder> ArtificeResourcePackImpl(net.minecraft.server.packs.PackType type, ResourceLocation identifier, Consumer<T> registerResources) {
         this.type = type;
         this.identifier = identifier;
         registerResources.accept((T) new ArtificeResourcePackBuilder());
 
         JsonObject packMeta = new JsonObjectBuilder()
-                        .add("pack_format", SharedConstants.getGameVersion().getPackVersion())
+                        .add("pack_format", SharedConstants.getCurrentVersion().getPackVersion())
                         .add("description", description != null ? description : "In-memory resource pack created with Artifice")
                         .build();
 
@@ -97,11 +96,11 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 
     @SuppressWarnings("MethodCallSideOnly")
     private void addLanguages(JsonObject languageMeta) {
-        for (LanguageDefinition def : languages) {
+        for (LanguageInfo def : languages) {
             languageMeta.add(def.getCode(), new JsonObjectBuilder()
                             .add("name", def.getName())
                             .add("region", def.getRegion())
-                            .add("bidirectional", def.isRightToLeft())
+                            .add("bidirectional", def.isBidirectional())
                             .build());
         }
     }
@@ -181,12 +180,12 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
             JsonObject packMeta;
             if (type.equals("assets")) {
                 packMeta = new JsonObjectBuilder()
-                        .add("pack_format", SharedConstants.getGameVersion().getPackVersion(PackType.RESOURCE))
+                        .add("pack_format", SharedConstants.getCurrentVersion().getPackVersion(PackType.RESOURCE))
                         .add("description", description != null ? description : "In-memory resource pack created with Artifice")
                         .build();
             } else {
                 packMeta = new JsonObjectBuilder()
-                        .add("pack_format", SharedConstants.getGameVersion().getPackVersion(PackType.DATA))
+                        .add("pack_format", SharedConstants.getCurrentVersion().getPackVersion(PackType.DATA))
                         .add("description", description != null ? description : "In-memory data pack created with Artifice")
                         .build();
             }
@@ -247,226 +246,226 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
         }
 
         @Override
-        public void add(Identifier id, ArtificeResource<?> resource) {
+        public void add(ResourceLocation id, ArtificeResource<?> resource) {
             ArtificeResourcePackImpl.this.resources.put(id, resource);
             ArtificeResourcePackImpl.this.namespaces.add(id.getNamespace());
         }
 
         @Override
-        public void addItemModel(Identifier id, Processor<ModelBuilder> f) {
+        public void addItemModel(ResourceLocation id, Processor<ModelBuilder> f) {
             this.add("models/item/", id, ".json", f, ModelBuilder::new);
         }
 
         @Override
-        public void addBlockModel(Identifier id, Processor<ModelBuilder> f) {
+        public void addBlockModel(ResourceLocation id, Processor<ModelBuilder> f) {
             this.add("models/block/", id, ".json", f, ModelBuilder::new);
         }
 
         @Override
-        public void addBlockState(Identifier id, Processor<BlockStateBuilder> f) {
+        public void addBlockState(ResourceLocation id, Processor<BlockStateBuilder> f) {
             this.add("blockstates/", id, ".json", f, BlockStateBuilder::new);
         }
 
         @Override
-        public void addTranslations(Identifier id, Processor<TranslationBuilder> f) {
+        public void addTranslations(ResourceLocation id, Processor<TranslationBuilder> f) {
             this.add("lang/", id, ".json", f, TranslationBuilder::new);
         }
 
         @Override
-        public void addParticle(Identifier id, Processor<ParticleBuilder> f) {
+        public void addParticle(ResourceLocation id, Processor<ParticleBuilder> f) {
             this.add("particles/", id, ".json", f, ParticleBuilder::new);
         }
 
         @Override
-        public void addItemAnimation(Identifier id, Processor<AnimationBuilder> f) {
+        public void addItemAnimation(ResourceLocation id, Processor<AnimationBuilder> f) {
             this.add("textures/item/", id, ".mcmeta", f, AnimationBuilder::new);
         }
 
         @Override
-        public void addBlockAnimation(Identifier id, Processor<AnimationBuilder> f) {
+        public void addBlockAnimation(ResourceLocation id, Processor<AnimationBuilder> f) {
             this.add("textures/block/", id, ".mcmeta", f, AnimationBuilder::new);
         }
 
         @Override
-        public void addLanguage(LanguageDefinition def) {
+        public void addLanguage(LanguageInfo def) {
             ArtificeResourcePackImpl.this.languages.add(def);
         }
 
         @Environment(EnvType.CLIENT)
         @Override
         public void addLanguage(String code, String region, String name, boolean rtl) {
-            this.addLanguage(new LanguageDefinition(code, region, name, rtl));
+            this.addLanguage(new LanguageInfo(code, region, name, rtl));
         }
 
         @Override
-        public void addAdvancement(Identifier id, Processor<AdvancementBuilder> f) {
+        public void addAdvancement(ResourceLocation id, Processor<AdvancementBuilder> f) {
             this.add("advancements/", id, ".json", f, AdvancementBuilder::new);
         }
 
         @Override
-        public void addDimensionType(Identifier id, Processor<DimensionTypeBuilder> f) {
+        public void addDimensionType(ResourceLocation id, Processor<DimensionTypeBuilder> f) {
             this.add("dimension_type/", id, ".json", f, DimensionTypeBuilder::new);
         }
 
         @Override
-        public void addDimension(Identifier id, Processor<DimensionBuilder> f) {
+        public void addDimension(ResourceLocation id, Processor<DimensionBuilder> f) {
             this.add("dimension/", id, ".json", f, DimensionBuilder::new);
         }
 
         @Override
-        public void addBiome(Identifier id, Processor<BiomeBuilder> f) {
+        public void addBiome(ResourceLocation id, Processor<BiomeBuilder> f) {
             this.add("worldgen/biome/", id, ".json", f, BiomeBuilder::new);
         }
 
         @Override
-        public void addConfiguredCarver(Identifier id, Processor<ConfiguredCarverBuilder> f) {
+        public void addConfiguredCarver(ResourceLocation id, Processor<ConfiguredCarverBuilder> f) {
             this.add("worldgen/configured_carver/", id, ".json", f, ConfiguredCarverBuilder::new);
         }
 
         @Override
-        public void addConfiguredStructureFeature(Identifier id, Processor<ConfiguredStructureFeatureBuilder> f) {
+        public void addConfiguredStructureFeature(ResourceLocation id, Processor<ConfiguredStructureFeatureBuilder> f) {
             this.add("worldgen/configured_structure_feature/", id, ".json", f, ConfiguredStructureFeatureBuilder::new);
         }
 
         @Override
-        public void addConfiguredFeature(Identifier id, Processor<ConfiguredFeatureBuilder> f) {
+        public void addConfiguredFeature(ResourceLocation id, Processor<ConfiguredFeatureBuilder> f) {
             this.add("worldgen/configured_feature/", id, ".json", f, ConfiguredFeatureBuilder::new);
         }
 
         @Override
-        public void addPlacedFeature(Identifier id, Processor<PlacedFeatureBuilder> f) {
+        public void addPlacedFeature(ResourceLocation id, Processor<PlacedFeatureBuilder> f) {
             this.add("worldgen/placed_feature/", id, ".json", f, PlacedFeatureBuilder::new);
         }
 
         //remove?, this has been moved to surface rules within noise within dimensions from surface builders
-        public void addConfiguredSurfaceBuilder(Identifier id, Processor<ConfiguredSurfaceBuilder> f) {
+        public void addConfiguredSurfaceBuilder(ResourceLocation id, Processor<ConfiguredSurfaceBuilder> f) {
             this.add("worldgen/configured_surface_builder/", id, ".json", f, ConfiguredSurfaceBuilder::new);
         }
 
         @Override
-        public void addNoiseSettingsBuilder(Identifier id, Processor<NoiseSettingsBuilder> f) {
+        public void addNoiseSettingsBuilder(ResourceLocation id, Processor<NoiseSettingsBuilder> f) {
             this.add("worldgen/noise_settings/", id, ".json", f, NoiseSettingsBuilder::new);
         }
 
         @Override
-        public void addLootTable(Identifier id, Processor<LootTableBuilder> f) {
+        public void addLootTable(ResourceLocation id, Processor<LootTableBuilder> f) {
             this.add("loot_tables/", id, ".json", f, LootTableBuilder::new);
         }
 
         @Override
-        public void addItemTag(Identifier id, Processor<TagBuilder> f) {
+        public void addItemTag(ResourceLocation id, Processor<TagBuilder> f) {
             this.add("tags/items/", id, ".json", f, TagBuilder::new);
         }
 
         @Override
-        public void addBlockTag(Identifier id, Processor<TagBuilder> f) {
+        public void addBlockTag(ResourceLocation id, Processor<TagBuilder> f) {
             this.add("tags/blocks/", id, ".json", f, TagBuilder::new);
         }
 
         @Override
-        public void addEntityTypeTag(Identifier id, Processor<TagBuilder> f) {
+        public void addEntityTypeTag(ResourceLocation id, Processor<TagBuilder> f) {
             this.add("tags/entity_types/", id, ".json", f, TagBuilder::new);
         }
 
         @Override
-        public void addFluidTag(Identifier id, Processor<TagBuilder> f) {
+        public void addFluidTag(ResourceLocation id, Processor<TagBuilder> f) {
             this.add("tags/fluids/", id, ".json", f, TagBuilder::new);
         }
 
         @Override
-        public void addFunctionTag(Identifier id, Processor<TagBuilder> f) {
+        public void addFunctionTag(ResourceLocation id, Processor<TagBuilder> f) {
             this.add("tags/functions/", id, ".json", f, TagBuilder::new);
         }
 
         @Override
-        public void addGenericRecipe(Identifier id, Processor<GenericRecipeBuilder> f) {
+        public void addGenericRecipe(ResourceLocation id, Processor<GenericRecipeBuilder> f) {
             this.add("recipes/", id, ".json", f, GenericRecipeBuilder::new);
         }
 
         @Override
-        public void addShapedRecipe(Identifier id, Processor<ShapedRecipeBuilder> f) {
+        public void addShapedRecipe(ResourceLocation id, Processor<ShapedRecipeBuilder> f) {
             this.add("recipes/", id, ".json", f, ShapedRecipeBuilder::new);
         }
 
         @Override
-        public void addShapelessRecipe(Identifier id, Processor<ShapelessRecipeBuilder> f) {
+        public void addShapelessRecipe(ResourceLocation id, Processor<ShapelessRecipeBuilder> f) {
             this.add("recipes/", id, ".json", f, ShapelessRecipeBuilder::new);
         }
 
         @Override
-        public void addStonecuttingRecipe(Identifier id, Processor<StonecuttingRecipeBuilder> f) {
+        public void addStonecuttingRecipe(ResourceLocation id, Processor<StonecuttingRecipeBuilder> f) {
             this.add("recipes/", id, ".json", f, StonecuttingRecipeBuilder::new);
         }
 
         @Override
-        public void addSmeltingRecipe(Identifier id, Processor<CookingRecipeBuilder> f) {
-            this.add("recipes/", id, ".json", r -> f.process(r.type(new Identifier("smelting"))), CookingRecipeBuilder::new);
+        public void addSmeltingRecipe(ResourceLocation id, Processor<CookingRecipeBuilder> f) {
+            this.add("recipes/", id, ".json", r -> f.process(r.type(new ResourceLocation("smelting"))), CookingRecipeBuilder::new);
         }
 
         @Override
-        public void addBlastingRecipe(Identifier id, Processor<CookingRecipeBuilder> f) {
-            this.add("recipes/", id, ".json", r -> f.process(r.type(new Identifier("blasting"))), CookingRecipeBuilder::new);
+        public void addBlastingRecipe(ResourceLocation id, Processor<CookingRecipeBuilder> f) {
+            this.add("recipes/", id, ".json", r -> f.process(r.type(new ResourceLocation("blasting"))), CookingRecipeBuilder::new);
         }
 
         @Override
-        public void addSmokingRecipe(Identifier id, Processor<CookingRecipeBuilder> f) {
-            this.add("recipes/", id, ".json", r -> f.process(r.type(new Identifier("smoking"))), CookingRecipeBuilder::new);
+        public void addSmokingRecipe(ResourceLocation id, Processor<CookingRecipeBuilder> f) {
+            this.add("recipes/", id, ".json", r -> f.process(r.type(new ResourceLocation("smoking"))), CookingRecipeBuilder::new);
         }
 
         @Override
-        public void addCampfireRecipe(Identifier id, Processor<CookingRecipeBuilder> f) {
-            this.add("recipes/", id, ".json", r -> f.process(r.type(new Identifier("campfire_cooking"))), CookingRecipeBuilder::new);
+        public void addCampfireRecipe(ResourceLocation id, Processor<CookingRecipeBuilder> f) {
+            this.add("recipes/", id, ".json", r -> f.process(r.type(new ResourceLocation("campfire_cooking"))), CookingRecipeBuilder::new);
         }
 
         @Override
-        public void addSmithingRecipe(Identifier id, Processor<SmithingRecipeBuilder> f) {
-            this.add("recipes/", id, ".json", r -> f.process(r.type(new Identifier("blasting"))), SmithingRecipeBuilder::new);
+        public void addSmithingRecipe(ResourceLocation id, Processor<SmithingRecipeBuilder> f) {
+            this.add("recipes/", id, ".json", r -> f.process(r.type(new ResourceLocation("blasting"))), SmithingRecipeBuilder::new);
         }
 
-        private <T extends TypedJsonBuilder<? extends JsonResource>> void add(String path, Identifier id, String ext, Processor<T> f, Supplier<T> ctor) {
+        private <T extends TypedJsonBuilder<? extends JsonResource>> void add(String path, ResourceLocation id, String ext, Processor<T> f, Supplier<T> ctor) {
             this.add(IdUtils.wrapPath(path, id, ext), f.process(ctor.get()).build());
         }
     }
 
     @Override
-    public InputStream openRoot(String fname) {
+    public InputStream getRootResource(String fname) {
         if (fname.equals("pack.mcmeta")) return metadata.toInputStream();
         return new NullInputStream(0);
     }
 
     @Override
-    public InputStream open(ResourceType type, Identifier id) throws IOException {
-        if (!contains(type, id)) throw new FileNotFoundException(id.getPath());
+    public InputStream getResource(net.minecraft.server.packs.PackType type, ResourceLocation id) throws IOException {
+        if (!hasResource(type, id)) throw new FileNotFoundException(id.getPath());
         return this.resources.get(id).toInputStream();
     }
 
     @Override
-    public Collection<Identifier> findResources(ResourceType type, String namespace, String prefix, int maxDepth, Predicate<String> pathFilter) {
+    public Collection<ResourceLocation> getResources(net.minecraft.server.packs.PackType type, String namespace, String prefix, int maxDepth, Predicate<String> pathFilter) {
         if (type != this.type) return new HashSet<>();
-        Set<Identifier> keys = new HashSet<>(this.resources.keySet());
+        Set<ResourceLocation> keys = new HashSet<>(this.resources.keySet());
         keys.removeIf(id -> !id.getPath().startsWith(prefix) || !pathFilter.test(id.getPath()));
         return keys;
     }
 
     @Override
-    public boolean contains(ResourceType type, Identifier id) {
+    public boolean hasResource(net.minecraft.server.packs.PackType type, ResourceLocation id) {
         return type == this.type && this.resources.containsKey(id);
     }
 
     @Override
-    public <T> T parseMetadata(ResourceMetadataReader<T> reader) {
-        return metadata.getData().has(reader.getKey())
-                        ? reader.fromJson(metadata.getData().getAsJsonObject(reader.getKey()))
+    public <T> T getMetadataSection(MetadataSectionSerializer<T> reader) {
+        return metadata.getData().has(reader.getMetadataSectionName())
+                        ? reader.fromJson(metadata.getData().getAsJsonObject(reader.getMetadataSectionName()))
                         : null;
     }
 
     @Override
-    public Set<String> getNamespaces(ResourceType type) {
+    public Set<String> getNamespaces(net.minecraft.server.packs.PackType type) {
         return new HashSet<>(this.namespaces);
     }
 
     @Override
-    public ResourceType getType() {
+    public net.minecraft.server.packs.PackType getType() {
         return this.type;
     }
 
@@ -494,11 +493,11 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
         if (displayName == null) {
             switch (this.type) {
                 case CLIENT_RESOURCES -> {
-                    Identifier aid = ArtificeRegistry.ASSETS.getId(this);
+                    ResourceLocation aid = ArtificeRegistry.ASSETS.getKey(this);
                     return displayName = aid != null ? aid.toString() : "Generated Resources";
                 }
                 case SERVER_DATA -> {
-                    Identifier did = ArtificeRegistry.DATA.getId(this);
+                    ResourceLocation did = ArtificeRegistry.DATA.getKey(this);
                     return displayName = did != null ? did.toString() : "Generated Data";
                 }
             }
@@ -506,25 +505,25 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
         return displayName;
     }
 
-    public static ResourcePackSource ARTIFICE_RESOURCE_PACK_SOURCE = ResourcePackSource.nameAndSource("pack.source.artifice");
+    public static PackSource ARTIFICE_RESOURCE_PACK_SOURCE = PackSource.decorating("pack.source.artifice");
 
     @Override
     @Environment(EnvType.CLIENT)
-    public <T extends ResourcePackProfile> ClientOnly<ResourcePackProfile> toClientResourcePackProfile(ResourcePackProfile.Factory factory) {
-        ResourcePackProfile profile;
+    public <T extends Pack> ClientOnly<Pack> toClientResourcePackProfile(Pack.PackConstructor factory) {
+        Pack profile;
         String id = identifier == null ? "null" : identifier.toString();
         if (!this.overwrite){
-             profile = new ArtificeResourcePackContainer(this.optional, this.visible, Objects.requireNonNull(ResourcePackProfile.of(
+             profile = new ArtificeResourcePackContainer(this.optional, this.visible, Objects.requireNonNull(Pack.create(
                      id,
                     false, () -> this, factory,
-                    this.optional ? ResourcePackProfile.InsertionPosition.TOP : ResourcePackProfile.InsertionPosition.BOTTOM,
+                    this.optional ? Pack.Position.TOP : Pack.Position.BOTTOM,
                     ARTIFICE_RESOURCE_PACK_SOURCE
             )));
         } else {
-            profile = new ArtificeResourcePackContainer(false, false, Objects.requireNonNull(ResourcePackProfile.of(
+            profile = new ArtificeResourcePackContainer(false, false, Objects.requireNonNull(Pack.create(
                     id,
                     true, () -> this, factory,
-                    ResourcePackProfile.InsertionPosition.TOP,
+                    Pack.Position.TOP,
                     ARTIFICE_RESOURCE_PACK_SOURCE
             )));
         }
@@ -534,21 +533,21 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
     }
 
     @Environment(EnvType.CLIENT)
-    public ArtificeResourcePackContainer getAssetsContainer(ResourcePackProfile.Factory factory) {
+    public ArtificeResourcePackContainer getAssetsContainer(Pack.PackConstructor factory) {
         return (ArtificeResourcePackContainer) toClientResourcePackProfile(factory).get();
     }
 
     @Override
-    public ResourcePackProfile toServerResourcePackProfile(ResourcePackProfile.Factory factory) {
-        return ResourcePackProfile.of(
+    public Pack toServerResourcePackProfile(Pack.PackConstructor factory) {
+        return Pack.create(
                 identifier == null ? "null" : identifier.toString(),
                 !optional, () -> this, factory,
-                ResourcePackProfile.InsertionPosition.BOTTOM,
+                Pack.Position.BOTTOM,
                 ARTIFICE_RESOURCE_PACK_SOURCE
         );
     }
 
-    public ResourcePackProfile getDataContainer(ResourcePackProfile.Factory factory) {
+    public Pack getDataContainer(Pack.PackConstructor factory) {
         return toServerResourcePackProfile(factory);
     }
 }

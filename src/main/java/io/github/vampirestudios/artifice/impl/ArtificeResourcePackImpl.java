@@ -8,6 +8,7 @@ import com.mojang.bridge.game.PackType;
 import io.github.vampirestudios.artifice.api.ArtificeResourcePack;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.assets.*;
 import io.github.vampirestudios.artifice.api.builder.data.AdvancementBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.LootTableBuilder;
@@ -354,28 +355,28 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
         }
 
         @Override
-        public void addItemTag(Identifier id, Processor<TagBuilder> f) {
-            this.add("tags/items/", id, ".json", f, TagBuilder::new);
+        public void addItemTag(Identifier id, TagBuilder f) {
+            this.add("tags/items/", id, ".json", f);
         }
 
         @Override
-        public void addBlockTag(Identifier id, Processor<TagBuilder> f) {
-            this.add("tags/blocks/", id, ".json", f, TagBuilder::new);
+        public void addBlockTag(Identifier id, TagBuilder f) {
+            this.add("tags/blocks/", id, ".json", f);
         }
 
         @Override
-        public void addEntityTypeTag(Identifier id, Processor<TagBuilder> f) {
-            this.add("tags/entity_types/", id, ".json", f, TagBuilder::new);
+        public void addEntityTypeTag(Identifier id, TagBuilder f) {
+            this.add("tags/entity_types/", id, ".json", f);
         }
 
         @Override
-        public void addFluidTag(Identifier id, Processor<TagBuilder> f) {
-            this.add("tags/fluids/", id, ".json", f, TagBuilder::new);
+        public void addFluidTag(Identifier id, TagBuilder f) {
+            this.add("tags/fluids/", id, ".json", f);
         }
 
         @Override
-        public void addFunctionTag(Identifier id, Processor<TagBuilder> f) {
-            this.add("tags/functions/", id, ".json", f, TagBuilder::new);
+        public void addFunctionTag(Identifier id, TagBuilder f) {
+            this.add("tags/functions/", id, ".json", f);
         }
 
         @Override
@@ -425,6 +426,10 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 
         private <T extends TypedJsonBuilder<? extends JsonResource>> void add(String path, Identifier id, String ext, Processor<T> f, Supplier<T> ctor) {
             this.add(IdUtils.wrapPath(path, id, ext), f.process(ctor.get()).build());
+        }
+
+        private <T extends TypedJsonObject> void add(String path, Identifier id, String ext, T f) {
+            this.add(IdUtils.wrapPath(path, id, ext), new JsonResource(f.getData()));
         }
     }
 

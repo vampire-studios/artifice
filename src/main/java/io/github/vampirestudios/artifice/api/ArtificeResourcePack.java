@@ -362,7 +362,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the tag, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
          */
-        void addItemTag(Identifier id, Processor<TagBuilder> f);
+        void addItemTag(Identifier id, TagBuilder f);
 
         /**
          * Add a block tag with the given ID.
@@ -370,7 +370,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the tag, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
          */
-        void addBlockTag(Identifier id, Processor<TagBuilder> f);
+        void addBlockTag(Identifier id, TagBuilder f);
 
         /**
          * Add an entity type tag with the given ID.
@@ -378,7 +378,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the tag, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
          */
-        void addEntityTypeTag(Identifier id, Processor<TagBuilder> f);
+        void addEntityTypeTag(Identifier id, TagBuilder f);
 
         /**
          * Add a fluid tag with the given ID.
@@ -386,7 +386,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the tag, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
          */
-        void addFluidTag(Identifier id, Processor<TagBuilder> f);
+        void addFluidTag(Identifier id, TagBuilder f);
 
         /**
          * Add a function tag with the given ID.
@@ -394,7 +394,7 @@ public interface ArtificeResourcePack extends ResourcePack, ServerResourcePackPr
          * @param id The ID of the tag, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
          */
-        void addFunctionTag(Identifier id, Processor<TagBuilder> f);
+        void addFunctionTag(Identifier id, TagBuilder f);
 
         /**
          * Add a recipe with the given ID.

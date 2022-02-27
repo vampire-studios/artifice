@@ -2,16 +2,15 @@ package io.github.vampirestudios.artifice.api.builder.data;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
-import io.github.vampirestudios.artifice.api.resource.JsonResource;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import net.minecraft.util.Identifier;
 
 /**
  * Builder for tag files ({@code namespace:tags/type/tagid.json}).
  * @see <a href="https://minecraft.gamepedia.com/Tag" target="_blank">Minecraft Wiki</a>
  */
-public final class TagBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
-    public TagBuilder() { super(new JsonObject(), JsonResource::new); }
+public final class TagBuilder extends TypedJsonObject {
+    public TagBuilder() { super(new JsonObject()); }
 
     /**
      * Set whether this tag should override or append to versions of the same tag in lower priority data packs.
@@ -29,7 +28,7 @@ public final class TagBuilder extends TypedJsonBuilder<JsonResource<JsonObject>>
      * @return this
      */
     public TagBuilder value(Identifier id) {
-        with("values", JsonArray::new, values -> values.add(id.toString()));
+        join("values", arrayOf(id.toString()) );
         return this;
     }
 
@@ -39,7 +38,11 @@ public final class TagBuilder extends TypedJsonBuilder<JsonResource<JsonObject>>
      * @return this
      */
     public TagBuilder values(Identifier... ids) {
-        with("values", JsonArray::new, values -> { for(Identifier id : ids) values.add(id.toString()); });
+        JsonArray array = new JsonArray();
+        for(Identifier id : ids){
+            array.add(id.toString());
+        }
+        join("values", array);
         return this;
     }
 
@@ -49,7 +52,7 @@ public final class TagBuilder extends TypedJsonBuilder<JsonResource<JsonObject>>
      * @return this
      */
     public TagBuilder include(Identifier tagId) {
-        with("values", JsonArray::new, values -> values.add("#"+tagId.toString()));
+        join("values", arrayOf("#"+tagId.toString()));
         return this;
     }
 }

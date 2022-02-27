@@ -5,9 +5,9 @@ import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.Processor;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.GenerationStep;
 
 public class BiomeBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
     public BiomeBuilder() {
@@ -15,12 +15,12 @@ public class BiomeBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
         this.root.add("carvers", new JsonObject());
         this.root.add("starts", new JsonArray());
         this.root.add("features", new JsonArray());
-        for (GenerationStep.Feature step : GenerationStep.Feature.values()) {
+        for (GenerationStep.Decoration step : GenerationStep.Decoration.values()) {
             this.root.getAsJsonArray("features").add(new JsonArray());
         }
         this.root.add("spawn_costs", new JsonObject());
         this.root.add("spawners", new JsonObject());
-        for (SpawnGroup spawnGroup : SpawnGroup.values()) {
+        for (MobCategory spawnGroup : MobCategory.values()) {
             this.root.getAsJsonObject("spawners").add(spawnGroup.getName(), new JsonArray());
         }
     }
@@ -45,7 +45,7 @@ public class BiomeBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
         return this;
     }
 
-    public BiomeBuilder category(Biome.Category category) {
+    public BiomeBuilder category(Biome.BiomeCategory category) {
         this.root.addProperty("category", category.getName());
         return this;
     }
@@ -63,31 +63,31 @@ public class BiomeBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
         return this;
     }
 
-    public BiomeBuilder addSpawnEntry(SpawnGroup spawnGroup, Processor<BiomeSpawnEntryBuilder> biomeSpawnEntryBuilderProcessor) {
+    public BiomeBuilder addSpawnEntry(MobCategory spawnGroup, Processor<BiomeSpawnEntryBuilder> biomeSpawnEntryBuilderProcessor) {
         this.root.getAsJsonObject("spawners").get(spawnGroup.getName()).getAsJsonArray()
                 .add(biomeSpawnEntryBuilderProcessor.process(new BiomeSpawnEntryBuilder()).buildTo(new JsonObject()));
         return this;
     }
 
-    private BiomeBuilder addCarver(GenerationStep.Carver carver, String[] configuredCaverIDs) {
+    private BiomeBuilder addCarver(GenerationStep.Carving carver, String[] configuredCaverIDs) {
         for (String configuredCaverID : configuredCaverIDs)
             this.root.getAsJsonObject("carvers").getAsJsonArray(carver.getName()).add(configuredCaverID);
         return this;
     }
 
     public BiomeBuilder addAirCarvers(String... configuredCarverIds) {
-        this.root.getAsJsonObject("carvers").add(GenerationStep.Carver.AIR.getName(), new JsonArray());
-        this.addCarver(GenerationStep.Carver.AIR, configuredCarverIds);
+        this.root.getAsJsonObject("carvers").add(GenerationStep.Carving.AIR.getName(), new JsonArray());
+        this.addCarver(GenerationStep.Carving.AIR, configuredCarverIds);
         return this;
     }
 
     public BiomeBuilder addLiquidCarvers(String... configuredCarverIds) {
-        this.root.getAsJsonObject("carvers").add(GenerationStep.Carver.LIQUID.getName(), new JsonArray());
-        this.addCarver(GenerationStep.Carver.LIQUID, configuredCarverIds);
+        this.root.getAsJsonObject("carvers").add(GenerationStep.Carving.LIQUID.getName(), new JsonArray());
+        this.addCarver(GenerationStep.Carving.LIQUID, configuredCarverIds);
         return this;
     }
 
-    public BiomeBuilder addFeaturesByStep(GenerationStep.Feature step, String... featureIDs) {
+    public BiomeBuilder addFeaturesByStep(GenerationStep.Decoration step, String... featureIDs) {
         for (String featureID : featureIDs)
             this.root.getAsJsonArray("features").get(step.ordinal()).getAsJsonArray().add(featureID);
         return this;

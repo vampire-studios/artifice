@@ -1,0 +1,24 @@
+accessWidener v2 named
+transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData ZERO Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData Y Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData SHIFT_X Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData SHIFT_Z Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData BASE_3D_NOISE Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData CONTINENTS Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData EROSION Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData RIDGES Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData FACTOR Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData DEPTH Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData SLOPED_CHEESE Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData CONTINENTS_LARGE Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData EROSION_LARGE Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData FACTOR_LARGE Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData DEPTH_LARGE Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData SLOPED_CHEESE_LARGE Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData SLOPED_CHEESE_END Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData SPAGHETTI_ROUGHNESS_FUNCTION Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData ENTRANCES Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData NOODLE Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData PILLARS Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData SPAGHETTI_2D_THICKNESS_MODULATOR Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData SPAGHETTI_2D Lnet/minecraft/resources/ResourceKey;

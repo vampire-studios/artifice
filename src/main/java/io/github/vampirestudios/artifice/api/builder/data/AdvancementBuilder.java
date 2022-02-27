@@ -6,8 +6,8 @@ import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.Processor;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Builder for advancement files ({@code namespace:advancements/advid.json}).
@@ -32,7 +32,7 @@ public final class AdvancementBuilder extends TypedJsonBuilder<JsonResource<Json
      * @param id The parent advancement ID ({@code namespace:advid}).
      * @return this
      */
-    public AdvancementBuilder parent(Identifier id) {
+    public AdvancementBuilder parent(ResourceLocation id) {
         root.addProperty("parent", id.toString());
         return this;
     }
@@ -80,7 +80,7 @@ public final class AdvancementBuilder extends TypedJsonBuilder<JsonResource<Json
          * @param item The item ID.
          * @return this
          */
-        public Display icon(Identifier item) { return icon(item, null); }
+        public Display icon(ResourceLocation item) { return icon(item, null); }
 
         /**
          * Set the icon item of this advancement.
@@ -88,7 +88,7 @@ public final class AdvancementBuilder extends TypedJsonBuilder<JsonResource<Json
          * @param nbt A string containing the JSON-serialized NBT of the item.
          * @return this
          */
-        public Display icon(Identifier item, String nbt) {
+        public Display icon(ResourceLocation item, String nbt) {
             with("icon", JsonObject::new, icon -> {
                icon.addProperty("item", item.toString());
                if(nbt != null) icon.addProperty("nbt", nbt);
@@ -111,8 +111,8 @@ public final class AdvancementBuilder extends TypedJsonBuilder<JsonResource<Json
          * @param title The title.
          * @return this
          */
-        public Display title(Text title) {
-            root.add("title", Text.Serializer.toJsonTree(title));
+        public Display title(Component title) {
+            root.add("title", Component.Serializer.toJsonTree(title));
             return this;
         }
 
@@ -131,7 +131,7 @@ public final class AdvancementBuilder extends TypedJsonBuilder<JsonResource<Json
          * @param id The texture path ({@code namespace:textures/gui/advancements/backgrounds/bgname.png}).
          * @return this
          */
-        public Display background(Identifier id) {
+        public Display background(ResourceLocation id) {
             root.addProperty("background", id.toString());
             return this;
         }
@@ -151,8 +151,8 @@ public final class AdvancementBuilder extends TypedJsonBuilder<JsonResource<Json
          * @param desc The description.
          * @return this
          */
-        public Display description(Text desc) {
-            root.add("description", Text.Serializer.toJsonTree(desc));
+        public Display description(Component desc) {
+            root.add("description", Component.Serializer.toJsonTree(desc));
             return this;
         }
 
@@ -214,7 +214,7 @@ public final class AdvancementBuilder extends TypedJsonBuilder<JsonResource<Json
          * @return this
          * @see <a href="https://minecraft.gamepedia.com/Advancements#List_of_triggers" target="_blank">Minecraft Wiki</a>
          */
-        public Criteria trigger(Identifier id) {
+        public Criteria trigger(ResourceLocation id) {
             root.addProperty("trigger", id.toString());
             return this;
         }

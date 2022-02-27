@@ -6,7 +6,7 @@ import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Builder for a particle definition ({@code namespace:particles/particleid.json}).
@@ -21,7 +21,7 @@ public final class ParticleBuilder extends TypedJsonBuilder<JsonResource<JsonObj
      * @param id The texure ID ({@code namespace:textureid}).
      * @return this
      */
-    public ParticleBuilder texture(Identifier id) {
+    public ParticleBuilder texture(ResourceLocation id) {
         with("textures", JsonArray::new, textures -> textures.add(id.toString()));
         return this;
     }

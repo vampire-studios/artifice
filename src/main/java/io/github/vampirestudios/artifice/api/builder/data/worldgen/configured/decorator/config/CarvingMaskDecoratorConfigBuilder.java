@@ -1,6 +1,6 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.decorator.config;
 
-import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.level.levelgen.GenerationStep;
 
 public class CarvingMaskDecoratorConfigBuilder extends DecoratorConfigBuilder {
 
@@ -13,7 +13,7 @@ public class CarvingMaskDecoratorConfigBuilder extends DecoratorConfigBuilder {
         return this;
     }
 
-    public CarvingMaskDecoratorConfigBuilder step(GenerationStep.Carver step) {
+    public CarvingMaskDecoratorConfigBuilder step(GenerationStep.Carving step) {
         this.root.addProperty("step", step.getName());
         return this;
     }

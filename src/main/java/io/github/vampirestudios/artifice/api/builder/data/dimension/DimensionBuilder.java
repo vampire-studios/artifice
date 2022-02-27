@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.Processor;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 public class DimensionBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
     public DimensionBuilder() {
@@ -16,7 +16,7 @@ public class DimensionBuilder extends TypedJsonBuilder<JsonResource<JsonObject>>
      * @param identifier
      * @return
      */
-    public DimensionBuilder dimensionType(Identifier identifier) {
+    public DimensionBuilder dimensionType(ResourceLocation identifier) {
         this.root.addProperty("type", identifier.toString());
         return this;
     }

@@ -6,7 +6,7 @@ import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.Processor;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Builder for loot table files ({@code namespace:loot_tables/type/lootid.json}).
@@ -20,7 +20,7 @@ public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonOb
      * @param id The type ID.
      * @return this
      */
-    public LootTableBuilder type(Identifier id) {
+    public LootTableBuilder type(ResourceLocation id) {
         root.addProperty("type", id.toString());
         return this;
     }
@@ -62,7 +62,7 @@ public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonOb
          * @return this
          * @see <a href="https://minecraft.gamepedia.com/Loot_table#Conditions" target="_blank">Minecraft Wiki</a>
          */
-        public Pool condition(Identifier id, Processor<JsonObjectBuilder> settings) {
+        public Pool condition(ResourceLocation id, Processor<JsonObjectBuilder> settings) {
             with("conditions", JsonArray::new, conditions ->
                 conditions.add(settings.process(new JsonObjectBuilder().add("condition", id.toString())).build()));
             return this;
@@ -122,7 +122,7 @@ public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonOb
              * @param id The type ID.
              * @return this
              */
-            public Entry type(Identifier id) {
+            public Entry type(ResourceLocation id) {
                 root.addProperty("type", id.toString());
                 return this;
             }
@@ -132,7 +132,7 @@ public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonOb
              * @param id The name of the value as an ID.
              * @return this
              */
-            public Entry name(Identifier id) {
+            public Entry name(ResourceLocation id) {
                 root.addProperty("name", id.toString());
                 return this;
             }
@@ -184,7 +184,7 @@ public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonOb
              * @return this
              * @see <a href="https://minecraft.gamepedia.com/Loot_table#Functions" target="_blank">Minecraft Wiki</a>
              */
-            public Entry function(Identifier id, Processor<Function> settings) {
+            public Entry function(ResourceLocation id, Processor<Function> settings) {
                 with("functions", JsonArray::new, functions ->
                     functions.add(settings.process(new Function(new JsonObjectBuilder().add("function", id.toString()).build())).build()));
                 return this;
@@ -199,7 +199,7 @@ public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonOb
              * @return this
              * @see <a href="https://minecraft.gamepedia.com/Loot_table#Conditions" target="_blank">Minecraft Wiki</a>
              */
-            public Entry condition(Identifier id, Processor<JsonObjectBuilder> settings) {
+            public Entry condition(ResourceLocation id, Processor<JsonObjectBuilder> settings) {
                 with("conditions", JsonArray::new, conditions ->
                         conditions.add(settings.process(new JsonObjectBuilder().add("condition", id.toString())).build()));
                 return this;
@@ -222,7 +222,7 @@ public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonOb
                  * @return this
                  * @see <a href="https://minecraft.gamepedia.com/Loot_table#Conditions" target="_blank">Minecraft Wiki</a>
                  */
-                public Function condition(Identifier id, Processor<JsonObjectBuilder> settings) {
+                public Function condition(ResourceLocation id, Processor<JsonObjectBuilder> settings) {
                     with("conditions", JsonArray::new, conditions ->
                         conditions.add(settings.process(new JsonObjectBuilder().add("condition", id.toString())).build()));
                     return this;

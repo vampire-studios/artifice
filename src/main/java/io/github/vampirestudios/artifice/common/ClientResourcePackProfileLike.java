@@ -1,8 +1,8 @@
 package io.github.vampirestudios.artifice.common;
 
-import net.minecraft.resource.pack.ResourcePackProfile;
+import net.minecraft.server.packs.repository.Pack;
 
 public interface ClientResourcePackProfileLike {
     // Supplier to avoid loading ClientResourcePackProfile on the server
-    <T extends ResourcePackProfile> ClientOnly<ResourcePackProfile> toClientResourcePackProfile(ResourcePackProfile.Factory factory);
+    <T extends Pack> ClientOnly<Pack> toClientResourcePackProfile(Pack.PackConstructor factory);
 }

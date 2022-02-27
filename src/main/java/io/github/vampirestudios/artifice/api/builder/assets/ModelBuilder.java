@@ -7,7 +7,7 @@ import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.Processor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Builder for a model file ({@code namespace:models/block|item/modelid.json}).
@@ -22,7 +22,7 @@ public final class ModelBuilder extends TypedJsonBuilder<JsonResource<JsonObject
      * @param id The parent model ID ({@code namespace:block|item/modelid}
      * @return this
      */
-    public ModelBuilder parent(Identifier id) {
+    public ModelBuilder parent(ResourceLocation id) {
         root.addProperty("parent", id.toString());
         return this;
     }
@@ -33,7 +33,7 @@ public final class ModelBuilder extends TypedJsonBuilder<JsonResource<JsonObject
      * @param path The texture ID ({@code namespace:type/textureid}).
      * @return this
      */
-    public ModelBuilder texture(String name, Identifier path) {
+    public ModelBuilder texture(String name, ResourceLocation path) {
         with("textures", JsonObject::new, textures -> textures.addProperty(name, path.toString()));
         return this;
     }
@@ -151,7 +151,7 @@ public final class ModelBuilder extends TypedJsonBuilder<JsonResource<JsonObject
          * @param id The model id ({@code namespace:block|item/modelid}).
          * @return this
          */
-        public Override model(Identifier id) {
+        public Override model(ResourceLocation id) {
             root.addProperty("model", id.toString());
             return this;
         }

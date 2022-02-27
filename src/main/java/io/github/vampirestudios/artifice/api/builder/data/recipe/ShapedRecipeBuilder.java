@@ -3,14 +3,14 @@ package io.github.vampirestudios.artifice.api.builder.data.recipe;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
 import io.github.vampirestudios.artifice.api.util.Processor;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Builder for a shaped crafting recipe ({@code namespace:recipes/id.json}).
  * @see <a href="https://minecraft.gamepedia.com/Recipe#JSON_format" target="_blank">Minecraft Wiki</a>
  */
 public final class ShapedRecipeBuilder extends RecipeBuilder<ShapedRecipeBuilder> {
-    public ShapedRecipeBuilder() { super(); type(new Identifier("crafting_shaped")); }
+    public ShapedRecipeBuilder() { super(); type(new ResourceLocation("crafting_shaped")); }
 
     /**
      * Set the recipe pattern for this recipe.
@@ -29,7 +29,7 @@ public final class ShapedRecipeBuilder extends RecipeBuilder<ShapedRecipeBuilder
      * @param id The item ID.
      * @return this
      */
-    public ShapedRecipeBuilder ingredientItem(Character key, Identifier id) {
+    public ShapedRecipeBuilder ingredientItem(Character key, ResourceLocation id) {
         with("key", JsonObject::new, ingredients ->
             ingredients.add(key.toString(), new JsonObjectBuilder().add("item", id.toString()).build()));
         return this;
@@ -41,7 +41,7 @@ public final class ShapedRecipeBuilder extends RecipeBuilder<ShapedRecipeBuilder
      * @param id The tag ID.
      * @return this
      */
-    public ShapedRecipeBuilder ingredientTag(Character key, Identifier id) {
+    public ShapedRecipeBuilder ingredientTag(Character key, ResourceLocation id) {
         with("key", JsonObject::new, ingredients ->
             ingredients.add(key.toString(), new JsonObjectBuilder().add("tag", id.toString()).build()));
         return this;
@@ -65,7 +65,7 @@ public final class ShapedRecipeBuilder extends RecipeBuilder<ShapedRecipeBuilder
      * @param count The number of result items.
      * @return this
      */
-    public ShapedRecipeBuilder result(Identifier id, int count) {
+    public ShapedRecipeBuilder result(ResourceLocation id, int count) {
         root.add("result", new JsonObjectBuilder().add("item", id.toString()).add("count", count).build());
         return this;
     }

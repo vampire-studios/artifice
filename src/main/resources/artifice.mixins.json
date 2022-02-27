@@ -3,9 +3,10 @@
   "package": "io.github.vampirestudios.artifice.mixin",
   "compatibilityLevel": "JAVA_8",
   "injectors": {
-    "defaultRequire": 1
+	"defaultRequire": 1
   },
   "mixins": [
+	"MappedRegistryMixin",
 	"MixinResourcePackManager"
   ],
   "client": [

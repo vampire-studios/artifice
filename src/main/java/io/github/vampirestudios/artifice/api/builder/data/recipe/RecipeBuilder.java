@@ -3,7 +3,7 @@ package io.github.vampirestudios.artifice.api.builder.data.recipe;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Base builder for a recipe ({@code namespace:recipes/id.json}).
@@ -19,7 +19,7 @@ public abstract class RecipeBuilder<T extends RecipeBuilder<T>> extends TypedJso
      * @param id The type ID.
      * @return this
      */
-    public T type(Identifier id) {
+    public T type(ResourceLocation id) {
         root.addProperty("type", id.toString());
         return (T)this;
     }
@@ -29,7 +29,7 @@ public abstract class RecipeBuilder<T extends RecipeBuilder<T>> extends TypedJso
      * @param id The group ID.
      * @return this
      */
-    public T group(Identifier id) {
+    public T group(ResourceLocation id) {
         root.addProperty("group", id.toString());
         return (T)this;
     }

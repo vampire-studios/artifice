@@ -10,13 +10,13 @@ public class EmeraldOreFeatureConfigBuilder extends FeatureConfigBuilder {
         super();
     }
 
-    public EmeraldOreFeatureConfigBuilder state(Processor<StateDataBuilder> processor) {
-        with("state", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
+    public EmeraldOreFeatureConfigBuilder state(StateDataBuilder processor) {
+        with("state", JsonObject::new, processor::merge);
         return this;
     }
 
-    public EmeraldOreFeatureConfigBuilder target(Processor<StateDataBuilder> processor) {
-        with("target", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
+    public EmeraldOreFeatureConfigBuilder target(StateDataBuilder processor) {
+        with("target", JsonObject::new, processor::merge);
         return this;
     }
 }

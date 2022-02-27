@@ -9,8 +9,8 @@ public class FillLayerFeatureConfigBuilder extends FeatureConfigBuilder {
         super();
     }
 
-    public FillLayerFeatureConfigBuilder state(Processor<StateDataBuilder> processor) {
-        with("state", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
+    public FillLayerFeatureConfigBuilder state(StateDataBuilder processor) {
+        with("state", JsonObject::new, processor::merge);
         return this;
     }
 

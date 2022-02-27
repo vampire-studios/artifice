@@ -25,13 +25,13 @@ public class RandomPatchFeatureConfigBuilder extends FeatureConfigBuilder {
         return this;
     }
 
-    public RandomPatchFeatureConfigBuilder addBlockToWhitelist(Processor<StateDataBuilder> processor) {
-        this.root.getAsJsonArray("whitelist").add(processor.process(new StateDataBuilder()).buildTo(new JsonObject()));
+    public RandomPatchFeatureConfigBuilder addBlockToWhitelist(StateDataBuilder processor) {
+        this.root.getAsJsonArray("whitelist").add(processor.getData());
         return this;
     }
 
-    public RandomPatchFeatureConfigBuilder addBlockToBlacklist(Processor<StateDataBuilder> processor) {
-        this.root.getAsJsonArray("blacklist").add(processor.process(new StateDataBuilder()).buildTo(new JsonObject()));
+    public RandomPatchFeatureConfigBuilder addBlockToBlacklist(StateDataBuilder processor) {
+        this.root.getAsJsonArray("blacklist").add(processor.getData());
         return this;
     }
 

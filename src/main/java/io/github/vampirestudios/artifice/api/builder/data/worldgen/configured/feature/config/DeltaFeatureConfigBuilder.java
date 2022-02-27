@@ -21,13 +21,13 @@ public class DeltaFeatureConfigBuilder extends FeatureConfigBuilder {
         return this;
     }
 
-    public DeltaFeatureConfigBuilder rim(Processor<StateDataBuilder> processor) {
-        with("rim", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
+    public DeltaFeatureConfigBuilder rim(StateDataBuilder processor) {
+        with("rim", JsonObject::new, processor::merge);
         return this;
     }
 
-    public DeltaFeatureConfigBuilder contents(Processor<StateDataBuilder> processor) {
-        with("contents", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
+    public DeltaFeatureConfigBuilder contents(StateDataBuilder processor) {
+        with("contents", JsonObject::new, processor::merge);
         return this;
     }
 }

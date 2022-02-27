@@ -261,8 +261,8 @@ public class ArtificeTestMod implements ModInitializer {
 
 			// gotta wait on noise config
 			pack.addNoiseSettingsBuilder(id("test_dimension"),noiseSettingsBuilder ->
-					noiseSettingsBuilder.defaultBlock(new StateDataBuilder().name("minecraft:stone"))
-							.defaultFluid(new StateDataBuilder().name("minecraft:lava").setProperty("level", "0"))
+					noiseSettingsBuilder.defaultBlock(StateDataBuilder.name("minecraft:stone"))
+							.defaultFluid(StateDataBuilder.name("minecraft:lava").setProperty("level", "0"))
 							.seaLevel(65).legacyRandomSource(false).aquifersEnabled(true)
 							.disableMobGeneration(false).aquifersEnabled(true).oreVeinsEnabled(true)
 							.oreVeinsEnabled(true).noiseConfig(noiseConfigBuilder -> noiseConfigBuilder
@@ -632,48 +632,48 @@ public class ArtificeTestMod implements ModInitializer {
 													))
 											), 0, 0
 									)
-							).noiseRouter().surfaceRules(builder -> builder.sequence(surfaceRulesBuilder ->
-									surfaceRulesBuilder.condition(
-											surfaceRulesBuilder1 -> surfaceRulesBuilder1.verticalGradient(
-													"bebrock",
-													YOffsetBuilder.aboveBottom(0),
-													YOffsetBuilder.aboveBottom(5)
+							).noiseRouter().surfaceRules(SurfaceRulesBuilder.sequence(
+									SurfaceRulesBuilder.condition(
+										SurfaceRulesBuilder.verticalGradient(
+											"bebrock",
+											YOffsetBuilder.aboveBottom(0),
+											YOffsetBuilder.aboveBottom(5)
+										),
+										SurfaceRulesBuilder.block(StateDataBuilder.name("minecraft:bedrock"))
+									),
+									SurfaceRulesBuilder.condition(
+										SurfaceRulesBuilder.verticalGradient(
+											"deepslate",
+											YOffsetBuilder.absolute(-16),
+											YOffsetBuilder.absolute(0)
+										),
+										SurfaceRulesBuilder.block(StateDataBuilder.name("minecraft:deepslate").setProperty("axis", "y"))
+									),
+									SurfaceRulesBuilder.condition(
+										SurfaceRulesBuilder.verticalGradient(
+											"tuff",
+											YOffsetBuilder.absolute(0),
+											YOffsetBuilder.absolute(16)
+										),
+										SurfaceRulesBuilder.block(StateDataBuilder.name("minecraft:tuff"))
+									),
+									SurfaceRulesBuilder.condition(
+										SurfaceRulesBuilder.aboveMainSurface(),
+										SurfaceRulesBuilder.sequence(
+											SurfaceRulesBuilder.condition(
+												SurfaceRulesBuilder.biome(id("test_biome").toString()),
+												SurfaceRulesBuilder.block(StateDataBuilder.name("artifice:test_block"))
 											),
-											surfaceRulesBuilder1 -> surfaceRulesBuilder1.block(stateDataBuilder -> stateDataBuilder.name("minecraft:bedrock"))
-									), surfaceRulesBuilder ->
-									surfaceRulesBuilder.condition(
-											surfaceRulesBuilder1 -> surfaceRulesBuilder1.verticalGradient(
-													"deepslate",
-													YOffsetBuilder.absolute(-16),
-													YOffsetBuilder.absolute(0)
-											),
-											surfaceRulesBuilder1 -> surfaceRulesBuilder1.block(stateDataBuilder -> stateDataBuilder.name("minecraft:deepslate").setProperty("axis", "y"))
-									), surfaceRulesBuilder ->
-									surfaceRulesBuilder.condition(
-											surfaceRulesBuilder1 -> surfaceRulesBuilder1.verticalGradient(
-													"tuff",
-													YOffsetBuilder.absolute(0),
-													YOffsetBuilder.absolute(16)
-											),
-											surfaceRulesBuilder1 -> surfaceRulesBuilder1.block(stateDataBuilder -> stateDataBuilder.name("minecraft:tuff"))
-									), surfaceRulesBuilder ->
-									surfaceRulesBuilder.condition(
-											SurfaceRulesBuilder::aboveMainSurface,
-											surfaceRulesBuilder1 -> surfaceRulesBuilder1.sequence(surfaceRulesBuilder2 ->
-															surfaceRulesBuilder2.condition(
-																	surfaceRulesBuilder3 -> surfaceRulesBuilder3.biome(id("test_biome").toString()),
-																	surfaceRulesBuilder3 -> surfaceRulesBuilder3.block(stateDataBuilder -> stateDataBuilder.name("artifice:test_block"))
-															),
-													surfaceRulesBuilder2 -> surfaceRulesBuilder2.block(stateDataBuilder -> stateDataBuilder.name("minecraft:grass_block"))
-											)
-									), surfaceRulesBuilder ->
-									surfaceRulesBuilder.condition(
-											surfaceRulesBuilder1 -> surfaceRulesBuilder1.verticalGradient(
-													"woollenpjs",
-													YOffsetBuilder.belowTop(80),
-													YOffsetBuilder.aboveBottom(22)
-											),
-											surfaceRulesBuilder1 -> surfaceRulesBuilder1.block(stateDataBuilder -> stateDataBuilder.name("minecraft:cyan_wool"))
+											SurfaceRulesBuilder.block(StateDataBuilder.name("minecraft:grass_block"))
+										)
+									),
+									SurfaceRulesBuilder.condition(
+										SurfaceRulesBuilder.verticalGradient(
+											"woollenpjs",
+											YOffsetBuilder.belowTop(80),
+											YOffsetBuilder.aboveBottom(22)
+										),
+										SurfaceRulesBuilder.block(StateDataBuilder.name("minecraft:cyan_wool"))
 									)
 							))
 			);

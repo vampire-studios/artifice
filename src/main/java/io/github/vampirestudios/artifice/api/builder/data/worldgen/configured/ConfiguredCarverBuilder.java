@@ -33,8 +33,8 @@ public class ConfiguredCarverBuilder extends TypedJsonBuilder<JsonResource<JsonO
         return this;
     }
 
-    public ConfiguredCarverBuilder lavaLevel(Map.Entry<String, Integer> obj) {
-        with(this.root.getAsJsonObject("config"), "lava_level", JsonObject::new, jsonObject -> jsonObject.addProperty(obj.getKey(),obj.getValue()));
+    public ConfiguredCarverBuilder lavaLevel(YOffsetBuilder obj) {
+        with(this.root.getAsJsonObject("config"), "lava_level", JsonObject::new, obj::merge);
         return this;
     }
 

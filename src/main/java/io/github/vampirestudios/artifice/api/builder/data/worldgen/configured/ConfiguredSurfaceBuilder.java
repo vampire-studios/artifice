@@ -18,20 +18,20 @@ public class ConfiguredSurfaceBuilder extends TypedJsonBuilder<JsonResource<Json
      * @param blockStateBuilderProcessor
      * @return
      */
-    private ConfiguredSurfaceBuilder setBlockState(String id, Processor<StateDataBuilder> blockStateBuilderProcessor) {
-        with(this.root.getAsJsonObject("config"),id, JsonObject::new, jsonObject -> blockStateBuilderProcessor.process(new StateDataBuilder()).buildTo(jsonObject));
+    private ConfiguredSurfaceBuilder setBlockState(String id, StateDataBuilder blockStateBuilderProcessor) {
+        with(this.root.getAsJsonObject("config"),id, JsonObject::new, blockStateBuilderProcessor::merge);
         return this;
     }
 
-    public ConfiguredSurfaceBuilder topMaterial(Processor<StateDataBuilder> blockStateBuilderProcessor) {
+    public ConfiguredSurfaceBuilder topMaterial(StateDataBuilder blockStateBuilderProcessor) {
         return this.setBlockState("top_material", blockStateBuilderProcessor);
     }
 
-    public ConfiguredSurfaceBuilder underMaterial(Processor<StateDataBuilder> blockStateBuilderProcessor) {
+    public ConfiguredSurfaceBuilder underMaterial(StateDataBuilder blockStateBuilderProcessor) {
         return this.setBlockState("under_material", blockStateBuilderProcessor);
     }
 
-    public ConfiguredSurfaceBuilder underwaterMaterial(Processor<StateDataBuilder> blockStateBuilderProcessor) {
+    public ConfiguredSurfaceBuilder underwaterMaterial(StateDataBuilder blockStateBuilderProcessor) {
         return this.setBlockState("underwater_material", blockStateBuilderProcessor);
     }
 

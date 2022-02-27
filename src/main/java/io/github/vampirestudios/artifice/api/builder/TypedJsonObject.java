@@ -3,12 +3,9 @@ package io.github.vampirestudios.artifice.api.builder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonArray;
-import io.github.vampirestudios.artifice.api.util.Processor;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Map;
-import java.util.function.Supplier;
 
 public abstract class TypedJsonObject {
     protected final JsonObject root;
@@ -24,6 +21,7 @@ public abstract class TypedJsonObject {
         return this.root;
     }
 
+
     protected void join(JsonObject in, String key, JsonObject value) {
         in.add(key, in.has(key) ? merge(value, (JsonObject)in.get(key)) : value); }
     protected void join(String key, JsonObject value) {
@@ -35,7 +33,7 @@ public abstract class TypedJsonObject {
         join(this.root, key, value); }
 
 
-    protected JsonObject merge(JsonObject target) {
+    public JsonObject merge(JsonObject target) {
         return merge(target, this.root);
     }
 
@@ -51,34 +49,64 @@ public abstract class TypedJsonObject {
         return source;
     }
 
-    protected JsonArray arrayOf(TypedJsonObject... values){
+    public static JsonArray arrayOf(TypedJsonObject... values){
         JsonArray array = new JsonArray();
         for(TypedJsonObject entry : values) array.add(entry.getData());
         return array;
     }
 
-    protected JsonArray arrayOf(boolean... values) {
+    public static JsonArray arrayOf(boolean... values) {
         JsonArray array = new JsonArray();
         for(boolean i : values) array.add(i);
         return array;
     }
 
-    protected JsonArray arrayOf(Character... values) {
+    public static JsonArray arrayOf(Character... values) {
         JsonArray array = new JsonArray();
         for(Character i : values) array.add(i);
         return array;
     }
 
-    protected JsonArray arrayOf(Number... values) {
+    public static JsonArray arrayOf(Number... values) {
         JsonArray array = new JsonArray();
         for(Number i : values) array.add(i);
         return array;
     }
 
-    protected JsonArray arrayOf(String... values) {
+    public static JsonArray arrayOf(String... values) {
         JsonArray array = new JsonArray();
         for(String i : values) array.add(i);
         return array;
+    }
+
+    public TypedJsonObject add(String key, TypedJsonObject value){
+        this.root.add(key,value.getData());
+        return this;
+    }
+
+    public TypedJsonObject add(String key, JsonElement value){
+        this.root.add(key,value);
+        return this;
+    }
+
+    public TypedJsonObject add(String key, String value){
+        this.root.addProperty(key,value);
+        return this;
+    }
+
+    public TypedJsonObject add(String key, Number value){
+        this.root.addProperty(key,value);
+        return this;
+    }
+
+    public TypedJsonObject add(String key, Boolean value){
+        this.root.addProperty(key,value);
+        return this;
+    }
+
+    public TypedJsonObject add(String key, Character value){
+        this.root.addProperty(key,value);
+        return this;
     }
 
     public InputStream toInputStream() {

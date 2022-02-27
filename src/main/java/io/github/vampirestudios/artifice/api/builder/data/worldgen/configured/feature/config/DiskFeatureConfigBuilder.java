@@ -13,8 +13,8 @@ public class DiskFeatureConfigBuilder extends FeatureConfigBuilder {
         this.root.add("targets", new JsonArray());
     }
 
-    public DiskFeatureConfigBuilder state(Processor<StateDataBuilder> processor) {
-        with("state", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
+    public DiskFeatureConfigBuilder state(StateDataBuilder processor) {
+        with("state", JsonObject::new, processor::merge);
         return this;
     }
 
@@ -35,8 +35,8 @@ public class DiskFeatureConfigBuilder extends FeatureConfigBuilder {
         return this;
     }
 
-    public DiskFeatureConfigBuilder addTarget(Processor<StateDataBuilder> processor) {
-        this.root.getAsJsonArray("targets").add(processor.process(new StateDataBuilder()).buildTo(new JsonObject()));
+    public DiskFeatureConfigBuilder addTarget(StateDataBuilder processor) {
+        this.root.getAsJsonArray("targets").add(processor.getData());
         return this;
     }
 }

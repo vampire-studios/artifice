@@ -56,7 +56,7 @@ public class NoiseSettingsBuilder extends TypedJsonBuilder<JsonResource<JsonObje
      * Set a block state.
      */
     public NoiseSettingsBuilder setBlockState(String id, StateDataBuilder stateDataBuilder) {
-        this.root.add(id, stateDataBuilder.build());
+        this.root.add(id, stateDataBuilder.getData());
         return this;
     }
 
@@ -77,8 +77,8 @@ public class NoiseSettingsBuilder extends TypedJsonBuilder<JsonResource<JsonObje
     /**
      * Build surface rules.
      */
-    public NoiseSettingsBuilder surfaceRules(Processor<SurfaceRulesBuilder> surfaceRulesBuilder) {
-        with("surface_rule", JsonObject::new, jsonObject -> surfaceRulesBuilder.process(new SurfaceRulesBuilder()).buildTo(jsonObject));
+    public NoiseSettingsBuilder surfaceRules(SurfaceRulesBuilder surfaceRulesBuilder) {
+        with("surface_rule", JsonObject::new, surfaceRulesBuilder::merge);
         return this;
     }
 

@@ -10,8 +10,8 @@ public class SingleStateFeatureConfigBuilder extends FeatureConfigBuilder {
         super();
     }
 
-    public SingleStateFeatureConfigBuilder state(Processor<StateDataBuilder> processor) {
-        with("state", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
+    public SingleStateFeatureConfigBuilder state(StateDataBuilder processor) {
+        with("state", JsonObject::new, processor::merge);
         return this;
     }
 }

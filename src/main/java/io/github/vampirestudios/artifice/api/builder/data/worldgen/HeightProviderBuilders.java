@@ -3,6 +3,7 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
 import io.github.vampirestudios.artifice.api.util.Processor;
+import net.minecraft.world.level.levelgen.heightproviders.HeightProviderType;
 
 import java.util.Map;
 
@@ -12,8 +13,8 @@ public class HeightProviderBuilders extends TypedJsonBuilder<JsonObject> {
 		super(new JsonObject(), j->j);
 	}
 
-	public HeightProviderBuilders constant(String name, Map.Entry<String, Integer> obj) {
-		with(name, JsonObject::new, jsonObject -> this.root.addProperty(obj.getKey(),obj.getValue()));
+	public HeightProviderBuilders constant(String name, YOffsetBuilder obj) {
+		with(name, JsonObject::new, obj::merge);
 		return this;
 	}
 
@@ -47,13 +48,13 @@ public class HeightProviderBuilders extends TypedJsonBuilder<JsonObject> {
 			if(hasFloatValues) this.root.add("value", new JsonObject());
 		}
 
-		public UniformHeightProviderBuilder minInclusive(Map.Entry<String, Integer> obj) {
-			with("min_inclusive", JsonObject::new, jsonObject -> jsonObject.addProperty(obj.getKey(),obj.getValue()));
+		public UniformHeightProviderBuilder minInclusive(YOffsetBuilder obj) {
+			with("min_inclusive", JsonObject::new, obj::merge);
 			return this;
 		}
 
-		public UniformHeightProviderBuilder maxInclusive(Map.Entry<String, Integer> obj) {
-			with("max_inclusive", JsonObject::new, jsonObject -> jsonObject.addProperty(obj.getKey(),obj.getValue()));
+		public UniformHeightProviderBuilder maxInclusive(YOffsetBuilder obj) {
+			with("max_inclusive", JsonObject::new, obj::merge);
 			return this;
 		}
 

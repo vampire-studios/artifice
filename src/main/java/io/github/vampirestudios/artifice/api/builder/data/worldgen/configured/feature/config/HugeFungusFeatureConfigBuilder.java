@@ -10,23 +10,23 @@ public class HugeFungusFeatureConfigBuilder extends FeatureConfigBuilder {
         super();
     }
 
-    public HugeFungusFeatureConfigBuilder validBaseBlock(Processor<StateDataBuilder> processor) {
-        with("valid_base_block", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
+    public HugeFungusFeatureConfigBuilder validBaseBlock(StateDataBuilder processor) {
+        with("valid_base_block", JsonObject::new, processor::merge);
         return this;
     }
 
-    public HugeFungusFeatureConfigBuilder stemState(Processor<StateDataBuilder> processor) {
-        with("stem_state", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
+    public HugeFungusFeatureConfigBuilder stemState(StateDataBuilder processor) {
+        with("stem_state", JsonObject::new, processor::merge);
         return this;
     }
 
-    public HugeFungusFeatureConfigBuilder hatState(Processor<StateDataBuilder> processor) {
-        with("hat_state", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
+    public HugeFungusFeatureConfigBuilder hatState(StateDataBuilder processor) {
+        with("hat_state", JsonObject::new, processor::merge);
         return this;
     }
 
-    public HugeFungusFeatureConfigBuilder decorState(Processor<StateDataBuilder> processor) {
-        with("decor_state", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
+    public HugeFungusFeatureConfigBuilder decorState(StateDataBuilder processor) {
+        with("decor_state", JsonObject::new, processor::merge);
         return this;
     }
 

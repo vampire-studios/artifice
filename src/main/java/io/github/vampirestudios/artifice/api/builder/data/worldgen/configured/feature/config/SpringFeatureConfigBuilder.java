@@ -12,8 +12,8 @@ public class SpringFeatureConfigBuilder extends FeatureConfigBuilder {
         this.root.add("valid_blocks", new JsonArray());
     }
 
-    public SpringFeatureConfigBuilder fluidState(Processor<StateDataBuilder> processor) {
-        with("state", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
+    public SpringFeatureConfigBuilder fluidState(StateDataBuilder processor) {
+        with("state", JsonObject::new, processor::merge);
         return this;
     }
 

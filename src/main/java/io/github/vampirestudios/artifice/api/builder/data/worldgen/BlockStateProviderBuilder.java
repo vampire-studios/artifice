@@ -23,8 +23,8 @@ public class BlockStateProviderBuilder extends TypedJsonBuilder<JsonObject> {
             this.type("minecraft:simple_state_provider");
         }
 
-        public SimpleBlockStateProviderBuilder state(Processor<StateDataBuilder> processor) {
-            with("state", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
+        public SimpleBlockStateProviderBuilder state(StateDataBuilder processor) {
+            with("state", JsonObject::new, processor::merge);
             return this;
         }
     }
@@ -36,10 +36,10 @@ public class BlockStateProviderBuilder extends TypedJsonBuilder<JsonObject> {
             this.root.add("entries", new JsonArray());
         }
 
-        public WeightedBlockStateProviderBuilder addEntry(int weight, Processor<StateDataBuilder> processor) {
+        public WeightedBlockStateProviderBuilder addEntry(int weight, StateDataBuilder processor) {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("weight", weight);
-            jsonObject.add("data", processor.process(new StateDataBuilder()).buildTo(new JsonObject()));
+            jsonObject.add("data", processor.getData());
             this.root.getAsJsonArray("entries").add(jsonObject);
             return this;
         }
@@ -65,8 +65,8 @@ public class BlockStateProviderBuilder extends TypedJsonBuilder<JsonObject> {
             this.type("minecraft:pillar_state_provider");
         }
 
-        public PillarBlockStateProviderBuilder state(Processor<StateDataBuilder> processor) {
-            with("state", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
+        public PillarBlockStateProviderBuilder state(StateDataBuilder processor) {
+            with("state", JsonObject::new, processor::merge);
             return this;
         }
     }

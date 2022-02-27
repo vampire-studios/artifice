@@ -43,8 +43,8 @@ public class RuleTestBuilder extends TypedJsonBuilder<JsonObject> {
             this.predicateType("minecraft:blockstate_match");
         }
 
-        public BlockStateRuleTestBuilder blockState(Processor<StateDataBuilder> processor) {
-            with("block_state", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
+        public BlockStateRuleTestBuilder blockState(StateDataBuilder processor) {
+            with("block_state", JsonObject::new, processor::merge);
             return this;
         }
     }
@@ -87,8 +87,8 @@ public class RuleTestBuilder extends TypedJsonBuilder<JsonObject> {
             this.predicateType("minecraft:random_block_match");
         }
 
-        public RandomBlockStateMatchRuleTestBuilder blockState(Processor<StateDataBuilder> processor) {
-            with("block_state", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
+        public RandomBlockStateMatchRuleTestBuilder blockState(StateDataBuilder processor) {
+            with("block_state", JsonObject::new, processor::merge);
             return this;
         }
 

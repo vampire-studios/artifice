@@ -16,8 +16,8 @@ public class OreFeatureConfigBuilder extends FeatureConfigBuilder {
         return this;
     }
 
-    public OreFeatureConfigBuilder state(Processor<StateDataBuilder> processor) {
-        with("target", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
+    public OreFeatureConfigBuilder state(StateDataBuilder processor) {
+        with("target", JsonObject::new, processor::merge);
         return this;
     }
 

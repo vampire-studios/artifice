@@ -1,22 +1,23 @@
 package io.github.vampirestudios.artifice.api.builder.data;
 
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 
-public class StateDataBuilder extends TypedJsonBuilder<JsonObject> {
+public class StateDataBuilder extends TypedJsonObject {
 
     private final JsonObject jsonObject = new JsonObject();
 
     public StateDataBuilder() {
-        super(new JsonObject(), j->j);
+        super(new JsonObject());
     }
 
     /**
      * Set the id of the block.
      */
-    public StateDataBuilder name(String id) {
-        this.root.addProperty("Name", id);
-        return this;
+    public static StateDataBuilder name(String id) {
+        StateDataBuilder builder = new StateDataBuilder();
+        builder.root.addProperty("Name", id);
+        return builder;
     }
 
     /**

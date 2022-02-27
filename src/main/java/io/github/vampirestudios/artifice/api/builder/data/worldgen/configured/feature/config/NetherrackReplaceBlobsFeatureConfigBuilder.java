@@ -16,13 +16,13 @@ public class NetherrackReplaceBlobsFeatureConfigBuilder extends FeatureConfigBui
         return this;
     }
 
-    public NetherrackReplaceBlobsFeatureConfigBuilder target(Processor<StateDataBuilder> processor) {
-        with("target", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
+    public NetherrackReplaceBlobsFeatureConfigBuilder target(StateDataBuilder processor) {
+        with("target", JsonObject::new, processor::merge);
         return this;
     }
 
-    public NetherrackReplaceBlobsFeatureConfigBuilder state(Processor<StateDataBuilder> processor) {
-        with("state", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
+    public NetherrackReplaceBlobsFeatureConfigBuilder state(StateDataBuilder processor) {
+        with("state", JsonObject::new, processor::merge);
         return this;
     }
 }

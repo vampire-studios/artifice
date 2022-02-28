@@ -88,10 +88,10 @@ public class SmithingRecipeBuilder extends RecipeBuilder<SmithingRecipeBuilder> 
     }
 
     private JsonObject item(ResourceLocation id) {
-        return new JsonObjectBuilder().add("item", id.toString()).build();
+        return new JsonObjectBuilder().add("item", id.toString()).getData();
     }
 
     private JsonObject tag(ResourceLocation id) {
-        return new JsonObjectBuilder().add("tag", id.toString()).build();
+        return new JsonObjectBuilder().add("tag", id.toString()).getData();
     }
 }

@@ -163,7 +163,7 @@ public final class BlockStateBuilder extends TypedJsonBuilder<JsonResource<JsonO
         public Case whenAny(String name, String state) {
             with("when", JsonObject::new, when -> with(when, "OR", JsonArray::new, cases -> {
                 when.entrySet().forEach(e -> { if(!e.getKey().equals("OR")) when.remove(e.getKey()); });
-                cases.add(new JsonObjectBuilder().add(name, state).build());
+                cases.add(new JsonObjectBuilder().add(name, state).getData());
             }));
             return this;
         }

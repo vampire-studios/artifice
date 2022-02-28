@@ -57,8 +57,8 @@ public abstract class TypedJsonBuilder<T> {
         return this;
     }
 
-    public TypedJsonBuilder<T> jsonObject(String name, Processor<JsonObjectBuilder> settings) {
-        root.add(name, settings.process(new JsonObjectBuilder()).build());
+    public TypedJsonBuilder<T> jsonObject(String name, JsonObjectBuilder settings) {
+        root.add(name, settings.getData());
         return this;
     }
 

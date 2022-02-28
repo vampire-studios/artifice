@@ -1,143 +1,95 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen;
 
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
-import net.minecraft.world.level.levelgen.heightproviders.HeightProviderType;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 
-import java.util.Map;
-
-public class HeightProviderBuilders extends TypedJsonBuilder<JsonObject> {
+public class HeightProviderBuilders extends TypedJsonObject {
 
 	public HeightProviderBuilders() {
-		super(new JsonObject(), j->j);
+		super(new JsonObject());
 	}
 
 	public HeightProviderBuilders constant(String name, YOffsetBuilder obj) {
-		with(name, JsonObject::new, obj::merge);
+		join(name, obj.getData());
 		return this;
 	}
 
-	public HeightProviderBuilders uniform(String name, Processor<UniformHeightProviderBuilder> processor) {
-		with(name, JsonObject::new, jsonObject -> processor.process(new UniformHeightProviderBuilder()).buildTo(this.root));
-		return this;
+	public static HeightProviderBuilders uniform(String name, YOffsetBuilder minInclusive, YOffsetBuilder maxInclusive) {
+		HeightProviderBuilders builder = new HeightProviderBuilders();
+
+		TypedJsonObject value = new TypedJsonObject()
+				.add("min_inclusive", minInclusive)
+				.add("max_inclusive", maxInclusive);
+		TypedJsonObject uniform = new TypedJsonObject()
+				.add("type", "minecraft:uniform")
+				.add("value", value.getData());
+
+		builder.add(name, uniform.getData());
+
+		return builder;
 	}
 
-	public HeightProviderBuilders biasedToBottom(String name, Processor<BiasedToBottomHeightProviderBuilder> processor) {
-		with(name, JsonObject::new, jsonObject -> processor.process(new BiasedToBottomHeightProviderBuilder()).buildTo(this.root));
-		return this;
+	public HeightProviderBuilders biasedToBottom(String name, YOffsetBuilder minInclusive, YOffsetBuilder maxInclusive, int inner) {
+		HeightProviderBuilders builder = new HeightProviderBuilders();
+
+		TypedJsonObject value = new TypedJsonObject()
+				.add("min_inclusive", minInclusive)
+				.add("max_inclusive", maxInclusive)
+				.add("inner",inner);
+		TypedJsonObject uniform = new TypedJsonObject()
+				.add("type", "minecraft:uniform")
+				.add("value", value);
+
+		builder.add(name, uniform.getData());
+
+		return builder;
 	}
 
-	public HeightProviderBuilders veryBiasedToBottom(String name, Processor<VeryBiasedToBottomHeightProviderBuilder> processor) {
-		with(name, JsonObject::new, jsonObject -> processor.process(new VeryBiasedToBottomHeightProviderBuilder()).buildTo(this.root));
-		return this;
+	public HeightProviderBuilders veryBiasedToBottom(String name, YOffsetBuilder minInclusive, YOffsetBuilder maxInclusive, int inner) {
+		HeightProviderBuilders builder = new HeightProviderBuilders();
+
+		TypedJsonObject value = new TypedJsonObject()
+				.add("min_inclusive", minInclusive)
+				.add("max_inclusive", maxInclusive)
+				.add("inner",inner);
+		TypedJsonObject uniform = new TypedJsonObject()
+				.add("type", "minecraft:uniform")
+				.add("value", value);
+
+		builder.add(name, uniform.getData());
+
+		return builder;
 	}
 
-	public HeightProviderBuilders trapezoid(String name, Processor<TrapezoidHeightProviderBuilder> processor) {
-		with(name, JsonObject::new, jsonObject -> processor.process(new TrapezoidHeightProviderBuilder()).buildTo(this.root));
-		return this;
+	public HeightProviderBuilders trapezoid(String name, YOffsetBuilder minInclusive, YOffsetBuilder maxInclusive, int plateau) {
+		HeightProviderBuilders builder = new HeightProviderBuilders();
+
+		TypedJsonObject value = new TypedJsonObject()
+				.add("min_inclusive", minInclusive)
+				.add("max_inclusive", maxInclusive)
+				.add("plateau",plateau);
+		TypedJsonObject uniform = new TypedJsonObject()
+				.add("type", "minecraft:uniform")
+				.add("value", value);
+
+		builder.add(name, uniform.getData());
+
+		return builder;
 	}
 
-	public static class UniformHeightProviderBuilder extends TypedJsonBuilder<JsonObject> {
+	/*public HeightProviderBuilders weightedList(String name, TrapezoidHeightProviderBuilder processor) {
+		HeightProviderBuilders builder = new HeightProviderBuilders();
 
-		private boolean hasFloatValues = false;
+		TypedJsonObject value = new TypedJsonObject()
+				.add("min_inclusive", minInclusive)
+				.add("max_inclusive", maxInclusive)
+				.add("inner",inner);
+		TypedJsonObject uniform = new TypedJsonObject()
+				.add("type", "minecraft:uniform")
+				.add("value", value);
 
-		public UniformHeightProviderBuilder() {
-			super(new JsonObject(), j->j);
-			this.root.addProperty("type", "minecraft:uniform");
-			if(hasFloatValues) this.root.add("value", new JsonObject());
-		}
+		builder.add(name, uniform.getData());
 
-		public UniformHeightProviderBuilder minInclusive(YOffsetBuilder obj) {
-			with("min_inclusive", JsonObject::new, obj::merge);
-			return this;
-		}
-
-		public UniformHeightProviderBuilder maxInclusive(YOffsetBuilder obj) {
-			with("max_inclusive", JsonObject::new, obj::merge);
-			return this;
-		}
-
-		public UniformHeightProviderBuilder minAndMaxInclusive(float minInclusive, float maxExclusive) {
-			JsonObject value = new JsonObject();
-			value.addProperty("min_inclusive", minInclusive);
-			value.addProperty("max_exclusive", maxExclusive);
-			this.root.add("value", value);
-			return this;
-		}
-
-	}
-
-	public static class BiasedToBottomHeightProviderBuilder extends TypedJsonBuilder<JsonObject> {
-
-		public BiasedToBottomHeightProviderBuilder() {
-			super(new JsonObject(), j->j);
-			this.root.addProperty("type", "minecraft:biased_to_bottom");
-		}
-
-		public BiasedToBottomHeightProviderBuilder absolute(int offset) {
-			this.root.addProperty("absolute", offset);
-			return this;
-		}
-
-		public BiasedToBottomHeightProviderBuilder aboveBottom(int offset) {
-			this.root.addProperty("above_bottom", offset);
-			return this;
-		}
-
-		public BiasedToBottomHeightProviderBuilder belowTop(int offset) {
-			this.root.addProperty("below_top", offset);
-			return this;
-		}
-
-	}
-
-	public static class VeryBiasedToBottomHeightProviderBuilder extends TypedJsonBuilder<JsonObject> {
-
-		public VeryBiasedToBottomHeightProviderBuilder() {
-			super(new JsonObject(), j->j);
-			this.root.addProperty("type", "minecraft:very_biased_to_bottom");
-		}
-
-		public VeryBiasedToBottomHeightProviderBuilder absolute(int offset) {
-			this.root.addProperty("absolute", offset);
-			return this;
-		}
-
-		public VeryBiasedToBottomHeightProviderBuilder aboveBottom(int offset) {
-			this.root.addProperty("above_bottom", offset);
-			return this;
-		}
-
-		public VeryBiasedToBottomHeightProviderBuilder belowTop(int offset) {
-			this.root.addProperty("below_top", offset);
-			return this;
-		}
-
-	}
-
-	public static class TrapezoidHeightProviderBuilder extends TypedJsonBuilder<JsonObject> {
-
-		public TrapezoidHeightProviderBuilder() {
-			super(new JsonObject(), j->j);
-			this.root.addProperty("type", "minecraft:trapezoid");
-		}
-
-		public TrapezoidHeightProviderBuilder absolute(int offset) {
-			this.root.addProperty("absolute", offset);
-			return this;
-		}
-
-		public TrapezoidHeightProviderBuilder aboveBottom(int offset) {
-			this.root.addProperty("above_bottom", offset);
-			return this;
-		}
-
-		public TrapezoidHeightProviderBuilder belowTop(int offset) {
-			this.root.addProperty("below_top", offset);
-			return this;
-		}
-
-	}
-
+		return builder;
+	} */
 }

@@ -16,7 +16,7 @@ public final class CookingRecipeBuilder extends RecipeBuilder<CookingRecipeBuild
      * @return this
      */
     public CookingRecipeBuilder ingredientItem(ResourceLocation id) {
-        root.add("ingredient", new JsonObjectBuilder().add("item", id.toString()).build());
+        root.add("ingredient", new JsonObjectBuilder().add("item", id.toString()).getData());
         return this;
     }
 
@@ -26,7 +26,7 @@ public final class CookingRecipeBuilder extends RecipeBuilder<CookingRecipeBuild
      * @return this
      */
     public CookingRecipeBuilder ingredientTag(ResourceLocation id) {
-        root.add("ingredient", new JsonObjectBuilder().add("tag", id.toString()).build());
+        root.add("ingredient", new JsonObjectBuilder().add("tag", id.toString()).getData());
         return this;
     }
 

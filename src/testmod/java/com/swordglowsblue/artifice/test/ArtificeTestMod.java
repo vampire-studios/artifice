@@ -3,6 +3,8 @@ package com.swordglowsblue.artifice.test;
 import io.github.vampirestudios.artifice.api.Artifice;
 import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.dimension.ChunkGeneratorTypeBuilder.FlatChunkGeneratorTypeBuilder.LayersBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.FloatProviderBuilders;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.HeightProviderBuilders;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.SurfaceRulesBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.YOffsetBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.biome.BiomeBuilder;
@@ -235,28 +237,12 @@ public class ArtificeTestMod implements ModInitializer {
 					carverBuilder
 							.probability(0.15F)
 							.type("minecraft:cave")
-							.y(heightProviderBuilders -> heightProviderBuilders.uniform("y",
-									uniformHeightProviderBuilder -> uniformHeightProviderBuilder
-											.minInclusive(YOffsetBuilder.aboveBottom(8))
-											.maxInclusive(YOffsetBuilder.absolute(180))
-							))
-							.yScale(heightProviderBuilders -> heightProviderBuilders.uniform("yScale",
-									uniformHeightProviderBuilder -> uniformHeightProviderBuilder
-											.minAndMaxInclusive(0.1F, 0.9F)
-							))
+							.y(HeightProviderBuilders.uniform("y",YOffsetBuilder.aboveBottom(8),YOffsetBuilder.absolute(180)))
+							.yScale(FloatProviderBuilders.uniform("yScale",0.1F, 0.9F))
 							.lavaLevel(YOffsetBuilder.aboveBottom(8))
-							.horizontalRadiusModifier(heightProviderBuilders -> heightProviderBuilders.uniform("horizontal_radius_modifier",
-									uniformHeightProviderBuilder -> uniformHeightProviderBuilder
-											.minAndMaxInclusive(1.7F, 2.4F)
-							))
-							.verticalRadiusModifier(heightProviderBuilders -> heightProviderBuilders.uniform("vertical_radius_modifier",
-									uniformHeightProviderBuilder -> uniformHeightProviderBuilder
-											.minAndMaxInclusive(1.5F, 2.1F)
-							))
-							.floorLevel(heightProviderBuilders -> heightProviderBuilders.uniform("floor_level",
-									uniformHeightProviderBuilder -> uniformHeightProviderBuilder
-											.minAndMaxInclusive(-1F, -0.4F)
-							))
+							.horizontalRadiusModifier(FloatProviderBuilders.uniform("horizontal_radius_modifier",1.7F, 2.4F))
+							.verticalRadiusModifier(FloatProviderBuilders.uniform("vertical_radius_modifier",1.5F, 2.1F))
+							.floorLevel(FloatProviderBuilders.uniform("floor_level",-1F, -0.4F))
 			);
 
 			// gotta wait on noise config

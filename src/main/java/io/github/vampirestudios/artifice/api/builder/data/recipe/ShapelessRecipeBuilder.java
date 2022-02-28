@@ -19,7 +19,7 @@ public final class ShapelessRecipeBuilder extends RecipeBuilder<ShapelessRecipeB
      */
     public ShapelessRecipeBuilder ingredientItem(ResourceLocation id) {
         with("ingredients", JsonArray::new, ingredients ->
-            ingredients.add(new JsonObjectBuilder().add("item", id.toString()).build()));
+            ingredients.add(new JsonObjectBuilder().add("item", id.toString()).getData()));
         return this;
     }
 
@@ -30,7 +30,7 @@ public final class ShapelessRecipeBuilder extends RecipeBuilder<ShapelessRecipeB
      */
     public ShapelessRecipeBuilder ingredientTag(ResourceLocation id) {
         with("ingredients", JsonArray::new, ingredients ->
-            ingredients.add(new JsonObjectBuilder().add("tag", id.toString()).build()));
+            ingredients.add(new JsonObjectBuilder().add("tag", id.toString()).getData()));
         return this;
     }
 
@@ -52,7 +52,7 @@ public final class ShapelessRecipeBuilder extends RecipeBuilder<ShapelessRecipeB
      * @return this
      */
     public ShapelessRecipeBuilder result(ResourceLocation id, int count) {
-        root.add("result", new JsonObjectBuilder().add("item", id.toString()).add("count", count).build());
+        root.add("result", new JsonObjectBuilder().add("item", id.toString()).add("count", count).getData());
         return this;
     }
 }

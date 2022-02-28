@@ -31,7 +31,7 @@ public final class ShapedRecipeBuilder extends RecipeBuilder<ShapedRecipeBuilder
      */
     public ShapedRecipeBuilder ingredientItem(Character key, ResourceLocation id) {
         with("key", JsonObject::new, ingredients ->
-            ingredients.add(key.toString(), new JsonObjectBuilder().add("item", id.toString()).build()));
+            ingredients.add(key.toString(), new JsonObjectBuilder().add("item", id.toString()).getData()));
         return this;
     }
 
@@ -43,7 +43,7 @@ public final class ShapedRecipeBuilder extends RecipeBuilder<ShapedRecipeBuilder
      */
     public ShapedRecipeBuilder ingredientTag(Character key, ResourceLocation id) {
         with("key", JsonObject::new, ingredients ->
-            ingredients.add(key.toString(), new JsonObjectBuilder().add("tag", id.toString()).build()));
+            ingredients.add(key.toString(), new JsonObjectBuilder().add("tag", id.toString()).getData()));
         return this;
     }
 
@@ -66,7 +66,7 @@ public final class ShapedRecipeBuilder extends RecipeBuilder<ShapedRecipeBuilder
      * @return this
      */
     public ShapedRecipeBuilder result(ResourceLocation id, int count) {
-        root.add("result", new JsonObjectBuilder().add("item", id.toString()).add("count", count).build());
+        root.add("result", new JsonObjectBuilder().add("item", id.toString()).add("count", count).getData());
         return this;
     }
 }

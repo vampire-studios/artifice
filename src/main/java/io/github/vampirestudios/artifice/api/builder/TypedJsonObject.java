@@ -7,7 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Map;
 
-public abstract class TypedJsonObject {
+public class TypedJsonObject {
     protected final JsonObject root;
 
     public TypedJsonObject() {

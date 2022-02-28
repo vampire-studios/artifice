@@ -74,7 +74,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
         JsonObject packMeta = new JsonObjectBuilder()
                         .add("pack_format", SharedConstants.getCurrentVersion().getPackVersion())
                         .add("description", description != null ? description : "In-memory resource pack created with Artifice")
-                        .build();
+                        .getData();
 
         JsonObject languageMeta = new JsonObject();
         if (isClient()) {
@@ -84,7 +84,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
         JsonObjectBuilder builder = new JsonObjectBuilder();
         builder.add("pack", packMeta);
         if (languages.size() > 0) builder.add("language", languageMeta);
-        this.metadata = new JsonResource<>(builder.build());
+        this.metadata = new JsonResource<>(builder.getData());
     }
 
     private boolean isClient() {
@@ -102,7 +102,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
                             .add("name", def.getName())
                             .add("region", def.getRegion())
                             .add("bidirectional", def.isBidirectional())
-                            .build());
+                            .getData());
         }
     }
 
@@ -183,12 +183,12 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
                 packMeta = new JsonObjectBuilder()
                         .add("pack_format", SharedConstants.getCurrentVersion().getPackVersion(PackType.RESOURCE))
                         .add("description", description != null ? description : "In-memory resource pack created with Artifice")
-                        .build();
+                        .getData();
             } else {
                 packMeta = new JsonObjectBuilder()
                         .add("pack_format", SharedConstants.getCurrentVersion().getPackVersion(PackType.DATA))
                         .add("description", description != null ? description : "In-memory data pack created with Artifice")
-                        .build();
+                        .getData();
             }
 
             JsonObject languageMeta = new JsonObject();
@@ -199,7 +199,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
             JsonObjectBuilder builder = new JsonObjectBuilder();
             builder.add("pack", packMeta);
             if (languages.size() > 0) builder.add("language", languageMeta);
-            JsonResource<JsonObject> mcmeta = new JsonResource<>(builder.build());
+            JsonResource<JsonObject> mcmeta = new JsonResource<>(builder.getData());
             writeResourceFile(new File(filePath + "/pack.mcmeta"), mcmeta);
             resources.forEach((id, resource) -> {
                 String path = String.format("./%s/%s/%s/%s", filePath, type, id.getNamespace(), id.getPath());

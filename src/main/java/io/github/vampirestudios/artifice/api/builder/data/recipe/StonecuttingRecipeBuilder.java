@@ -17,7 +17,7 @@ public final class StonecuttingRecipeBuilder extends RecipeBuilder<StonecuttingR
      * @return this
      */
     public StonecuttingRecipeBuilder ingredientItem(ResourceLocation id) {
-        root.add("ingredient", new JsonObjectBuilder().add("item", id.toString()).build());
+        root.add("ingredient", new JsonObjectBuilder().add("item", id.toString()).getData());
         return this;
     }
 
@@ -27,7 +27,7 @@ public final class StonecuttingRecipeBuilder extends RecipeBuilder<StonecuttingR
      * @return this
      */
     public StonecuttingRecipeBuilder ingredientTag(ResourceLocation id) {
-        root.add("ingredient", new JsonObjectBuilder().add("tag", id.toString()).build());
+        root.add("ingredient", new JsonObjectBuilder().add("tag", id.toString()).getData());
         return this;
     }
 

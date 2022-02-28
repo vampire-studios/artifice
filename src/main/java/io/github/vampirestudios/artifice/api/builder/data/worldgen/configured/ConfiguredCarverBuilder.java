@@ -2,6 +2,7 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured;
 
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.FloatProviderBuilders;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.HeightProviderBuilders;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.YOffsetBuilder;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
@@ -23,13 +24,13 @@ public class ConfiguredCarverBuilder extends TypedJsonBuilder<JsonResource<JsonO
         return this;
     }
 
-    public ConfiguredCarverBuilder y(Processor<HeightProviderBuilders> processor) {
-        with(this.root.getAsJsonObject("config"), "y", JsonObject::new, jsonObject -> processor.process(new HeightProviderBuilders()).buildTo(jsonObject));
+    public ConfiguredCarverBuilder y(HeightProviderBuilders processor) {
+        with(this.root.getAsJsonObject("config"), "y", JsonObject::new, processor::merge);
         return this;
     }
 
-    public ConfiguredCarverBuilder yScale(Processor<HeightProviderBuilders> processor) {
-        with(this.root.getAsJsonObject("config"), "yScale", JsonObject::new, jsonObject -> processor.process(new HeightProviderBuilders()).buildTo(jsonObject));
+    public ConfiguredCarverBuilder yScale(FloatProviderBuilders processor) {
+        with(this.root.getAsJsonObject("config"), "yScale", JsonObject::new, processor::merge);
         return this;
     }
 
@@ -38,18 +39,18 @@ public class ConfiguredCarverBuilder extends TypedJsonBuilder<JsonResource<JsonO
         return this;
     }
 
-    public ConfiguredCarverBuilder horizontalRadiusModifier(Processor<HeightProviderBuilders> processor) {
-        with(this.root.getAsJsonObject("config"), "horizontal_radius_multiplier", JsonObject::new, jsonObject -> processor.process(new HeightProviderBuilders()).buildTo(jsonObject));
+    public ConfiguredCarverBuilder horizontalRadiusModifier(FloatProviderBuilders processor) {
+        with(this.root.getAsJsonObject("config"), "horizontal_radius_multiplier", JsonObject::new, processor::merge);
         return this;
     }
 
-    public ConfiguredCarverBuilder verticalRadiusModifier(Processor<HeightProviderBuilders> processor) {
-        with(this.root.getAsJsonObject("config"), "vertical_radius_multiplier", JsonObject::new, jsonObject -> processor.process(new HeightProviderBuilders()).buildTo(jsonObject));
+    public ConfiguredCarverBuilder verticalRadiusModifier(FloatProviderBuilders processor) {
+        with(this.root.getAsJsonObject("config"), "vertical_radius_multiplier", JsonObject::new, processor::merge);
         return this;
     }
 
-    public ConfiguredCarverBuilder floorLevel(Processor<HeightProviderBuilders> processor) {
-        with(this.root.getAsJsonObject("config"), "floor_level", JsonObject::new, jsonObject -> processor.process(new HeightProviderBuilders()).buildTo(jsonObject));
+    public ConfiguredCarverBuilder floorLevel(FloatProviderBuilders processor) {
+        with(this.root.getAsJsonObject("config"), "floor_level", JsonObject::new, processor::merge);
         return this;
     }
 

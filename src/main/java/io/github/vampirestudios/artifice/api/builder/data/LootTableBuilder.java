@@ -64,7 +64,7 @@ public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonOb
          */
         public Pool condition(ResourceLocation id, Processor<JsonObjectBuilder> settings) {
             with("conditions", JsonArray::new, conditions ->
-                conditions.add(settings.process(new JsonObjectBuilder().add("condition", id.toString())).build()));
+                conditions.add(settings.process(new JsonObjectBuilder().add("condition", id.toString())).getData()));
             return this;
         }
 
@@ -85,7 +85,7 @@ public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonOb
          * @return this
          */
         public Pool rolls(int min, int max) {
-            root.add("rolls", new JsonObjectBuilder().add("min", min).add("max", max).build());
+            root.add("rolls", new JsonObjectBuilder().add("min", min).add("max", max).getData());
             return this;
         }
 
@@ -106,7 +106,7 @@ public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonOb
          * @return this
          */
         public Pool bonusRolls(float min, float max) {
-            root.add("bonus_rolls", new JsonObjectBuilder().add("min", min).add("max", max).build());
+            root.add("bonus_rolls", new JsonObjectBuilder().add("min", min).add("max", max).getData());
             return this;
         }
 
@@ -186,7 +186,7 @@ public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonOb
              */
             public Entry function(ResourceLocation id, Processor<Function> settings) {
                 with("functions", JsonArray::new, functions ->
-                    functions.add(settings.process(new Function(new JsonObjectBuilder().add("function", id.toString()).build())).build()));
+                    functions.add(settings.process(new Function(new JsonObjectBuilder().add("function", id.toString()).getData())).getData()));
                 return this;
             }
 
@@ -201,7 +201,7 @@ public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonOb
              */
             public Entry condition(ResourceLocation id, Processor<JsonObjectBuilder> settings) {
                 with("conditions", JsonArray::new, conditions ->
-                        conditions.add(settings.process(new JsonObjectBuilder().add("condition", id.toString())).build()));
+                        conditions.add(settings.process(new JsonObjectBuilder().add("condition", id.toString())).getData()));
                 return this;
             }
 
@@ -222,9 +222,8 @@ public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonOb
                  * @return this
                  * @see <a href="https://minecraft.gamepedia.com/Loot_table#Conditions" target="_blank">Minecraft Wiki</a>
                  */
-                public Function condition(ResourceLocation id, Processor<JsonObjectBuilder> settings) {
-                    with("conditions", JsonArray::new, conditions ->
-                        conditions.add(settings.process(new JsonObjectBuilder().add("condition", id.toString())).build()));
+                public Function condition(ResourceLocation id, JsonObjectBuilder settings) {
+                    join("conditions",arrayOf(settings.add("condition", id.toString())));
                     return this;
                 }
             }

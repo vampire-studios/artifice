@@ -54,7 +54,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
     @Nullable
     private final ResourceLocation identifier;
     private final Set<String> namespaces = new HashSet<>();
-    private final Map<ResourceLocation, ArtificeResource> resources = new HashMap<>();
+    private final Map<ResourceLocation, ArtificeResource<?>> resources = new HashMap<>();
     private final Set<LanguageInfo> languages = new HashSet<>();
     private final JsonResource<JsonObject> metadata;
 
@@ -65,15 +65,23 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
     private boolean overwrite;
 
     @SuppressWarnings("unchecked")
-    public <T extends ResourcePackBuilder> ArtificeResourcePackImpl(net.minecraft.server.packs.PackType type, ResourceLocation identifier, Consumer<T> registerResources) {
+    public <T extends ResourcePackBuilder> ArtificeResourcePackImpl(net.minecraft.server.packs.PackType type, @Nullable ResourceLocation identifier, Consumer<T> registerResources) {
         this.type = type;
         this.identifier = identifier;
         registerResources.accept((T) new ArtificeResourcePackBuilder());
 
-        JsonObject packMeta = new JsonObjectBuilder()
-                        .add("pack_format", SharedConstants.getCurrentVersion().getPackVersion())
-                        .add("description", description != null ? description : "In-memory resource pack created with Artifice")
-                        .build();
+        JsonObject packMeta;
+        if (type.equals(net.minecraft.server.packs.PackType.CLIENT_RESOURCES)) {
+            packMeta = new JsonObjectBuilder()
+                    .add("pack_format", SharedConstants.getCurrentVersion().getPackVersion(PackType.RESOURCE))
+                    .add("description", description != null ? description : "In-memory resource pack created with Artifice")
+                    .build();
+        } else {
+            packMeta = new JsonObjectBuilder()
+                    .add("pack_format", SharedConstants.getCurrentVersion().getPackVersion(PackType.DATA))
+                    .add("description", description != null ? description : "In-memory data pack created with Artifice")
+                    .build();
+        }
 
         JsonObject languageMeta = new JsonObject();
         if (isClient()) {
@@ -119,13 +127,14 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
             throw new IOException("Can't dump resources to " + folderPath + "; permission denied");
         }
 
-        writeResourceFile(new File(folderPath + "/pack.mcmeta"), metadata);
-        resources.forEach((id, resource) -> {
-            String path = String.format("./%s/%s/%s/%s", folderPath, this.type.getDirectory(), id.getNamespace(), id.getPath());
-            writeResourceFile(new File(path), resource);
-        });
-
-        LogManager.getLogger().info("[Artifice] Finished dumping " + getName() + " " + type.getDirectory() + ".");
+        new Thread(() -> {
+            writeResourceFile(new File(folderPath + "/pack.mcmeta"), metadata);
+            resources.forEach((id, resource) -> {
+                String path = String.format("./%s/%s/%s/%s", folderPath, this.type.getDirectory(), id.getNamespace(), id.getPath());
+                writeResourceFile(new File(path), resource);
+            });
+            LogManager.getLogger().info("[Artifice] Finished dumping " + getName() + " " + type.getDirectory() + ".");
+        }).start();
     }
 
     private void writeResourceFile(File output, ArtificeResource<?> resource) {
@@ -199,13 +208,14 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
             builder.add("pack", packMeta);
             if (languages.size() > 0) builder.add("language", languageMeta);
             JsonResource<JsonObject> mcmeta = new JsonResource<>(builder.build());
-            writeResourceFile(new File(filePath + "/pack.mcmeta"), mcmeta);
-            resources.forEach((id, resource) -> {
-                String path = String.format("./%s/%s/%s/%s", filePath, type, id.getNamespace(), id.getPath());
-                writeResourceFile(new File(path), resource);
-            });
-
-            LogManager.getLogger().info("[Artifice] Finished dumping " + getName() + " " + type + ".");
+            new Thread(() -> {
+                writeResourceFile(new File(filePath + "/pack.mcmeta"), mcmeta);
+                resources.forEach((id, resource) -> {
+                    String path = String.format("./%s/%s/%s/%s", filePath, type, id.getNamespace(), id.getPath());
+                    writeResourceFile(new File(path), resource);
+                });
+                LogManager.getLogger().info("[Artifice] Finished dumping " + getName() + " " + type + ".");
+            }).start();
         }
 
         private void writeResourceFile(File output, ArtificeResource<?> resource) {
@@ -422,7 +432,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
             this.add("recipes/", id, ".json", r -> f.process(r.type(new ResourceLocation("blasting"))), SmithingRecipeBuilder::new);
         }
 
-        private <T extends TypedJsonBuilder<? extends JsonResource>> void add(String path, ResourceLocation id, String ext, Processor<T> f, Supplier<T> ctor) {
+        private <T extends TypedJsonBuilder<? extends JsonResource<?>>> void add(String path, ResourceLocation id, String ext, Processor<T> f, Supplier<T> ctor) {
             this.add(IdUtils.wrapPath(path, id, ext), f.process(ctor.get()).build());
         }
     }
@@ -509,10 +519,10 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public <T extends Pack> ClientOnly<Pack> toClientResourcePackProfile(Pack.PackConstructor factory) {
+    public ClientOnly<Pack> toClientResourcePackProfile(Pack.PackConstructor factory) {
         Pack profile;
         String id = identifier == null ? "null" : identifier.toString();
-        if (!this.overwrite){
+        if (!this.overwrite) {
              profile = new ArtificeResourcePackContainer(this.optional, this.visible, Objects.requireNonNull(Pack.create(
                      id,
                     false, () -> this, factory,

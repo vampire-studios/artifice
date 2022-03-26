@@ -1,9 +1,9 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.gen;
 
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 
-public class TrunkPlacerBuilder extends TypedJsonBuilder<JsonObject> {
+public class TrunkPlacerBuilder extends TypedJsonObject<JsonObject> {
 
     public TrunkPlacerBuilder() {
         super(new JsonObject(), j->j);

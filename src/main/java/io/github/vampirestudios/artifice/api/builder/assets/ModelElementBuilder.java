@@ -1,7 +1,7 @@
 package io.github.vampirestudios.artifice.api.builder.assets;
 
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.util.Processor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -14,7 +14,7 @@ import net.minecraft.util.Mth;
  * @see ModelBuilder
  */
 @Environment(EnvType.CLIENT)
-public final class ModelElementBuilder extends TypedJsonBuilder<JsonObject> {
+public final class ModelElementBuilder extends TypedJsonObject<JsonObject> {
     ModelElementBuilder() { super(new JsonObject(), j->j); }
 
     /**
@@ -86,7 +86,7 @@ public final class ModelElementBuilder extends TypedJsonBuilder<JsonObject> {
      * @see ModelElementBuilder
      */
     @Environment(EnvType.CLIENT)
-    public static final class Rotation extends TypedJsonBuilder<JsonObject> {
+    public static final class Rotation extends TypedJsonObject<JsonObject> {
         private Rotation(JsonObject root) { super(root, j->j); }
 
         /**
@@ -144,7 +144,7 @@ public final class ModelElementBuilder extends TypedJsonBuilder<JsonObject> {
      * @see ModelElementBuilder
      */
     @Environment(EnvType.CLIENT)
-    public static final class Face extends TypedJsonBuilder<JsonObject> {
+    public static final class Face extends TypedJsonObject<JsonObject> {
         private Face(JsonObject root) { super(root, j->j); }
 
         /**

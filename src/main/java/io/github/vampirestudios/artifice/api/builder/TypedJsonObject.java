@@ -51,7 +51,13 @@ public class TypedJsonObject {
 
     public static JsonArray arrayOf(TypedJsonObject... values){
         JsonArray array = new JsonArray();
-        for(TypedJsonObject entry : values) array.add(entry.getData());
+        for(TypedJsonObject i : values) array.add(i.getData());
+        return array;
+    }
+
+    public static JsonArray arrayOf(JsonObject... values){
+        JsonArray array = new JsonArray();
+        for(JsonObject i : values) array.add(i);
         return array;
     }
 

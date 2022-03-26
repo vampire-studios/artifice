@@ -1,11 +1,11 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.gen;
 
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.UniformIntDistributionBuilder;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
-public class FoliagePlacerBuilder extends TypedJsonBuilder<JsonObject> {
+public class FoliagePlacerBuilder extends TypedJsonObject<JsonObject> {
 
     public FoliagePlacerBuilder() {
         super(new JsonObject(), j->j);

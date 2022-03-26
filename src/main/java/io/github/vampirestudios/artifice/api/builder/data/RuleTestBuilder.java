@@ -1,10 +1,10 @@
 package io.github.vampirestudios.artifice.api.builder.data;
 
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
-public class RuleTestBuilder extends TypedJsonBuilder<JsonObject> {
+public class RuleTestBuilder extends TypedJsonObject<JsonObject> {
 
     public RuleTestBuilder() {
         super(new JsonObject(), j->j);

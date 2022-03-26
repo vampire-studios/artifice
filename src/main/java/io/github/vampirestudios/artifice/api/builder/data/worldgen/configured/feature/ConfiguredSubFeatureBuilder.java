@@ -1,11 +1,11 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature;
 
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config.FeatureConfigBuilder;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
-public class ConfiguredSubFeatureBuilder extends TypedJsonBuilder<JsonObject> {
+public class ConfiguredSubFeatureBuilder extends TypedJsonObject<JsonObject> {
     public ConfiguredSubFeatureBuilder() {
         super(new JsonObject(), j->j);
     }

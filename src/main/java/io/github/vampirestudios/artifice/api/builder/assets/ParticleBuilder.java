@@ -2,7 +2,7 @@ package io.github.vampirestudios.artifice.api.builder.assets;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
  * Builder for a particle definition ({@code namespace:particles/particleid.json}).
  */
 @Environment(EnvType.CLIENT)
-public final class ParticleBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
+public final class ParticleBuilder extends TypedJsonObject<JsonResource<JsonObject>> {
     public ParticleBuilder() { super(new JsonObject(), JsonResource::new); }
 
     /**

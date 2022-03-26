@@ -2,9 +2,9 @@ package io.github.vampirestudios.artifice.api.builder.data.dimension;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 
-public class NoiseConfigBuilder extends TypedJsonBuilder<JsonObject> {
+public class NoiseConfigBuilder extends TypedJsonObject<JsonObject> {
     public NoiseConfigBuilder() {
         super(new JsonObject(), j->j);
     }

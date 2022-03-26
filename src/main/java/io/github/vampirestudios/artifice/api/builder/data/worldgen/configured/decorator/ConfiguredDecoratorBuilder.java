@@ -1,11 +1,11 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.decorator;
 
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.decorator.config.DecoratorConfigBuilder;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
-public class ConfiguredDecoratorBuilder extends TypedJsonBuilder<JsonObject> {
+public class ConfiguredDecoratorBuilder extends TypedJsonObject<JsonObject> {
 
     public ConfiguredDecoratorBuilder() {
         super(new JsonObject(), j->j);

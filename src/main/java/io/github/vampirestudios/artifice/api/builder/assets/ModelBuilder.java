@@ -2,7 +2,7 @@ package io.github.vampirestudios.artifice.api.builder.assets;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.Processor;
 import net.fabricmc.api.EnvType;
@@ -14,7 +14,7 @@ import net.minecraft.resources.ResourceLocation;
  * @see <a href="https://minecraft.gamepedia.com/Model" target="_blank">Minecraft Wiki</a>
  */
 @Environment(EnvType.CLIENT)
-public final class ModelBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
+public final class ModelBuilder extends TypedJsonObject<JsonResource<JsonObject>> {
     public ModelBuilder() { super(new JsonObject(), JsonResource::new); }
 
     /**
@@ -85,7 +85,7 @@ public final class ModelBuilder extends TypedJsonBuilder<JsonResource<JsonObject
      * @see ModelBuilder
      */
     @Environment(EnvType.CLIENT)
-    public static final class Display extends TypedJsonBuilder<JsonObject> {
+    public static final class Display extends TypedJsonObject<JsonObject> {
         private Display() { super(new JsonObject(), j->j); }
 
         /**
@@ -130,7 +130,7 @@ public final class ModelBuilder extends TypedJsonBuilder<JsonResource<JsonObject
      * @see ModelBuilder
      */
     @Environment(EnvType.CLIENT)
-    public static final class Override extends TypedJsonBuilder<JsonObject> {
+    public static final class Override extends TypedJsonObject<JsonObject> {
         private Override() { super(new JsonObject(), j->j); }
 
         /**

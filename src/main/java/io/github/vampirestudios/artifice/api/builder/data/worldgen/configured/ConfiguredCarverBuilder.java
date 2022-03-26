@@ -1,7 +1,7 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured;
 
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.FloatProviderBuilders;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.HeightProviderBuilders;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.YOffsetBuilder;
@@ -10,7 +10,7 @@ import io.github.vampirestudios.artifice.api.util.Processor;
 
 import java.util.Map;
 
-public class ConfiguredCarverBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
+public class ConfiguredCarverBuilder extends TypedJsonObject<JsonResource<JsonObject>> {
     public ConfiguredCarverBuilder() {
         super(new JsonObject(), JsonResource::new);
     }

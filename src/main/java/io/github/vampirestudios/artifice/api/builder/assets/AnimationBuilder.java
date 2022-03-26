@@ -3,7 +3,7 @@ package io.github.vampirestudios.artifice.api.builder.assets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.Processor;
 import net.fabricmc.api.EnvType;
@@ -14,7 +14,7 @@ import net.fabricmc.api.Environment;
  * @see <a href="https://minecraft.gamepedia.com/Resource_pack#Animation" target="_blank">Minecraft Wiki</a>
  */
 @Environment(EnvType.CLIENT)
-public final class AnimationBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
+public final class AnimationBuilder extends TypedJsonObject<JsonResource<JsonObject>> {
     public AnimationBuilder() { super(new JsonObject(), anim ->
         new JsonResource<>(new JsonObjectBuilder().add("animation", anim).build())); }
 

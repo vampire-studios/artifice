@@ -36,8 +36,8 @@ public final class StonecuttingRecipeBuilder extends RecipeBuilder<StonecuttingR
      * @param settings A callback which will be passed a {@link MultiIngredientBuilder}.
      * @return this
      */
-    public StonecuttingRecipeBuilder multiIngredient(Processor<MultiIngredientBuilder> settings) {
-        root.add("ingredient", settings.process(new MultiIngredientBuilder()).build());
+    public StonecuttingRecipeBuilder multiIngredient(MultiIngredientBuilder settings) {
+        root.add("ingredient", settings.build());
         return this;
     }
 

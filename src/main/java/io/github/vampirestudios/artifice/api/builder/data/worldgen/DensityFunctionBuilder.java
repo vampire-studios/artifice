@@ -1,15 +1,15 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen;
 
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.DensityFunction;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 
-public class DensityFunctionBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
+public class DensityFunctionBuilder extends TypedJsonObject {
 	public DensityFunctionBuilder() {
-		super(new JsonObject(), JsonResource::new);
+		super(new JsonObject());
 	}
 
 	public DensityFunctionBuilder type(String type) {

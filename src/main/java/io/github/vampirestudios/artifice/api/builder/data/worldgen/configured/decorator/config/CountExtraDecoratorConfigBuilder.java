@@ -7,17 +7,17 @@ public class CountExtraDecoratorConfigBuilder extends DecoratorConfigBuilder {
     }
 
     public CountExtraDecoratorConfigBuilder count(int count) {
-        this.root.addProperty("count", count);
+        add("count", count);
         return this;
     }
 
     public CountExtraDecoratorConfigBuilder extraCount(int extraCount) {
-        this.root.addProperty("extra_count", extraCount);
+        add("extra_count", extraCount);
         return this;
     }
 
     public CountExtraDecoratorConfigBuilder extraChance(float extraChance) {
-        this.root.addProperty("extra_chance", extraChance);
+        add("extra_chance", extraChance);
         return this;
     }
 }

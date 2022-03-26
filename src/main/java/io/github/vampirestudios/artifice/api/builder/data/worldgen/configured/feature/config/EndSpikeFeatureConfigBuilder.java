@@ -2,7 +2,7 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.f
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class EndSpikeFeatureConfigBuilder extends FeatureConfigBuilder {
@@ -30,7 +30,7 @@ public class EndSpikeFeatureConfigBuilder extends FeatureConfigBuilder {
         return this;
     }
 
-    public static class SpikeBuilder extends TypedJsonBuilder<JsonObject> {
+    public static class SpikeBuilder extends TypedJsonObject<JsonObject> {
         public SpikeBuilder() {
             super(new JsonObject(), j->j);
         }

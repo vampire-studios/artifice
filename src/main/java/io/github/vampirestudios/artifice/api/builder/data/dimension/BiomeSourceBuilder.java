@@ -2,10 +2,10 @@ package io.github.vampirestudios.artifice.api.builder.data.dimension;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
-public class BiomeSourceBuilder extends TypedJsonBuilder<JsonObject> {
+public class BiomeSourceBuilder extends TypedJsonObject<JsonObject> {
 
     public BiomeSourceBuilder() {
         super(new JsonObject(), j->j);
@@ -85,7 +85,7 @@ public class BiomeSourceBuilder extends TypedJsonBuilder<JsonObject> {
             return this;
         }
 
-        public static class BiomeBuilder extends TypedJsonBuilder<JsonObject> {
+        public static class BiomeBuilder extends TypedJsonObject<JsonObject> {
             protected BiomeBuilder() {
                 super(new JsonObject(), j->j);
             }
@@ -111,7 +111,7 @@ public class BiomeSourceBuilder extends TypedJsonBuilder<JsonObject> {
             }
         }
 
-        public static class BiomeParametersBuilder extends TypedJsonBuilder<JsonObject> {
+        public static class BiomeParametersBuilder extends TypedJsonObject<JsonObject> {
             protected BiomeParametersBuilder() {
                 super(new JsonObject(), j->j);
             }
@@ -208,7 +208,7 @@ public class BiomeSourceBuilder extends TypedJsonBuilder<JsonObject> {
             return this;
         }
 
-        public static class NoiseSettings extends TypedJsonBuilder<JsonObject> {
+        public static class NoiseSettings extends TypedJsonObject<JsonObject> {
             protected NoiseSettings() {
                 super(new JsonObject(), j->j);
             }
@@ -237,7 +237,7 @@ public class BiomeSourceBuilder extends TypedJsonBuilder<JsonObject> {
             }
         }
 
-        public static class AmplitudesBuilder extends TypedJsonBuilder<JsonObject> {
+        public static class AmplitudesBuilder extends TypedJsonObject<JsonObject> {
             protected AmplitudesBuilder() {
                 super(new JsonObject(), j->j);
             }

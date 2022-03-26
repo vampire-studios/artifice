@@ -3,7 +3,7 @@ package io.github.vampirestudios.artifice.api.builder.data;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.Processor;
 import net.minecraft.resources.ResourceLocation;
@@ -12,8 +12,8 @@ import net.minecraft.resources.ResourceLocation;
  * Builder for loot table files ({@code namespace:loot_tables/type/lootid.json}).
  * @see <a href="https://minecraft.gamepedia.com/Loot_table" target="_blank">Minecraft Wiki</a>
  */
-public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
-    public LootTableBuilder() { super(new JsonObject(), JsonResource::new); }
+public final class LootTableBuilder extends TypedJsonObject {
+    public LootTableBuilder() { super(new JsonObject()); }
 
     /**
      * Set the type of this loot table.
@@ -30,8 +30,8 @@ public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonOb
      * @param settings A callback which will be passed a {@link Pool}.
      * @return this
      */
-    public LootTableBuilder pool(Processor<Pool> settings) {
-        with("pools", JsonArray::new, pools -> pools.add(settings.process(new Pool()).build()));
+    public LootTableBuilder pool(Pool settings) {
+        join("pools", arrayOf(settings));
         return this;
     }
 
@@ -39,17 +39,16 @@ public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonOb
      * Builder for loot table pools.
      * @see LootTableBuilder
      */
-    public static final class Pool extends TypedJsonBuilder<JsonObject> {
-        private Pool() { super(new JsonObject(), j->j); }
+    public static final class Pool extends TypedJsonObject {
+        private Pool() { super(new JsonObject()); }
 
         /**
          * Add an entry to this pool.
          * @param settings A callback which will be passed an {@link Entry}.
          * @return this
          */
-        public Pool entry(Processor<Entry> settings) {
-            with("entries", JsonArray::new, entries ->
-                entries.add(settings.process(new Entry()).build()));
+        public Pool entry(Entry settings) {
+            join("entries", arrayOf(settings));
             return this;
         }
 
@@ -114,8 +113,8 @@ public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonOb
          * Builder for a loot table pool entry.
          * @see Pool
          */
-        public static final class Entry extends TypedJsonBuilder<JsonObject> {
-            private Entry() { super(new JsonObject(), j->j); }
+        public static final class Entry extends TypedJsonObject {
+            private Entry() { super(new JsonObject()); }
 
             /**
              * Set the type of this entry.
@@ -142,8 +141,8 @@ public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonOb
              * @param settings A callback which will be passed an {@link Entry}.
              * @return this
              */
-            public Entry child(Processor<Entry> settings) {
-                with("children", JsonArray::new, children -> children.add(settings.process(new Entry()).build()));
+            public Entry child(Entry settings) {
+                join("children", settings.getData());
                 return this;
             }
 
@@ -184,8 +183,8 @@ public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonOb
              * @return this
              * @see <a href="https://minecraft.gamepedia.com/Loot_table#Functions" target="_blank">Minecraft Wiki</a>
              */
-            public Entry function(ResourceLocation id, Processor<Function> settings) {
-                with("functions", JsonArray::new, functions ->
+            public Entry function(ResourceLocation id, Function settings) {
+                join("functions", JsonArray::new, functions ->
                     functions.add(settings.process(new Function(new JsonObjectBuilder().add("function", id.toString()).getData())).getData()));
                 return this;
             }
@@ -210,7 +209,7 @@ public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonOb
              * @see Entry
              * @see <a href="https://minecraft.gamepedia.com/Loot_table#Functions" target="_blank">Minecraft Wiki</a>
              */
-            public static final class Function extends JsonObjectBuilder {
+            public static final class Function extends TypedJsonObject {
                 private Function(JsonObject func) { super(func); }
 
                 /**
@@ -218,12 +217,12 @@ public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonOb
                  * The specific properties of this vary by condition, so this falls through to direct JSON building.
                  *
                  * @param id The condition ID.
-                 * @param settings A callback which will be passed a {@link JsonObjectBuilder}.
+                 * @param settings A callback which will be passed a {@link TypedJsonObject}.
                  * @return this
                  * @see <a href="https://minecraft.gamepedia.com/Loot_table#Conditions" target="_blank">Minecraft Wiki</a>
                  */
-                public Function condition(ResourceLocation id, JsonObjectBuilder settings) {
-                    join("conditions",arrayOf(settings.add("condition", id.toString())));
+                public Function condition(ResourceLocation id, TypedJsonObject settings) {
+                    this.join("conditions",arrayOf(settings.add("condition", id.toString())));
                     return this;
                 }
             }

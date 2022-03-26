@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import com.mojang.bridge.game.PackType;
 import io.github.vampirestudios.artifice.api.ArtificeResourcePack;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.assets.*;
 import io.github.vampirestudios.artifice.api.builder.data.AdvancementBuilder;
@@ -423,7 +423,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
             this.add("recipes/", id, ".json", r -> f.process(r.type(new ResourceLocation("blasting"))), SmithingRecipeBuilder::new);
         }
 
-        private <T extends TypedJsonBuilder<? extends JsonResource>> void add(String path, ResourceLocation id, String ext, Processor<T> f, Supplier<T> ctor) {
+        private <T extends TypedJsonObject<? extends JsonResource>> void add(String path, ResourceLocation id, String ext, Processor<T> f, Supplier<T> ctor) {
             this.add(IdUtils.wrapPath(path, id, ext), f.process(ctor.get()).build());
         }
 

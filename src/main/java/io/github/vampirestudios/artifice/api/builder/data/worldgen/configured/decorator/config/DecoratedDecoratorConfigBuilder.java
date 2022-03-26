@@ -10,13 +10,13 @@ public class DecoratedDecoratorConfigBuilder extends DecoratorConfigBuilder {
         super();
     }
 
-    public DecoratedDecoratorConfigBuilder outerDecorator(Processor<ConfiguredDecoratorBuilder> processor) {
-        with("outer", JsonObject::new, jsonObject -> processor.process(new ConfiguredDecoratorBuilder()).buildTo(jsonObject));
+    public DecoratedDecoratorConfigBuilder outerDecorator(ConfiguredDecoratorBuilder processor) {
+        join("outer", processor.getData());
         return this;
     }
 
-    public DecoratedDecoratorConfigBuilder innerDecorator(Processor<ConfiguredDecoratorBuilder> processor) {
-        with("inner", JsonObject::new, jsonObject -> processor.process(new ConfiguredDecoratorBuilder()).buildTo(jsonObject));
+    public DecoratedDecoratorConfigBuilder innerDecorator(ConfiguredDecoratorBuilder processor) {
+        join("inner", processor.getData());
         return this;
     }
 }

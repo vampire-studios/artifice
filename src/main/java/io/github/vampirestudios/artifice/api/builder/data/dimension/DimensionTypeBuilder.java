@@ -2,13 +2,13 @@ package io.github.vampirestudios.artifice.api.builder.data.dimension;
 
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.TagResourceLocation;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
-public final class DimensionTypeBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
+public final class DimensionTypeBuilder extends TypedJsonObject<JsonResource<JsonObject>> {
     public DimensionTypeBuilder() {
         super(new JsonObject(), JsonResource::new);
     }

@@ -1,7 +1,7 @@
 package io.github.vampirestudios.artifice.api.builder.data.recipe;
 
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import net.minecraft.resources.ResourceLocation;
 
@@ -11,8 +11,8 @@ import net.minecraft.resources.ResourceLocation;
  * @see <a href="https://minecraft.gamepedia.com/Recipe#JSON_format" target="_blank">Minecraft Wiki</a>
  */
 @SuppressWarnings("unchecked")
-public abstract class RecipeBuilder<T extends RecipeBuilder<T>> extends TypedJsonBuilder<JsonResource<JsonObject>> {
-    protected RecipeBuilder() { super(new JsonObject(), JsonResource::new); }
+public abstract class RecipeBuilder<T extends RecipeBuilder<T>> extends TypedJsonObject {
+    protected RecipeBuilder() { super(new JsonObject()); }
 
     /**
      * Set the type of this recipe.

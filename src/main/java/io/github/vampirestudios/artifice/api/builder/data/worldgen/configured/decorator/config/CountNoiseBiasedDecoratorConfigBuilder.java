@@ -7,7 +7,7 @@ public class CountNoiseBiasedDecoratorConfigBuilder extends DecoratorConfigBuild
     }
 
     public CountNoiseBiasedDecoratorConfigBuilder noiseToCountRatio(int noiseToCountRatio) {
-        this.root.addProperty("noise_to_count_ratio", noiseToCountRatio);
+        add("noise_to_count_ratio", noiseToCountRatio);
         return this;
     }
 

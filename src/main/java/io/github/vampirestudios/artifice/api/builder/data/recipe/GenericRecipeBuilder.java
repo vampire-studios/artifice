@@ -3,6 +3,7 @@ package io.github.vampirestudios.artifice.api.builder.data.recipe;
 import com.google.gson.JsonElement;
 import io.github.vampirestudios.artifice.api.builder.JsonArrayBuilder;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
 /**
@@ -68,11 +69,11 @@ public final class GenericRecipeBuilder extends RecipeBuilder<GenericRecipeBuild
     /**
      * Add a JSON object to this recipe.
      * @param name The key.
-     * @param settings A callback which will be passed a {@link JsonObjectBuilder}.
+     * @param settings A callback which will be passed a {@link TypedJsonObject}.
      * @return this
      */
-    public RecipeBuilder addObject(String name, Processor<JsonObjectBuilder> settings) {
-        root.add(name, settings.process(new JsonObjectBuilder()).build());
+    public RecipeBuilder addObject(String name, TypedJsonObject settings) {
+        root.add(name, settings.getData());
         return this;
     }
 

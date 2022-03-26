@@ -1,12 +1,12 @@
 package io.github.vampirestudios.artifice.api.builder.data.dimension;
 
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.Processor;
 import net.minecraft.resources.ResourceLocation;
 
-public class DimensionBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
+public class DimensionBuilder extends TypedJsonObject<JsonResource<JsonObject>> {
     public DimensionBuilder() {
         super(new JsonObject(), JsonResource::new);
     }

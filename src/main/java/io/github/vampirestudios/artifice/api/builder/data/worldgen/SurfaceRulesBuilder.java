@@ -3,9 +3,7 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
-import java.util.Map;
 
 public class SurfaceRulesBuilder extends TypedJsonObject {
 

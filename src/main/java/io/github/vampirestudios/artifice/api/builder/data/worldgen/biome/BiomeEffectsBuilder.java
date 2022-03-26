@@ -1,13 +1,13 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.biome;
 
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
-public class BiomeEffectsBuilder extends TypedJsonBuilder<JsonObject> {
+public class BiomeEffectsBuilder extends TypedJsonObject {
 
     public BiomeEffectsBuilder() {
-        super(new JsonObject(), j->j);
+        super(new JsonObject());
     }
 
     /**
@@ -78,30 +78,30 @@ public class BiomeEffectsBuilder extends TypedJsonBuilder<JsonObject> {
         return this;
     }
 
-    public BiomeEffectsBuilder moodSound(Processor<BiomeMoodSoundBuilder> biomeMoodSoundBuilder) {
-        with("mood_sound", JsonObject::new, biomeMoodSound -> biomeMoodSoundBuilder.process(new BiomeMoodSoundBuilder()).buildTo(biomeMoodSound));
+    public BiomeEffectsBuilder moodSound(BiomeMoodSoundBuilder biomeMoodSoundBuilder) {
+        join("mood_sound", biomeMoodSoundBuilder.getData());
         return this;
     }
 
-    public BiomeEffectsBuilder additionsSound(Processor<BiomeAdditionsSoundBuilder> biomeAdditionsSoundBuilder) {
-        with("additions_sound", JsonObject::new, biomeAdditionsSound -> biomeAdditionsSoundBuilder.process(new BiomeAdditionsSoundBuilder()).buildTo(biomeAdditionsSound));
+    public BiomeEffectsBuilder additionsSound(BiomeAdditionsSoundBuilder biomeAdditionsSoundBuilder) {
+        join("additions_sound", biomeAdditionsSoundBuilder.getData());
         return this;
     }
 
-    public BiomeEffectsBuilder music(Processor<BiomeMusicSoundBuilder> biomeMusicSoundBuilder) {
-        with("music", JsonObject::new, biomeMusicSound -> biomeMusicSoundBuilder.process(new BiomeMusicSoundBuilder()).buildTo(biomeMusicSound));
+    public BiomeEffectsBuilder music(BiomeMusicSoundBuilder biomeMusicSoundBuilder) {
+        join("music", biomeMusicSoundBuilder.getData());
         return this;
     }
 
-    public BiomeEffectsBuilder particle(Processor<BiomeParticleConfigBuilder> biomeParticleConfigBuilder) {
-        with("particle", JsonObject::new, biomeParticleConfig -> biomeParticleConfigBuilder.process(new BiomeParticleConfigBuilder()).buildTo(biomeParticleConfig));
+    public BiomeEffectsBuilder particle(BiomeParticleConfigBuilder biomeParticleConfigBuilder) {
+        join("particle", biomeParticleConfigBuilder.getData());
         return this;
     }
 
-    public static class BiomeMoodSoundBuilder extends TypedJsonBuilder<JsonObject> {
+    public static class BiomeMoodSoundBuilder extends TypedJsonObject {
 
         public BiomeMoodSoundBuilder() {
-            super(new JsonObject(), j->j);
+            super(new JsonObject());
         }
 
         public BiomeMoodSoundBuilder tickDelay(int tick_delay) {
@@ -125,10 +125,10 @@ public class BiomeEffectsBuilder extends TypedJsonBuilder<JsonObject> {
         }
     }
 
-    public static class BiomeMusicSoundBuilder extends TypedJsonBuilder<JsonObject> {
+    public static class BiomeMusicSoundBuilder extends TypedJsonObject {
 
         public BiomeMusicSoundBuilder() {
-            super(new JsonObject(), j->j);
+            super(new JsonObject());
         }
 
         public BiomeMusicSoundBuilder minDelay(int min_delay) {
@@ -152,10 +152,10 @@ public class BiomeEffectsBuilder extends TypedJsonBuilder<JsonObject> {
         }
     }
 
-    public static class BiomeAdditionsSoundBuilder extends TypedJsonBuilder<JsonObject> {
+    public static class BiomeAdditionsSoundBuilder extends TypedJsonObject {
 
         public BiomeAdditionsSoundBuilder() {
-            super(new JsonObject(), j->j);
+            super(new JsonObject());
         }
 
         public BiomeAdditionsSoundBuilder tickChance(double tick_chance) {
@@ -169,10 +169,10 @@ public class BiomeEffectsBuilder extends TypedJsonBuilder<JsonObject> {
         }
     }
 
-    public static class BiomeParticleConfigBuilder extends TypedJsonBuilder<JsonObject> {
+    public static class BiomeParticleConfigBuilder extends TypedJsonObject {
 
         public BiomeParticleConfigBuilder() {
-            super(new JsonObject(), j->j);
+            super(new JsonObject());
         }
 
         public BiomeParticleConfigBuilder probability(float probability) {

@@ -1,10 +1,10 @@
 package io.github.vampirestudios.artifice.api.builder.data.dimension;
 
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
-public class ChunkGeneratorTypeBuilder extends TypedJsonBuilder<JsonObject> {
+public class ChunkGeneratorTypeBuilder extends TypedJsonObject<JsonObject> {
 
     protected ChunkGeneratorTypeBuilder() {
         super(new JsonObject(), j->j);

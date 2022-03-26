@@ -2,19 +2,20 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen.biome;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.Processor;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.GenerationStep;
 
-public class BiomeBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
+public class BiomeBuilder extends TypedJsonObject {
     public BiomeBuilder() {
-        super(new JsonObject(), JsonResource::new);
-        this.root.add("carvers", new JsonObject());
-        this.root.add("starts", new JsonArray());
-        this.root.add("features", new JsonArray());
+        super(new JsonObject());
+        this.add("carvers", new JsonObject());
+        this.add("starts", new JsonArray());
+        this.add("features", new JsonArray());
         for (GenerationStep.Decoration step : GenerationStep.Decoration.values()) {
             this.root.getAsJsonArray("features").add(new JsonArray());
         }
@@ -50,22 +51,23 @@ public class BiomeBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
         return this;
     }
 
-    public BiomeBuilder effects(Processor<BiomeEffectsBuilder> biomeEffectsBuilder) {
-        with("effects", JsonObject::new, biomeEffects -> biomeEffectsBuilder.process(new BiomeEffectsBuilder()).buildTo(biomeEffects));
+    public BiomeBuilder effects(BiomeEffectsBuilder biomeEffectsBuilder) {
+        join("effects", biomeEffectsBuilder.getData());
         return this;
     }
 
     public BiomeBuilder addSpawnCosts(String entityID, SpawnDensityBuilder spawnDensityBuilderProcessor) {
-        with(entityID, JsonObject::new, spawnDensityBuilder -> {
-            spawnDensityBuilder.addProperty("energy_budget", spawnDensityBuilderProcessor.energyBudget);
-            spawnDensityBuilder.addProperty("charge", spawnDensityBuilderProcessor.charge);
-        });
+        TypedJsonObject spawnDensityBuilder = new TypedJsonObject();
+        spawnDensityBuilder.add("energy_budget", spawnDensityBuilderProcessor.energyBudget)
+                .add("charge", spawnDensityBuilderProcessor.charge);
+        join(entityID, spawnDensityBuilder.getData());
         return this;
     }
 
-    public BiomeBuilder addSpawnEntry(MobCategory spawnGroup, Processor<BiomeSpawnEntryBuilder> biomeSpawnEntryBuilderProcessor) {
-        this.root.getAsJsonObject("spawners").get(spawnGroup.getName()).getAsJsonArray()
-                .add(biomeSpawnEntryBuilderProcessor.process(new BiomeSpawnEntryBuilder()).buildTo(new JsonObject()));
+    public BiomeBuilder addSpawnEntry(MobCategory spawnGroup, BiomeSpawnEntryBuilder biomeSpawnEntryBuilderProcessor) {
+        this.root.getAsJsonObject("spawners").get(spawnGroup.getName())
+                .getAsJsonArray()
+                .add(biomeSpawnEntryBuilderProcessor.getData());
         return this;
     }
 

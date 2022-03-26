@@ -3,9 +3,7 @@ package io.github.vampirestudios.artifice.api.builder.data;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
-import io.github.vampirestudios.artifice.api.resource.JsonResource;
-import io.github.vampirestudios.artifice.api.util.Processor;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -13,17 +11,16 @@ import net.minecraft.resources.ResourceLocation;
  * Builder for advancement files ({@code namespace:advancements/advid.json}).
  * @see <a href="https://minecraft.gamepedia.com/Advancements#JSON_Format" target="_blank">Minecraft Wiki</a>
  */
-public final class AdvancementBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
-    public AdvancementBuilder() { super(new JsonObject(), JsonResource::new); }
+public final class AdvancementBuilder extends TypedJsonObject {
+    public AdvancementBuilder() { super(new JsonObject()); }
 
     /**
      * Set the display options for this advancement.
      * @param settings A callback which will be passed a {@link Display}.
      * @return this
      */
-    public AdvancementBuilder display(Processor<Display> settings) {
-        with("display", JsonObject::new, display ->
-            settings.process(new Display()).buildTo(display));
+    public AdvancementBuilder display(Display settings) {
+        join("display", settings.getData());
         return this;
     }
 
@@ -43,8 +40,8 @@ public final class AdvancementBuilder extends TypedJsonBuilder<JsonResource<Json
      * @param settings A callback which will be passed a {@link Criteria}.
      * @return this
      */
-    public AdvancementBuilder criteria(String name, Processor<Criteria> settings) {
-        with("criteria", JsonObject::new, criteria -> with(criteria, name, JsonObject::new, criterion ->
+    public AdvancementBuilder criteria(String name, Criteria settings) {
+        join("criteria", JsonObject::new, criteria -> with(criteria, name, JsonObject::new, criterion ->
             settings.process(new Criteria()).buildTo(criterion)));
         return this;
     }
@@ -60,11 +57,7 @@ public final class AdvancementBuilder extends TypedJsonBuilder<JsonResource<Json
      * @return this
      */
     public AdvancementBuilder requirement(String... anyOf) {
-        with("requirements", JsonArray::new, requirements -> {
-            JsonArray array = new JsonArray();
-            for(String name : anyOf) array.add(name);
-            requirements.add(array);
-        });
+        join("requirements", arrayOf(anyOf));
         return this;
     }
 
@@ -72,8 +65,8 @@ public final class AdvancementBuilder extends TypedJsonBuilder<JsonResource<Json
      * Builder for advancement display properties.
      * @see AdvancementBuilder
      */
-    public static final class Display extends TypedJsonBuilder<JsonObject> {
-        private Display() { super(new JsonObject(), j->j); }
+    public static final class Display extends TypedJsonObject {
+        private Display() { super(); }
 
         /**
          * Set the icon item of this advancement.
@@ -89,10 +82,10 @@ public final class AdvancementBuilder extends TypedJsonBuilder<JsonResource<Json
          * @return this
          */
         public Display icon(ResourceLocation item, String nbt) {
-            with("icon", JsonObject::new, icon -> {
-               icon.addProperty("item", item.toString());
-               if(nbt != null) icon.addProperty("nbt", nbt);
-            });
+            TypedJsonObject icon = new TypedJsonObject();
+            icon.add("item", item.toString());
+            if(nbt != null) icon.add("nbt", nbt);
+            join("icon", icon.getData());
             return this;
         }
 
@@ -205,14 +198,14 @@ public final class AdvancementBuilder extends TypedJsonBuilder<JsonResource<Json
      * @see AdvancementBuilder
      * @see <a href="https://minecraft.gamepedia.com/Advancements#List_of_triggers" target="_blank">Minecraft Wiki</a>
      */
-    public static final class Criteria extends TypedJsonBuilder<JsonObject> {
-        private Criteria() { super(new JsonObject(), j->j); }
+    public static final class Criteria extends TypedJsonObject {
+        private Criteria() { super(); }
 
         /**
          * Set the trigger condition of this criteria.
          * @param id The trigger ID ({@code namespace:triggerid}).
          * @return this
-         * @see <a href="https://minecraft.gamepedia.com/Advancements#List_of_triggers" target="_blank">Minecraft Wiki</a>
+         * @see <a href="https://minecraft.fandom.com/wiki/Advancement/JSON_format#List_of_triggers" target="_blank">Minecraft Wiki</a>
          */
         public Criteria trigger(ResourceLocation id) {
             root.addProperty("trigger", id.toString());
@@ -227,8 +220,8 @@ public final class AdvancementBuilder extends TypedJsonBuilder<JsonResource<Json
          * @return this
          * @see <a href="https://minecraft.gamepedia.com/Advancements#List_of_triggers" target="_blank">Minecraft Wiki</a>
          */
-        public Criteria conditions(Processor<JsonObjectBuilder> settings) {
-            root.add("conditions", settings.process(new JsonObjectBuilder()).build());
+        public Criteria conditions(JsonObjectBuilder settings) {
+            root.add("conditions", settings.getData());
             return this;
         }
     }

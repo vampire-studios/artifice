@@ -41,16 +41,6 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonBuilder<JsonObject> {
         }
 
         /**
-         * Set a seed specially for this dimension.
-         * @param seed
-         * @return
-         */
-        public NoiseChunkGeneratorTypeBuilder seed(int seed) {
-            this.root.addProperty("seed", seed);
-            return this;
-        }
-
-        /**
          * @deprecated use noiseSettings instead.
          */
         @Deprecated

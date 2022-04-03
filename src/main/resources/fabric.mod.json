@@ -24,12 +24,23 @@
   "accessWidener": "artifice.accesswidener",
 
   "depends": {
-    "minecraft": ">=1.18",
+    "minecraft": "1.19-alpha.22.13.a",
     "fabricloader": ">=0.13.3",
     "java": "17"
   },
-
   "custom": {
-    "modmenu:api": true
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/63hmSTxyDA"
+      },
+      "badges": [
+        "library"
+      ],
+      "parent": {
+        "id": "vampire-studios-mods",
+        "name": "Vampire Studios' Mods",
+        "description": "All the mods from Vampire Studios"
+      }
+    }
   }
 }

@@ -82,6 +82,8 @@ public class JsonHelper {
 		ABS("minecraft:abs"),
 		NOISE("minecraft:noise"),
 		SHIFTED_NOISE("minecraft:shifted_noise"),
+		OLD_BLENDED_NOISE("minecraft:old_blended_noise"),
+		Y_CLAMPED_GRADIENT("minecraft:y_clamped_gradient"),
 		CLAMP("minecraft:clamp"),
 		SQUARE("minecraft:square"),
 		SQUEEZE("minecraft:squeeze"),

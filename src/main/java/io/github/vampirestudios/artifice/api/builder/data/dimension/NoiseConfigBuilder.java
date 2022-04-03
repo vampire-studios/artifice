@@ -56,56 +56,6 @@ public class NoiseConfigBuilder extends TypedJsonBuilder<JsonObject> {
         return this;
     }
 
-    /**
-     * Build noise sampling config.
-     */
-    public NoiseConfigBuilder sampling(double xzScale, double yScale, double xzFactor, double yFactor) {
-        JsonObject obj = new JsonObject();
-        noiseChecker(xzScale,"xz_scale");
-        noiseChecker(yScale,"y_scale");
-        noiseChecker(xzFactor,"xz_factor");
-        noiseChecker(yFactor,"y_factor");
-        obj.addProperty("xz_scale", xzScale);
-        obj.addProperty("y_scale", yScale);
-        obj.addProperty("xz_factor", xzFactor);
-        obj.addProperty("y_factor", yFactor);
-        this.root.add("sampling",obj);
-        return this;
-    }
-
-    void noiseChecker(double check, String name){
-        if (check > 1000.0D) throw new IllegalArgumentException(name + " can't be higher than 1000.0D! Found " + check);
-        if (check < 0.001D) throw new IllegalArgumentException(name + " can't be smaller than 0.001D! Found " + check);
-    }
-
-    /**
-     * Build slide config.
-     */
-    private NoiseConfigBuilder slideConfig(String id, double target, int size, int offset) {
-        JsonObject obj = new JsonObject();
-        obj.addProperty("target", target);
-        if (size > 255) throw new IllegalArgumentException("size can't be higher than 255! Found " + size);
-        if (size < 0) throw new IllegalArgumentException("size can't be smaller than 0! Found " + size);
-        obj.addProperty("size", size);
-        obj.addProperty("offset", offset);
-        this.root.add(id,obj);
-        return this;
-    }
-
-    /**
-     * Build top slide.
-     */
-    public NoiseConfigBuilder topSlide(double target, int size, int offset) {
-        return this.slideConfig("top_slide", target, size, offset);
-    }
-
-    /**
-     * Build bottom slide.
-     */
-    public NoiseConfigBuilder bottomSlide(double target, int size, int offset) {
-        return this.slideConfig("bottom_slide", target, size, offset);
-    }
-
     //todo a better system for this
     private NoiseConfigBuilder terrainShaper(Object offset, Object factor, Object jaggedness,int differentiator) {
         JsonObject obj = new JsonObject();

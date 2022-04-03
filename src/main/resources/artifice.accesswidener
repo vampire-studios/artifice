@@ -25,4 +25,3 @@ transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData S
 
 accessible method net/minecraft/world/level/levelgen/NoiseGeneratorSettings overworld (ZZ)Lnet/minecraft/world/level/levelgen/NoiseGeneratorSettings;
 accessible method net/minecraft/world/level/levelgen/NoiseSettings overworldNoiseSettings (Z)Lnet/minecraft/world/level/levelgen/NoiseSettings;
-accessible method net/minecraft/world/level/levelgen/NoiseRouterData overworld (Lnet/minecraft/world/level/levelgen/NoiseSettings;Z)Lnet/minecraft/world/level/levelgen/NoiseRouterWithOnlyNoises;

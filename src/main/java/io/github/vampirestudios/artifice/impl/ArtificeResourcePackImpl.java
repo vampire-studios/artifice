@@ -21,7 +21,7 @@ import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.Co
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.ConfiguredSurfaceBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.ConfiguredFeatureBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.PlacedFeatureBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.structure.ConfiguredStructureFeatureBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.structure.StructureBuilder;
 import io.github.vampirestudios.artifice.api.resource.ArtificeResource;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.IdUtils;
@@ -333,8 +333,8 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
         }
 
         @Override
-        public void addConfiguredStructureFeature(ResourceLocation id, Processor<ConfiguredStructureFeatureBuilder> f) {
-            this.add("worldgen/configured_structure_feature/", id, ".json", f, ConfiguredStructureFeatureBuilder::new);
+        public void addStructure(ResourceLocation id, Processor<StructureBuilder> f) {
+            this.add("worldgen/structure/", id, ".json", f, StructureBuilder::new);
         }
 
         @Override
@@ -450,10 +450,10 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
     }
 
     @Override
-    public Collection<ResourceLocation> getResources(net.minecraft.server.packs.PackType type, String namespace, String prefix, int maxDepth, Predicate<String> pathFilter) {
+    public Collection<ResourceLocation> getResources(net.minecraft.server.packs.PackType type, String namespace, String prefix, Predicate<ResourceLocation> pathFilter) {
         if (type != this.type) return new HashSet<>();
         Set<ResourceLocation> keys = new HashSet<>(this.resources.keySet());
-        keys.removeIf(id -> !id.getPath().startsWith(prefix) || !pathFilter.test(id.getPath()));
+        keys.removeIf(id -> !id.getPath().startsWith(prefix) || !pathFilter.test(id));
         return keys;
     }
 

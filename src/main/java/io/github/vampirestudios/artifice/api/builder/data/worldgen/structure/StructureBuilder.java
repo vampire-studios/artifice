@@ -1,4 +1,4 @@
-package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.structure;
+package io.github.vampirestudios.artifice.api.builder.data.worldgen.structure;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -7,27 +7,27 @@ import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.fe
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
-public class ConfiguredStructureFeatureBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
-	public ConfiguredStructureFeatureBuilder() {
+public class StructureBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
+	public StructureBuilder() {
 		super(new JsonObject(), JsonResource::new);
 	}
 
-	public ConfiguredStructureFeatureBuilder type(String type) {
+	public StructureBuilder type(String type) {
 		this.root.addProperty("type", type);
 		return this;
 	}
 
-	public ConfiguredStructureFeatureBuilder singleBiome(String biome) {
+	public StructureBuilder singleBiome(String biome) {
 		this.root.addProperty("biomes", biome);
 		return this;
 	}
 
-	public ConfiguredStructureFeatureBuilder biomeTag(String tag) {
+	public StructureBuilder biomeTag(String tag) {
 		this.root.addProperty("biomes", tag);
 		return this;
 	}
 
-	public ConfiguredStructureFeatureBuilder multipleBiomes(String... biomes) {
+	public StructureBuilder multipleBiomes(String... biomes) {
 		JsonArray biomesArray = new JsonArray();
 		for (String s : biomes) {
 			biomesArray.add(s);
@@ -39,17 +39,17 @@ public class ConfiguredStructureFeatureBuilder extends TypedJsonBuilder<JsonReso
 	/*
 	* Weather or not it should add extra terrain below the structure.
 	* */
-	public ConfiguredStructureFeatureBuilder adoptNoise(boolean adoptNoise) {
+	public StructureBuilder adoptNoise(boolean adoptNoise) {
 		this.root.addProperty("adoptNoise", adoptNoise);
 		return this;
 	}
 
-	public ConfiguredStructureFeatureBuilder spawnOverrides(Processor<SpawnOverridesBuilder> processor) {
+	public StructureBuilder spawnOverrides(Processor<SpawnOverridesBuilder> processor) {
 		with("spawn_overrides", JsonObject::new, jsonObject -> processor.process(new SpawnOverridesBuilder()).buildTo(jsonObject));
 		return this;
 	}
 
-	public ConfiguredStructureFeatureBuilder featureConfig(Processor<FeatureConfigBuilder> processor) {
+	public StructureBuilder featureConfig(Processor<FeatureConfigBuilder> processor) {
 		with("config", JsonObject::new, jsonObject -> processor.process(new FeatureConfigBuilder()).buildTo(jsonObject));
 		return this;
 	}

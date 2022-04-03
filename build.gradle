@@ -1,15 +1,15 @@
 plugins {
-    id 'fabric-loom'
+    id 'fabric-loom' version '0.12-SNAPSHOT'
     id 'maven-publish'
-    id 'io.github.juuxel.loom-quiltflower' version '1.6.0'
+    id("io.github.juuxel.loom-quiltflower") version "1.6.0"
     id 'org.quiltmc.quilt-mappings-on-loom' version '4.0.0'
 }
 
-archivesBaseName = mod_id
-version = "$mod_version+$minecraft_version"
-group = project.maven_group
-
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+archivesBaseName = project.archives_base_name
+version = project.mod_version + "+" + "build." + project.build_number + "-" + project.minecraft_version
+group = project.maven_group
 
 repositories {
     mavenCentral()
@@ -42,34 +42,6 @@ dependencies {
     testmodImplementation sourceSets.main.output
 }
 
-processResources {
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
-    inputs.property "version", project.version
-
-    from(sourceSets.main.resources.srcDirs) {
-        include "fabric.mod.json"
-        expand "version": project.version
-    }
-}
-
-tasks.withType(JavaCompile) { options.encoding = "UTF-8" }
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = "sources"
-    from sourceSets.main.allSource
-}
-jar { from "LICENSE" }
-
-// ensure that the encoding is set to UTF-8, no matter what the system default is
-// this fixes some edge cases with special characters not displaying correctly
-// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-}
-
-jar {
-    from "LICENSE"
-}
-
 Properties properties = new Properties()
 properties.put("total_version", version)
 
@@ -87,3 +59,40 @@ task updateTemplate(type: Copy) {
     destinationDir = rootDir
 }
 publish.dependsOn updateTemplate
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+    it.options.release = 17
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.archivesBaseName}"}
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url file("E:\\Development\\Work\\VampireStudiosMaven\\")
+        }
+    }
+}

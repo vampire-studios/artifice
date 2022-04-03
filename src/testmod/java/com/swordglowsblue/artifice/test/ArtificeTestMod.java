@@ -11,10 +11,10 @@ import io.github.vampirestudios.artifice.api.builder.data.worldgen.biome.BiomeBu
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config.TreeFeatureConfigBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.placementmodifiers.BiomePlacementModifier;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.placementmodifiers.InSquarePlacementModifier;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.structure.SpawnsBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.FeatureSizeBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.FoliagePlacerBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.TrunkPlacerBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.structure.SpawnsBuilder;
 import io.github.vampirestudios.artifice.api.resource.StringResource;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.core.Registry;
@@ -32,7 +32,6 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 
 import java.io.IOException;
-import java.util.Random;
 
 public class ArtificeTestMod implements ModInitializer {
 	private static final Item.Properties itemSettings = new Item.Properties().tab(CreativeModeTab.TAB_MISC);
@@ -163,7 +162,6 @@ public class ArtificeTestMod implements ModInitializer {
 								)
 					));
 					noiseChunkGeneratorTypeBuilder.noiseSettings("minecraft:overworld");
-					noiseChunkGeneratorTypeBuilder.seed((int) new Random().nextLong());
 				});
 			});
 
@@ -197,12 +195,10 @@ public class ArtificeTestMod implements ModInitializer {
 									)
 					));
 					noiseChunkGeneratorTypeBuilder.noiseSettings("artifice:test_dimension");
-					noiseChunkGeneratorTypeBuilder.seed((int) new Random().nextLong());
 				});
 			});
 
 			pack.addBiome(id("test_biome"), biomeBuilder -> biomeBuilder.precipitation(Biome.Precipitation.RAIN)
-					.category(Biome.BiomeCategory.PLAINS)
 					.temperature(0.8F).downfall(0.4F)
 					.addSpawnCosts("minecraft:bee", new BiomeBuilder.SpawnDensityBuilder(0.12, 1))
 					.addSpawnCosts("minecraft:cat", new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
@@ -214,9 +210,7 @@ public class ArtificeTestMod implements ModInitializer {
 					}).addAirCarvers(id("test_carver").toString())
 			);
 
-			pack.addBiome(id("test_biome2"), biomeBuilder -> biomeBuilder
-					.precipitation(Biome.Precipitation.RAIN)
-					.category(Biome.BiomeCategory.DESERT)
+			pack.addBiome(id("test_biome2"), biomeBuilder -> biomeBuilder.precipitation(Biome.Precipitation.RAIN)
 					.temperature(0.8F).downfall(0.4F)
 					.addSpawnCosts("minecraft:spider", new BiomeBuilder.SpawnDensityBuilder(0.6, 1))
 					.addSpawnCosts("minecraft:cat", new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
@@ -228,9 +222,7 @@ public class ArtificeTestMod implements ModInitializer {
 					}).addAirCarvers(id("test_carver").toString())
 			);
 
-			pack.addBiome(id("test_biome3"), biomeBuilder -> biomeBuilder
-					.precipitation(Biome.Precipitation.RAIN)
-					.category(Biome.BiomeCategory.PLAINS)
+			pack.addBiome(id("test_biome3"), biomeBuilder -> biomeBuilder.precipitation(Biome.Precipitation.RAIN)
 					.temperature(2.0F).downfall(0.4F)
 					.addSpawnCosts("minecraft:bee", new BiomeBuilder.SpawnDensityBuilder(0.12, 1))
 					.addSpawnCosts("minecraft:cat", new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
@@ -242,9 +234,7 @@ public class ArtificeTestMod implements ModInitializer {
 					}).addAirCarvers(id("test_carver").toString())
 			);
 
-			pack.addBiome(id("test_biome4"), biomeBuilder -> biomeBuilder
-					.precipitation(Biome.Precipitation.RAIN)
-					.category(Biome.BiomeCategory.PLAINS)
+			pack.addBiome(id("test_biome4"), biomeBuilder -> biomeBuilder.precipitation(Biome.Precipitation.RAIN)
 					.temperature(1.4F).downfall(1.0F)
 					.addSpawnCosts("minecraft:bee", new BiomeBuilder.SpawnDensityBuilder(0.12, 1))
 					.addSpawnCosts("minecraft:cat", new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
@@ -256,7 +246,7 @@ public class ArtificeTestMod implements ModInitializer {
 					}).addAirCarvers(id("test_carver").toString())
 			);
 
-			pack.addConfiguredStructureFeature(id("test_structure"), configuredStructureFeatureBuilder -> {
+			pack.addStructure(id("test_structure"), configuredStructureFeatureBuilder -> {
 				configuredStructureFeatureBuilder.type("minecraft:village");
 				configuredStructureFeatureBuilder.singleBiome("minecraft:plains");
 				configuredStructureFeatureBuilder.adoptNoise(false);
@@ -267,11 +257,11 @@ public class ArtificeTestMod implements ModInitializer {
 				});
 			});
 
-			pack.addConfiguredStructureFeature(id("test_structure2"), configuredStructureFeatureBuilder -> {
-				configuredStructureFeatureBuilder.type("minecraft:village");
-				configuredStructureFeatureBuilder.singleBiome("minecraft:nether_wastes");
-				configuredStructureFeatureBuilder.adoptNoise(true);
-				configuredStructureFeatureBuilder.spawnOverrides(spawnOverridesBuilder ->
+			pack.addStructure(id("test_structure2"), structureBuilder -> {
+				structureBuilder.type("minecraft:village");
+				structureBuilder.singleBiome("minecraft:nether_wastes");
+				structureBuilder.adoptNoise(true);
+				structureBuilder.spawnOverrides(spawnOverridesBuilder ->
 						spawnOverridesBuilder.monster(mobSpawnOverrideRuleBuilder ->
 								mobSpawnOverrideRuleBuilder.pieceBoundingBox().spawns(
 										new SpawnsBuilder("minecraft:piglin", 5, 4, 4),
@@ -280,7 +270,7 @@ public class ArtificeTestMod implements ModInitializer {
 								)
 						)
 				);
-				configuredStructureFeatureBuilder.featureConfig(featureConfigBuilder -> {
+				structureBuilder.featureConfig(featureConfigBuilder -> {
 					featureConfigBuilder.jsonString("start_pool", "minecraft:village/desert/town_centers");
 					featureConfigBuilder.jsonNumber("size", 6);
 				});
@@ -322,371 +312,6 @@ public class ArtificeTestMod implements ModInitializer {
 							.disableMobGeneration(false).aquifersEnabled(true).oreVeinsEnabled(true)
 							.oreVeinsEnabled(true).noiseConfig(noiseConfigBuilder -> noiseConfigBuilder
 									.minimumY(-64).height(384).sizeHorizontal(1).sizeVertical(2)
-									.sampling(1, 1, 80, 160)
-									.bottomSlide(0.1171875, 3, 0)
-									.topSlide(-0.078125, 2, 8)
-									.terrainShaper(
-											noiseConfigBuilder.spline(
-													"continents",
-													noiseConfigBuilder.point(-1.1, 0, 0.044),
-													noiseConfigBuilder.point(-1.02, 0, -0.2222),
-													noiseConfigBuilder.point(-0.51, 0, -0.2222),
-													noiseConfigBuilder.point(-0.44, 0, -0.12),
-													noiseConfigBuilder.point(-0.18, 0, -0.12),
-													noiseConfigBuilder.point(-0.16, 0, noiseConfigBuilder.spline(
-															"erosion",
-															noiseConfigBuilder.point(-0.85, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.38940096, -0.08880186),
-																	noiseConfigBuilder.point(1, 0.38940096, 0.69000006)
-															)),
-															noiseConfigBuilder.point(-0.7, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.37788022, -0.115760356),
-																	noiseConfigBuilder.point(1, 0.37788022, 0.6400001)
-															)),
-															noiseConfigBuilder.point(-0.4, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0, -0.2222),
-																	noiseConfigBuilder.point(-0.75, 0.37788022, -0.2222),
-																	noiseConfigBuilder.point(-0.65, 0, 0),
-																	noiseConfigBuilder.point(0.5954547, 0, 2.9802322e-8),
-																	noiseConfigBuilder.point(0.6054547, 0.2534563, 2.9802322e-8),
-																	noiseConfigBuilder.point(1, 0.2534563, 0.100000024)
-															)),
-															noiseConfigBuilder.point(-0.35, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.5, -0.3),
-																	noiseConfigBuilder.point(-0.4, 0, 0.05),
-																	noiseConfigBuilder.point(0, 0, 0.05),
-																	noiseConfigBuilder.point(0.4, 0, 0.05),
-																	noiseConfigBuilder.point(1, 0.007000001, 0.060000002)
-															)),
-															noiseConfigBuilder.point(-0.1, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.5, -0.15),
-																	noiseConfigBuilder.point(-0.4, 0, 0),
-																	noiseConfigBuilder.point(0, 0, 0),
-																	noiseConfigBuilder.point(0.4, 0.1, 0.05),
-																	noiseConfigBuilder.point(1, 0.007000001, 0.060000002)
-															)),
-															noiseConfigBuilder.point(0.2, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.5, -0.15),
-																	noiseConfigBuilder.point(-0.4, 0, 0),
-																	noiseConfigBuilder.point(0, 0, 0),
-																	noiseConfigBuilder.point(0.4, 0, 0),
-																	noiseConfigBuilder.point(1, 0, 0)
-															)),
-															noiseConfigBuilder.point(0.7, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.5, -0.02),
-																	noiseConfigBuilder.point(-0.4, 0, -0.03),
-																	noiseConfigBuilder.point(0, 0, -0.03),
-																	noiseConfigBuilder.point(0.4, 0.06, 0.05),
-																	noiseConfigBuilder.point(1, 0, 0)
-															))
-													)),
-													noiseConfigBuilder.point(-0.15, 0, noiseConfigBuilder.spline(
-															"erosion",
-															noiseConfigBuilder.point(-0.85, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.38940096, -0.08880186),
-																	noiseConfigBuilder.point(1, 0.38940096, 0.69000006)
-															)),
-															noiseConfigBuilder.point(-0.7, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.37788022, -0.115760356),
-																	noiseConfigBuilder.point(1, 0.37788022, 0.6400001)
-															)),
-															noiseConfigBuilder.point(-0.4, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0, -0.115760356),
-																	noiseConfigBuilder.point(-0.75, 0, -0.2222),
-																	noiseConfigBuilder.point(-0.65, 0, 0),
-																	noiseConfigBuilder.point(0.5954547, 0, 2.9802322e-8),
-																	noiseConfigBuilder.point(0.6054547, 0.2534563, 2.9802322e-8),
-																	noiseConfigBuilder.point(1, 0.2534563, 0.100000024)
-															)),
-															noiseConfigBuilder.point(-0.35, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.5, -0.3),
-																	noiseConfigBuilder.point(-0.4, 0, 0.05),
-																	noiseConfigBuilder.point(0, 0, 0.05),
-																	noiseConfigBuilder.point(0.4, 0, 0.05),
-																	noiseConfigBuilder.point(1, 0.007000001, 0.060000002)
-															)),
-															noiseConfigBuilder.point(-0.1, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.5, -0.15),
-																	noiseConfigBuilder.point(-0.4, 0, 0),
-																	noiseConfigBuilder.point(0, 0, 0),
-																	noiseConfigBuilder.point(0.4, 0.1, 0.05),
-																	noiseConfigBuilder.point(1, 0.007000001, 0.060000002)
-															)),
-															noiseConfigBuilder.point(0.2, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.5, -0.15),
-																	noiseConfigBuilder.point(-0.4, 0, 0),
-																	noiseConfigBuilder.point(0, 0, 0),
-																	noiseConfigBuilder.point(0.4, 0, 0),
-																	noiseConfigBuilder.point(1, 0, 0)
-															)),
-															noiseConfigBuilder.point(0.7, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.5, -0.02),
-																	noiseConfigBuilder.point(-0.4, 0, -0.03),
-																	noiseConfigBuilder.point(0, 0, -0.03),
-																	noiseConfigBuilder.point(0.4, 0.06, 0),
-																	noiseConfigBuilder.point(1, 0, 0)
-															))
-													)),
-													noiseConfigBuilder.point(-0.1, 0, noiseConfigBuilder.spline(
-															"erosion",
-															noiseConfigBuilder.point(-0.85, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.38940096, -0.08880186),
-																	noiseConfigBuilder.point(1, 0.38940096, 0.69000006)
-															)),
-															noiseConfigBuilder.point(-0.7, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.37788022, -0.115760356),
-																	noiseConfigBuilder.point(1, 0.37788022, 0.6400001)
-															)),
-															noiseConfigBuilder.point(-0.4, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0, -0.2222),
-																	noiseConfigBuilder.point(-0.75, 0, -0.2222),
-																	noiseConfigBuilder.point(-0.65, 0, 0),
-																	noiseConfigBuilder.point(0.5954547, 0, -0.115760356),
-																	noiseConfigBuilder.point(0.6054547, 0.2534563, -0.115760356),
-																	noiseConfigBuilder.point(1, 0.2534563, 0.100000024)
-															)),
-															noiseConfigBuilder.point(-0.35, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.5, -0.25),
-																	noiseConfigBuilder.point(-0.4, 0, 0.05),
-																	noiseConfigBuilder.point(0, 0, 0.05),
-																	noiseConfigBuilder.point(0.4, 0, 0.05),
-																	noiseConfigBuilder.point(1, 0.007000001, 0.060000002)
-															)),
-															noiseConfigBuilder.point(-0.1, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.5, -0.1),
-																	noiseConfigBuilder.point(-0.4, 0.01, 0.001),
-																	noiseConfigBuilder.point(0, 0.01, 0.003),
-																	noiseConfigBuilder.point(0.4, 0.094000004, 0.05),
-																	noiseConfigBuilder.point(1, 0.007000001, 0.060000002)
-															)),
-															noiseConfigBuilder.point(0.2, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.5, -0.1),
-																	noiseConfigBuilder.point(-0.4, 0, 0.01),
-																	noiseConfigBuilder.point(0, 0, 0.01),
-																	noiseConfigBuilder.point(0.4, 0.04, 0.03),
-																	noiseConfigBuilder.point(1, 0.049, 0.1)
-															)),
-															noiseConfigBuilder.point(0.7, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0, -0.02),
-																	noiseConfigBuilder.point(-0.4, 0, -0.03),
-																	noiseConfigBuilder.point(0, 0, -0.03),
-																	noiseConfigBuilder.point(0.4, 0.12, 0.03),
-																	noiseConfigBuilder.point(1, 0.049, 0.1)
-															))
-													)),
-													noiseConfigBuilder.point(0.25, 0, noiseConfigBuilder.spline(
-															"erosion",
-															noiseConfigBuilder.point(-0.85, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0, 0.20235021),
-																	noiseConfigBuilder.point(0, 0.5138249, 0.7161751),
-																	noiseConfigBuilder.point(1, 0.5138249, 1.23)
-															)),
-															noiseConfigBuilder.point(-0.7, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0, 0.2),
-																	noiseConfigBuilder.point(0, 0.43317974, 0.44682026),
-																	noiseConfigBuilder.point(1, 0.43317974, 0.88)
-															)),
-															noiseConfigBuilder.point(-0.4, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0, 0.2),
-																	noiseConfigBuilder.point(0, 0.3917051, 0.30829495),
-																	noiseConfigBuilder.point(1, 0.3917051, 0.70000005)
-															)),
-															noiseConfigBuilder.point(-0.35, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.5, -0.25),
-																	noiseConfigBuilder.point(-0.4, 0, 0.35),
-																	noiseConfigBuilder.point(0, 0, 0.35),
-																	noiseConfigBuilder.point(0.4, 0, 0.35),
-																	noiseConfigBuilder.point(1, 0.049000014, 0.42000002)
-															)),
-															noiseConfigBuilder.point(-0.1, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.5, -0.1),
-																	noiseConfigBuilder.point(-0.4, 0.07, 0.0069999998),
-																	noiseConfigBuilder.point(0, 0.07, 0.021),
-																	noiseConfigBuilder.point(0.4, 0.658, 0.35),
-																	noiseConfigBuilder.point(1, 0.049000014, 0.42000002)
-															)),
-															noiseConfigBuilder.point(0.2, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.5, -0.1),
-																	noiseConfigBuilder.point(-0.4, 0, 0.01),
-																	noiseConfigBuilder.point(0, 0, 0.01),
-																	noiseConfigBuilder.point(0.4, 0.04, 0.03),
-																	noiseConfigBuilder.point(1, 0.049, 0.1)
-															)),
-															noiseConfigBuilder.point(0.4, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.5, -0.1),
-																	noiseConfigBuilder.point(-0.4, 0, 0.01),
-																	noiseConfigBuilder.point(0, 0, 0.01),
-																	noiseConfigBuilder.point(0.4, 0.04, 0.03),
-																	noiseConfigBuilder.point(1, 0.049, 0.1)
-															)),
-															noiseConfigBuilder.point(0.45, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0, -0.1),
-																	noiseConfigBuilder.point(-0.4, 0, noiseConfigBuilder.spline(
-																			"ridges",
-																			noiseConfigBuilder.point(-1, 0.5, -0.1),
-																			noiseConfigBuilder.point(-0.4, 0, 0.01),
-																			noiseConfigBuilder.point(0, 0, 0.01),
-																			noiseConfigBuilder.point(0.4, 0.04, 0.03),
-																			noiseConfigBuilder.point(1, 0.049, 0.1)
-																	)),
-																	noiseConfigBuilder.point(0, 0, 0.17)
-															)),
-															noiseConfigBuilder.point(0.55, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0, -0.1),
-																	noiseConfigBuilder.point(-0.4, 0, noiseConfigBuilder.spline(
-																			"ridges",
-																			noiseConfigBuilder.point(-1, 0.5, -0.1),
-																			noiseConfigBuilder.point(-0.4, 0, 0.01),
-																			noiseConfigBuilder.point(0, 0, 0.01),
-																			noiseConfigBuilder.point(0.4, 0.04, 0.03),
-																			noiseConfigBuilder.point(1, 0.049, 0.1)
-																	)),
-																	noiseConfigBuilder.point(0, 0, 0.17)
-															)),
-															noiseConfigBuilder.point(0.58, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.5, -0.1),
-																	noiseConfigBuilder.point(-0.4, 0, 0.01),
-																	noiseConfigBuilder.point(0, 0, 0.01),
-																	noiseConfigBuilder.point(0.4, 0.04, 0.03),
-																	noiseConfigBuilder.point(1, 0.049, 0.1)
-															)),
-															noiseConfigBuilder.point(0.7, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.5, -0.02),
-																	noiseConfigBuilder.point(-0.4, 0, -0.03),
-																	noiseConfigBuilder.point(0, 0, -0.03),
-																	noiseConfigBuilder.point(0.4, 0.12, 0.03),
-																	noiseConfigBuilder.point(1, 0.049, 0.1)
-															))
-													)),
-													noiseConfigBuilder.point(1.0, 0, noiseConfigBuilder.spline(
-															"erosion",
-															noiseConfigBuilder.point(-0.85, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0, 0.34792626),
-																	noiseConfigBuilder.point(0, 0.5760369, 0.9239631),
-																	noiseConfigBuilder.point(1, 0.5760369, 1.5)
-															)),
-															noiseConfigBuilder.point(-0.7, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0, 0.2),
-																	noiseConfigBuilder.point(0, 0.4608295, 0.5391705),
-																	noiseConfigBuilder.point(1, 0.4608295, 1)
-															)),
-															noiseConfigBuilder.point(-0.4, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0, 0.2),
-																	noiseConfigBuilder.point(0, 0.4608295, 0.5391705),
-																	noiseConfigBuilder.point(1, 0.4608295, 1)
-															)),
-															noiseConfigBuilder.point(-0.35, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.5, -0.2),
-																	noiseConfigBuilder.point(-0.4, 0, 0.5),
-																	noiseConfigBuilder.point(0, 0, 0.5),
-																	noiseConfigBuilder.point(0.4, 0, 0.5),
-																	noiseConfigBuilder.point(1, 0.070000015, 0.6)
-															)),
-															noiseConfigBuilder.point(-0.1, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.5, -0.05),
-																	noiseConfigBuilder.point(-0.4, 0.099999994, 0.01),
-																	noiseConfigBuilder.point(0, 0.099999994, 0.03),
-																	noiseConfigBuilder.point(0.4, 0.94, 0.5),
-																	noiseConfigBuilder.point(1, 0.070000015, 0.6)
-															)),
-															noiseConfigBuilder.point(0.2, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.5, -0.05),
-																	noiseConfigBuilder.point(-0.4, 0, 0.01),
-																	noiseConfigBuilder.point(0, 0, 0.01),
-																	noiseConfigBuilder.point(0.4, 0.04, 0.03),
-																	noiseConfigBuilder.point(1, 0.049, 0.1)
-															)),
-															noiseConfigBuilder.point(0.4, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.5, -0.05),
-																	noiseConfigBuilder.point(-0.4, 0, 0.01),
-																	noiseConfigBuilder.point(0, 0, 0.01),
-																	noiseConfigBuilder.point(0.4, 0.04, 0.03),
-																	noiseConfigBuilder.point(1, 0.049, 0.1)
-															)),
-															noiseConfigBuilder.point(0.45, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0, -0.05),
-																	noiseConfigBuilder.point(-0.4, 0, noiseConfigBuilder.spline(
-																			"ridges",
-																			noiseConfigBuilder.point(-1, 0.5, -0.05),
-																			noiseConfigBuilder.point(-0.4, 0, 0.01),
-																			noiseConfigBuilder.point(0, 0, 0.01),
-																			noiseConfigBuilder.point(0.4, 0.04, 0.03),
-																			noiseConfigBuilder.point(1, 0.049, 0.1)
-																	)),
-																	noiseConfigBuilder.point(0, 0, 0.17)
-															)),
-															noiseConfigBuilder.point(0.55, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0, -0.05),
-																	noiseConfigBuilder.point(-0.4, 0, noiseConfigBuilder.spline(
-																			"ridges",
-																			noiseConfigBuilder.point(-1, 0.5, -0.05),
-																			noiseConfigBuilder.point(-0.4, 0, 0.01),
-																			noiseConfigBuilder.point(0, 0, 0.01),
-																			noiseConfigBuilder.point(0.4, 0.04, 0.03),
-																			noiseConfigBuilder.point(1, 0.049, 0.1)
-																	)),
-																	noiseConfigBuilder.point(0, 0, 0.17)
-															)),
-															noiseConfigBuilder.point(0.58, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.5, -0.05),
-																	noiseConfigBuilder.point(-0.4, 0, 0.01),
-																	noiseConfigBuilder.point(0, 0, 0.01),
-																	noiseConfigBuilder.point(0.4, 0.04, 0.03),
-																	noiseConfigBuilder.point(1, 0.049, 0.1)
-															)),
-															noiseConfigBuilder.point(0.7, 0, noiseConfigBuilder.spline(
-																	"ridges",
-																	noiseConfigBuilder.point(-1, 0.5, -0.02),
-																	noiseConfigBuilder.point(-0.4, 0, -0.03),
-																	noiseConfigBuilder.point(0, 0, -0.03),
-																	noiseConfigBuilder.point(0.4, 0.04, 0.03),
-																	noiseConfigBuilder.point(1, 0.049, 0.1)
-															))
-													))
-											), 0, 0
-									)
 							).noiseRouter().surfaceRules(builder -> builder.sequence(surfaceRulesBuilder ->
 									surfaceRulesBuilder.condition(
 											surfaceRulesBuilder1 -> surfaceRulesBuilder1.verticalGradient(
@@ -708,19 +333,19 @@ public class ArtificeTestMod implements ModInitializer {
 									), surfaceRulesBuilder ->
 									surfaceRulesBuilder.condition(
 											surfaceRulesBuilder1 -> surfaceRulesBuilder1.verticalGradient(
-													"deepslate",
-													YOffsetBuilder.absolute(-16),
-													YOffsetBuilder.absolute(0)
-											),
-											surfaceRulesBuilder1 -> surfaceRulesBuilder1.block(stateDataBuilder -> stateDataBuilder.name("minecraft:deepslate").setProperty("axis", "y"))
-									), surfaceRulesBuilder ->
-									surfaceRulesBuilder.condition(
-											surfaceRulesBuilder1 -> surfaceRulesBuilder1.verticalGradient(
 													"tuff",
 													YOffsetBuilder.absolute(0),
 													YOffsetBuilder.absolute(16)
 											),
 											surfaceRulesBuilder1 -> surfaceRulesBuilder1.block(stateDataBuilder -> stateDataBuilder.name("minecraft:tuff"))
+									), surfaceRulesBuilder ->
+									surfaceRulesBuilder.condition(
+											surfaceRulesBuilder1 -> surfaceRulesBuilder1.verticalGradient(
+													"deepslate",
+													YOffsetBuilder.absolute(-16),
+													YOffsetBuilder.absolute(0)
+											),
+											surfaceRulesBuilder1 -> surfaceRulesBuilder1.block(stateDataBuilder -> stateDataBuilder.name("minecraft:deepslate").setProperty("axis", "y"))
 									)
 							))
 			);

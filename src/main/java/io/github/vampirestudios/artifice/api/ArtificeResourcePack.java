@@ -13,7 +13,7 @@ import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.Co
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.ConfiguredSurfaceBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.ConfiguredFeatureBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.PlacedFeatureBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.structure.ConfiguredStructureFeatureBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.structure.StructureBuilder;
 import io.github.vampirestudios.artifice.api.resource.ArtificeResource;
 import io.github.vampirestudios.artifice.api.util.Processor;
 import io.github.vampirestudios.artifice.api.virtualpack.ArtificeResourcePackContainer;
@@ -309,9 +309,9 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          * Add a Carver with the given ID.
          *
          * @param id The ID of the carver, which will be converted into the correct path.
-         * @param f A callback which will be passed an {@link ConfiguredStructureFeatureBuilder} to create the carver.
+         * @param f A callback which will be passed an {@link StructureBuilder} to create the carver.
          */
-        void addConfiguredStructureFeature(ResourceLocation id, Processor<ConfiguredStructureFeatureBuilder> f);
+        void addStructure(ResourceLocation id, Processor<StructureBuilder> f);
 
         /**
          * Add a Feature with the given ID.

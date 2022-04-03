@@ -1,4 +1,4 @@
-package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.structure;
+package io.github.vampirestudios.artifice.api.builder.data.worldgen.structure;
 
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;

@@ -5,15 +5,16 @@ import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.Processor;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 public class BiomeBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
     public BiomeBuilder() {
         super(new JsonObject(), JsonResource::new);
         this.root.add("carvers", new JsonObject());
-        this.root.add("starts", new JsonArray());
         this.root.add("features", new JsonArray());
         for (GenerationStep.Decoration step : GenerationStep.Decoration.values()) {
             this.root.getAsJsonArray("features").add(new JsonArray());
@@ -35,18 +36,8 @@ public class BiomeBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
         return this;
     }
 
-    public BiomeBuilder parent(String parent) {
-        this.root.addProperty("parent", parent);
-        return this;
-    }
-
     public BiomeBuilder precipitation(Biome.Precipitation precipitation) {
         this.root.addProperty("precipitation", precipitation.getName());
-        return this;
-    }
-
-    public BiomeBuilder category(Biome.BiomeCategory category) {
-        this.root.addProperty("category", category.getName());
         return this;
     }
 
@@ -93,8 +84,9 @@ public class BiomeBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
         return this;
     }
 
-    public BiomeBuilder addStructure(String structureID) {
-        this.root.getAsJsonArray("starts").add(structureID);
+    public BiomeBuilder addFeaturesByStep(GenerationStep.Decoration step, ResourceKey<PlacedFeature>... featureIDs) {
+        for (ResourceKey<PlacedFeature> featureID : featureIDs)
+            this.root.getAsJsonArray("features").get(step.ordinal()).getAsJsonArray().add(featureID.location().toString());
         return this;
     }
 

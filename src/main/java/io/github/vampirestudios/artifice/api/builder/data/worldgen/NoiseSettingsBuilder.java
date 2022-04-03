@@ -113,7 +113,7 @@ public class NoiseSettingsBuilder extends TypedJsonBuilder<JsonResource<JsonObje
             jsonObject.addProperty("continents", "minecraft:overworld/continents");
             jsonObject.addProperty("erosion", "minecraft:overworld/erosion");
             jsonObject.addProperty("depth", "minecraft:overworld/depth");
-            jsonObject.addProperty("ridges", /*"minecraft:overworld/ridges"*/0);
+            jsonObject.addProperty("ridges", "minecraft:overworld/ridges");
 
             jsonObject.add("initial_density_without_jaggedness", addInitialDensityWithoutJaggedness());
             jsonObject.add("final_density", addFinalDensity());

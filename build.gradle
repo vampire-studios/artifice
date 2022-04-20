@@ -27,13 +27,6 @@ loom {
     accessWidenerPath = file("src/main/resources/artifice.accesswidener")
 }
 
-repositories {
-    maven {
-        name 'QuiltSnapshot'
-        url 'https://maven.quiltmc.org/repository/snapshot'
-    }
-}
-
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.layered {

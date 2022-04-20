@@ -1,6 +1,6 @@
 # Artifice
-[![Discord](https://img.shields.io/discord/219787567262859264?color=blue&label=Discord)](https://discord.gg/63hmSTxyDA)
-[![Latest Commit](https://img.shields.io/github/last-commit/vampire-studios/artifice)](https://github.com/vampire-studios/artifice/commits/master)
+[![Discord](https://img.shields.io/discord/901129108275216392?color=yellow&label=Discord)](https://discord.gg/63hmSTxyDA)
+[![Latest Commit](https://img.shields.io/github/last-commit/vampire-studios/artifice/1.19)](https://github.com/vampire-studios/artifice/commits/master)
 
 A library mod for Minecraft 1.15+, for programmatically generated resource files.
 

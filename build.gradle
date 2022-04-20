@@ -1,8 +1,8 @@
 plugins {
-    id 'fabric-loom' version '0.12-SNAPSHOT'
+    id 'fabric-loom' version '0.12.+'
     id 'maven-publish'
-    id("io.github.juuxel.loom-quiltflower") version "1.6.0"
-    id 'org.quiltmc.quilt-mappings-on-loom' version '4.0.0'
+    id "io.github.juuxel.loom-quiltflower" version "1.7.+"
+    id 'org.quiltmc.quilt-mappings-on-loom' version '4.+'
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -25,6 +25,13 @@ sourceSets {
 
 loom {
     accessWidenerPath = file("src/main/resources/artifice.accesswidener")
+}
+
+repositories {
+    maven {
+        name 'QuiltSnapshot'
+        url 'https://maven.quiltmc.org/repository/snapshot'
+    }
 }
 
 dependencies {
@@ -91,8 +98,15 @@ publishing {
         }
     }
     repositories {
-        maven {
-            url file("E:\\Development\\Work\\VampireStudiosMaven\\")
+        if (project.hasProperty("siphalorMavenUser")) {
+            maven {
+                name = "Siphalor"
+                url = "https://maven.siphalor.de/upload.php"
+                credentials {
+                    username = siphalorMavenUser
+                    password = siphalorMavenPassword
+                }
+            }
         }
     }
 }

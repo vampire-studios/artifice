@@ -5,10 +5,10 @@ import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.UniformIntDistributionBuilder;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
-public class FoliagePlacerBuilder extends TypedJsonObject<JsonObject> {
+public class FoliagePlacerBuilder extends TypedJsonObject {
 
     public FoliagePlacerBuilder() {
-        super(new JsonObject(), j->j);
+        super(new JsonObject());
     }
 
     public <P extends FoliagePlacerBuilder> P type(String type) {
@@ -21,8 +21,8 @@ public class FoliagePlacerBuilder extends TypedJsonObject<JsonObject> {
         return (P) this;
     }
 
-    public <P extends FoliagePlacerBuilder> P radius(Processor<UniformIntDistributionBuilder> processor) {
-        with("radius", JsonObject::new, jsonObject -> processor.process(new UniformIntDistributionBuilder()).buildTo(jsonObject));
+    public <P extends FoliagePlacerBuilder> P radius(UniformIntDistributionBuilder processor) {
+        join("radius", processor.getData());
         return (P) this;
     }
 
@@ -31,8 +31,8 @@ public class FoliagePlacerBuilder extends TypedJsonObject<JsonObject> {
         return (P) this;
     }
 
-    public <P extends FoliagePlacerBuilder> P offset(Processor<UniformIntDistributionBuilder> processor) {
-        with("offset", JsonObject::new, jsonObject -> processor.process(new UniformIntDistributionBuilder()).buildTo(jsonObject));
+    public <P extends FoliagePlacerBuilder> P offset(UniformIntDistributionBuilder processor) {
+        join("offset", processor.getData());
         return (P) this;
     }
 
@@ -63,8 +63,8 @@ public class FoliagePlacerBuilder extends TypedJsonObject<JsonObject> {
             return this;
         }
 
-        public SpruceFoliagePlacerBuilder trunkHeight(Processor<UniformIntDistributionBuilder> processor) {
-            with("trunk_height", JsonObject::new, jsonObject -> processor.process(new UniformIntDistributionBuilder()).buildTo(jsonObject));
+        public SpruceFoliagePlacerBuilder trunkHeight(UniformIntDistributionBuilder processor) {
+            join("trunk_height", processor.getData());
             return this;
         }
     }
@@ -81,8 +81,8 @@ public class FoliagePlacerBuilder extends TypedJsonObject<JsonObject> {
             return this;
         }
 
-        public PineFoliagePlacerBuilder trunkHeight(Processor<UniformIntDistributionBuilder> processor) {
-            with("trunk_height", JsonObject::new, jsonObject -> processor.process(new UniformIntDistributionBuilder()).buildTo(jsonObject));
+        public PineFoliagePlacerBuilder trunkHeight(UniformIntDistributionBuilder processor) {
+            join("trunk_height", processor.getData());
             return this;
         }
     }
@@ -138,8 +138,8 @@ public class FoliagePlacerBuilder extends TypedJsonObject<JsonObject> {
             return this;
         }
 
-        public MegaPineFoliagePlacerBuilder crownHeight(Processor<UniformIntDistributionBuilder> processor) {
-            with("crown_height", JsonObject::new, jsonObject -> processor.process(new UniformIntDistributionBuilder()).buildTo(jsonObject));
+        public MegaPineFoliagePlacerBuilder crownHeight(UniformIntDistributionBuilder processor) {
+            join("crown_height", processor.getData());
             return this;
         }
     }

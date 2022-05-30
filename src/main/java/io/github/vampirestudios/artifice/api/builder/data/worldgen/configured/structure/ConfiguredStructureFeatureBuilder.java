@@ -7,9 +7,9 @@ import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.fe
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
-public class ConfiguredStructureFeatureBuilder extends TypedJsonObject<JsonResource<JsonObject>> {
+public class ConfiguredStructureFeatureBuilder extends TypedJsonObject {
 	public ConfiguredStructureFeatureBuilder() {
-		super(new JsonObject(), JsonResource::new);
+		super(new JsonObject());
 	}
 
 	public ConfiguredStructureFeatureBuilder type(String type) {
@@ -44,13 +44,13 @@ public class ConfiguredStructureFeatureBuilder extends TypedJsonObject<JsonResou
 		return this;
 	}
 
-	public ConfiguredStructureFeatureBuilder spawnOverrides(Processor<SpawnOverridesBuilder> processor) {
-		with("spawn_overrides", JsonObject::new, jsonObject -> processor.process(new SpawnOverridesBuilder()).buildTo(jsonObject));
+	public ConfiguredStructureFeatureBuilder spawnOverrides(SpawnOverridesBuilder processor) {
+		join("spawn_overrides", processor.getData());
 		return this;
 	}
 
-	public ConfiguredStructureFeatureBuilder featureConfig(Processor<FeatureConfigBuilder> processor) {
-		with("config", JsonObject::new, jsonObject -> processor.process(new FeatureConfigBuilder()).buildTo(jsonObject));
+	public ConfiguredStructureFeatureBuilder featureConfig(FeatureConfigBuilder processor) {
+		join("config", processor.getData());
 		return this;
 	}
 }

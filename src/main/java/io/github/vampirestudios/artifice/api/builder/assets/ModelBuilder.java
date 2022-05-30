@@ -14,8 +14,8 @@ import net.minecraft.resources.ResourceLocation;
  * @see <a href="https://minecraft.gamepedia.com/Model" target="_blank">Minecraft Wiki</a>
  */
 @Environment(EnvType.CLIENT)
-public final class ModelBuilder extends TypedJsonObject<JsonResource<JsonObject>> {
-    public ModelBuilder() { super(new JsonObject(), JsonResource::new); }
+public final class ModelBuilder extends TypedJsonObject {
+    public ModelBuilder() { super(new JsonObject()); }
 
     /**
      * Set the parent model for this model to inherit from.
@@ -34,7 +34,7 @@ public final class ModelBuilder extends TypedJsonObject<JsonResource<JsonObject>
      * @return this
      */
     public ModelBuilder texture(String name, ResourceLocation path) {
-        with("textures", JsonObject::new, textures -> textures.addProperty(name, path.toString()));
+        join("textures", new TypedJsonObject().add(name, path.toString()).getData());
         return this;
     }
 
@@ -44,9 +44,8 @@ public final class ModelBuilder extends TypedJsonObject<JsonResource<JsonObject>
      * @param settings A callback which will be passed a {@link Display}.
      * @return this
      */
-    public ModelBuilder display(String name, Processor<Display> settings) {
-        with("display", JsonObject::new, display ->
-            display.add(name, settings.process(new Display()).build()));
+    public ModelBuilder display(String name, Display settings) {
+        join("display", new TypedJsonObject().add(name, settings).getData());
         return this;
     }
 
@@ -55,8 +54,8 @@ public final class ModelBuilder extends TypedJsonObject<JsonResource<JsonObject>
      * @param settings A callback which will be passed a {@link ModelElementBuilder}.
      * @return this
      */
-    public ModelBuilder element(Processor<ModelElementBuilder> settings) {
-        with("elements", JsonArray::new, elements -> elements.add(settings.process(new ModelElementBuilder()).build()));
+    public ModelBuilder element(ModelElementBuilder settings) {
+        join("elements", arrayOf(settings));
         return this;
     }
 
@@ -75,8 +74,8 @@ public final class ModelBuilder extends TypedJsonObject<JsonResource<JsonObject>
      * @param settings A callback which will be passed a {@link Override}.
      * @return this
      */
-    public ModelBuilder override(Processor<Override> settings) {
-        with("overrides", JsonArray::new, overrides -> overrides.add(settings.process(new Override()).build()));
+    public ModelBuilder override(Override settings) {
+        join("predicate", arrayOf(settings));
         return this;
     }
 
@@ -85,8 +84,8 @@ public final class ModelBuilder extends TypedJsonObject<JsonResource<JsonObject>
      * @see ModelBuilder
      */
     @Environment(EnvType.CLIENT)
-    public static final class Display extends TypedJsonObject<JsonObject> {
-        private Display() { super(new JsonObject(), j->j); }
+    public static final class Display extends TypedJsonObject {
+        private Display() { super(); }
 
         /**
          * Set the rotation of this model around each axis.
@@ -130,8 +129,8 @@ public final class ModelBuilder extends TypedJsonObject<JsonResource<JsonObject>
      * @see ModelBuilder
      */
     @Environment(EnvType.CLIENT)
-    public static final class Override extends TypedJsonObject<JsonObject> {
-        private Override() { super(new JsonObject(), j->j); }
+    public static final class Override extends TypedJsonObject {
+        private Override() { super(); }
 
         /**
          * Set the required value of the given property.
@@ -142,7 +141,7 @@ public final class ModelBuilder extends TypedJsonObject<JsonResource<JsonObject>
          * @see <a href="https://minecraft.gamepedia.com/Model#Item_tags">Minecraft Wiki</a>
          */
         public Override predicate(String name, int value) {
-            with("predicate", JsonObject::new, predicate -> predicate.addProperty(name, value));
+            join("predicate", new TypedJsonObject().add(name, value).getData());
             return this;
         }
 

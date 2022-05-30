@@ -5,48 +5,48 @@ import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
-public class SpawnOverridesBuilder extends TypedJsonObject<JsonResource<JsonObject>> {
+public class SpawnOverridesBuilder extends TypedJsonObject {
 	public SpawnOverridesBuilder() {
-		super(new JsonObject(), JsonResource::new);
+		super(new JsonObject());
 	}
 
-	public SpawnOverridesBuilder monster(Processor<MobSpawnOverrideRuleBuilder> processor) {
-		with("monster", JsonObject::new, jsonObject -> processor.process(new MobSpawnOverrideRuleBuilder()).buildTo(jsonObject));
+	public SpawnOverridesBuilder monster(MobSpawnOverrideRuleBuilder processor) {
+		join("monster",processor.getData());
 		return this;
 	}
 
-	public SpawnOverridesBuilder creature(Processor<MobSpawnOverrideRuleBuilder> processor) {
-		with("creature", JsonObject::new, jsonObject -> processor.process(new MobSpawnOverrideRuleBuilder()).buildTo(jsonObject));
+	public SpawnOverridesBuilder creature(MobSpawnOverrideRuleBuilder processor) {
+		join("creature",processor.getData());
 		return this;
 	}
 
-	public SpawnOverridesBuilder ambient(Processor<MobSpawnOverrideRuleBuilder> processor) {
-		with("ambient", JsonObject::new, jsonObject -> processor.process(new MobSpawnOverrideRuleBuilder()).buildTo(jsonObject));
+	public SpawnOverridesBuilder ambient(MobSpawnOverrideRuleBuilder processor) {
+		join("ambient",processor.getData());
 		return this;
 	}
 
-	public SpawnOverridesBuilder axolotls(Processor<MobSpawnOverrideRuleBuilder> processor) {
-		with("axolotls", JsonObject::new, jsonObject -> processor.process(new MobSpawnOverrideRuleBuilder()).buildTo(jsonObject));
+	public SpawnOverridesBuilder axolotls(MobSpawnOverrideRuleBuilder processor) {
+		join("axolotls",processor.getData());
 		return this;
 	}
 
-	public SpawnOverridesBuilder undergroundWaterCreature(Processor<MobSpawnOverrideRuleBuilder> processor) {
-		with("underground_water_creature", JsonObject::new, jsonObject -> processor.process(new MobSpawnOverrideRuleBuilder()).buildTo(jsonObject));
+	public SpawnOverridesBuilder undergroundWaterCreature(MobSpawnOverrideRuleBuilder processor) {
+		join("underground_water_creature",processor.getData());
 		return this;
 	}
 
-	public SpawnOverridesBuilder waterCreature(Processor<MobSpawnOverrideRuleBuilder> processor) {
-		with("water_creature", JsonObject::new, jsonObject -> processor.process(new MobSpawnOverrideRuleBuilder()).buildTo(jsonObject));
+	public SpawnOverridesBuilder waterCreature(MobSpawnOverrideRuleBuilder processor) {
+		join("water_creature",processor.getData());
 		return this;
 	}
 
-	public SpawnOverridesBuilder waterAmbient(Processor<MobSpawnOverrideRuleBuilder> processor) {
-		with("water_ambient", JsonObject::new, jsonObject -> processor.process(new MobSpawnOverrideRuleBuilder()).buildTo(jsonObject));
+	public SpawnOverridesBuilder waterAmbient(MobSpawnOverrideRuleBuilder processor) {
+		join("water_ambient",processor.getData());
 		return this;
 	}
 
-	public SpawnOverridesBuilder misc(Processor<MobSpawnOverrideRuleBuilder> processor) {
-		with("misc", JsonObject::new, jsonObject -> processor.process(new MobSpawnOverrideRuleBuilder()).buildTo(jsonObject));
+	public SpawnOverridesBuilder misc(MobSpawnOverrideRuleBuilder processor) {
+		join("misc",processor.getData());
 		return this;
 	}
 

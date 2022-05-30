@@ -2,6 +2,7 @@ package io.github.vampirestudios.artifice.api.builder.data.recipe;
 
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.util.Processor;
 import net.minecraft.resources.ResourceLocation;
 
@@ -30,8 +31,7 @@ public final class ShapedRecipeBuilder extends RecipeBuilder<ShapedRecipeBuilder
      * @return this
      */
     public ShapedRecipeBuilder ingredientItem(Character key, ResourceLocation id) {
-        with("key", JsonObject::new, ingredients ->
-            ingredients.add(key.toString(), new JsonObjectBuilder().add("item", id.toString()).getData()));
+        join("key", new TypedJsonObject().add(key.toString(), new TypedJsonObject().add("item", id.toString()).getData()).getData());
         return this;
     }
 
@@ -42,8 +42,7 @@ public final class ShapedRecipeBuilder extends RecipeBuilder<ShapedRecipeBuilder
      * @return this
      */
     public ShapedRecipeBuilder ingredientTag(Character key, ResourceLocation id) {
-        with("key", JsonObject::new, ingredients ->
-            ingredients.add(key.toString(), new JsonObjectBuilder().add("tag", id.toString()).getData()));
+        join("key", new TypedJsonObject().add(key.toString(), new TypedJsonObject().add("tag", id.toString()).getData()).getData());
         return this;
     }
 
@@ -53,9 +52,8 @@ public final class ShapedRecipeBuilder extends RecipeBuilder<ShapedRecipeBuilder
      * @param settings A callback which will be passed a {@link MultiIngredientBuilder}.
      * @return this
      */
-    public ShapedRecipeBuilder multiIngredient(Character key, Processor<MultiIngredientBuilder> settings) {
-        with("key", JsonObject::new, ingredients ->
-            ingredients.add(key.toString(), settings.process(new MultiIngredientBuilder()).build()));
+    public ShapedRecipeBuilder multiIngredient(Character key, MultiIngredientBuilder settings) {
+        join("key", new TypedJsonObject().add(key.toString(), settings.build()).getData());
         return this;
     }
 

@@ -3,8 +3,8 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.f
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 
-public class FeatureConfigBuilder extends TypedJsonObject<JsonObject> {
+public class FeatureConfigBuilder extends TypedJsonObject {
     public FeatureConfigBuilder() {
-        super(new JsonObject(), j->j);
+        super(new JsonObject());
     }
 }

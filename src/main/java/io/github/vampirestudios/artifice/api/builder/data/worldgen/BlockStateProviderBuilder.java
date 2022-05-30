@@ -6,10 +6,10 @@ import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
-public class BlockStateProviderBuilder extends TypedJsonObject<JsonObject> {
+public class BlockStateProviderBuilder extends TypedJsonObject {
 
     public BlockStateProviderBuilder() {
-        super(new JsonObject(), j->j);
+        super(new JsonObject());
     }
 
     public <P extends BlockStateProviderBuilder> P type(String type) {
@@ -24,7 +24,7 @@ public class BlockStateProviderBuilder extends TypedJsonObject<JsonObject> {
         }
 
         public SimpleBlockStateProviderBuilder state(StateDataBuilder processor) {
-            with("state", JsonObject::new, processor::merge);
+            join("state", processor.buildCopy());
             return this;
         }
     }
@@ -66,7 +66,7 @@ public class BlockStateProviderBuilder extends TypedJsonObject<JsonObject> {
         }
 
         public PillarBlockStateProviderBuilder state(StateDataBuilder processor) {
-            with("state", JsonObject::new, processor::merge);
+            join("state", processor.buildCopy());
             return this;
         }
     }

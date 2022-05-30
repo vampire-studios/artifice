@@ -12,8 +12,8 @@ import net.minecraft.resources.ResourceLocation;
  * Builder for a particle definition ({@code namespace:particles/particleid.json}).
  */
 @Environment(EnvType.CLIENT)
-public final class ParticleBuilder extends TypedJsonObject<JsonResource<JsonObject>> {
-    public ParticleBuilder() { super(new JsonObject(), JsonResource::new); }
+public final class ParticleBuilder extends TypedJsonObject {
+    public ParticleBuilder() { super(new JsonObject()); }
 
     /**
      * Add a texture to this particle.
@@ -22,7 +22,7 @@ public final class ParticleBuilder extends TypedJsonObject<JsonResource<JsonObje
      * @return this
      */
     public ParticleBuilder texture(ResourceLocation id) {
-        with("textures", JsonArray::new, textures -> textures.add(id.toString()));
+        join("textures", arrayOf(id));
         return this;
     }
 }

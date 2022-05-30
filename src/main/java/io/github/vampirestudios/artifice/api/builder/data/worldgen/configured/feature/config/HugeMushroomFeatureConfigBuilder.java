@@ -10,13 +10,13 @@ public class HugeMushroomFeatureConfigBuilder extends FeatureConfigBuilder {
         super();
     }
 
-    public <P extends BlockStateProviderBuilder> HugeMushroomFeatureConfigBuilder capProvider(Processor<P> processor, P instance) {
-        with("cap_provider", JsonObject::new, jsonObject -> processor.process(instance).buildTo(jsonObject));
+    public <P extends BlockStateProviderBuilder> HugeMushroomFeatureConfigBuilder capProvider(P processor) {
+        join("cap_provider", processor.getData());
         return this;
     }
 
-    public <P extends BlockStateProviderBuilder> HugeMushroomFeatureConfigBuilder stemProvider(Processor<P> processor, P instance) {
-        with("stem_provider", JsonObject::new, jsonObject -> processor.process(instance).buildTo(jsonObject));
+    public <P extends BlockStateProviderBuilder> HugeMushroomFeatureConfigBuilder stemProvider(P processor) {
+        join("stem_provider", processor.getData());
         return this;
     }
 

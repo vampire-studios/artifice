@@ -17,15 +17,15 @@ public class RandomFeatureConfigBuilder extends FeatureConfigBuilder {
         return this;
     }
 
-    public RandomFeatureConfigBuilder addConfiguredFeature(Processor<RandomFeatureEntryBuilder> processor) {
-        this.root.getAsJsonArray("features").add(processor.process(new RandomFeatureEntryBuilder()).buildTo(new JsonObject()));
+    public RandomFeatureConfigBuilder addConfiguredFeature(RandomFeatureEntryBuilder processor) {
+        this.root.getAsJsonArray("features").add(processor.getData());
         return this;
     }
 
-    public static class RandomFeatureEntryBuilder extends TypedJsonObject<JsonObject> {
+    public static class RandomFeatureEntryBuilder extends TypedJsonObject {
 
         public RandomFeatureEntryBuilder() {
-            super(new JsonObject(), j->j);
+            super(new JsonObject());
         }
 
         public RandomFeatureEntryBuilder chance(float chance) {

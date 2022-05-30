@@ -15,13 +15,13 @@ public class RandomPatchFeatureConfigBuilder extends FeatureConfigBuilder {
         this.root.add("blacklist", new JsonArray());
     }
 
-    public <P extends BlockStateProviderBuilder> RandomPatchFeatureConfigBuilder stateProvider(Processor<P> processor, P instance) {
-        with("state_provider", JsonObject::new, jsonObject -> processor.process(instance).buildTo(jsonObject));
+    public <P extends BlockStateProviderBuilder> RandomPatchFeatureConfigBuilder stateProvider(P processor, P instance) {
+        join("state_provider", processor.getData());
         return this;
     }
 
-    public <P extends BlockPlacerBuilder> RandomPatchFeatureConfigBuilder blockPlacer(Processor<P> processor, P instance) {
-        with("block_placer", JsonObject::new, jsonObject -> processor.process(instance).buildTo(jsonObject));
+    public <P extends BlockPlacerBuilder> RandomPatchFeatureConfigBuilder blockPlacer(P processor, P instance) {
+        join("block_placer", processor.getData());
         return this;
     }
 

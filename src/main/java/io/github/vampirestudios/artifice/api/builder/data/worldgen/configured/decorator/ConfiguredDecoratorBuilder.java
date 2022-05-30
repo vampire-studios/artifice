@@ -5,10 +5,10 @@ import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.decorator.config.DecoratorConfigBuilder;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
-public class ConfiguredDecoratorBuilder extends TypedJsonObject<JsonObject> {
+public class ConfiguredDecoratorBuilder extends TypedJsonObject {
 
     public ConfiguredDecoratorBuilder() {
-        super(new JsonObject(), j->j);
+        super(new JsonObject());
     }
 
     public ConfiguredDecoratorBuilder name(String decoratorID) {
@@ -16,12 +16,12 @@ public class ConfiguredDecoratorBuilder extends TypedJsonObject<JsonObject> {
         return this;
     }
 
-    public <C extends DecoratorConfigBuilder> ConfiguredDecoratorBuilder config(Processor<C> processor, C instance) {
-        with("config", JsonObject::new, jsonObject -> processor.process(instance).buildTo(jsonObject));
+    public <C extends DecoratorConfigBuilder> ConfiguredDecoratorBuilder config(C processor) {
+        join("config", processor.getData());
         return this;
     }
 
     public ConfiguredDecoratorBuilder defaultConfig() {
-        return this.config(f -> {}, new DecoratorConfigBuilder());
+        return this.config(new DecoratorConfigBuilder());
     }
 }

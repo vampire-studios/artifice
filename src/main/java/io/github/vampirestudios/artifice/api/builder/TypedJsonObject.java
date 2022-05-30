@@ -3,6 +3,8 @@ package io.github.vampirestudios.artifice.api.builder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonArray;
+import net.minecraft.resources.ResourceLocation;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Map;
@@ -19,6 +21,9 @@ public class TypedJsonObject {
 
     public JsonObject getData(){
         return this.root;
+    }
+    public JsonObject buildCopy(){
+        return merge(new JsonObject());
     }
 
 
@@ -61,6 +66,12 @@ public class TypedJsonObject {
         return array;
     }
 
+    public static JsonArray arrayOf(JsonElement... values){
+        JsonArray array = new JsonArray();
+        for(JsonElement i : values) array.add(i);
+        return array;
+    }
+
     public static JsonArray arrayOf(boolean... values) {
         JsonArray array = new JsonArray();
         for(boolean i : values) array.add(i);
@@ -73,15 +84,38 @@ public class TypedJsonObject {
         return array;
     }
 
-    public static JsonArray arrayOf(Number... values) {
+    public static JsonArray arrayOf(float... values) {
         JsonArray array = new JsonArray();
         for(Number i : values) array.add(i);
         return array;
     }
 
+    public static JsonArray arrayOf(int... values) {
+        JsonArray array = new JsonArray();
+        for(Number i : values) array.add(i);
+        return array;
+    }
+
+    public static JsonArray arrayOf(long... values) {
+        JsonArray array = new JsonArray();
+        for(Number i : values) array.add(i);
+        return array;
+    }
+
+    public static JsonArray arrayOf(double... values) {
+        JsonArray array = new JsonArray();
+        for(Number i : values) array.add(i);
+        return array;
+    }
     public static JsonArray arrayOf(String... values) {
         JsonArray array = new JsonArray();
         for(String i : values) array.add(i);
+        return array;
+    }
+
+    public static JsonArray arrayOf(ResourceLocation... values) {
+        JsonArray array = new JsonArray();
+        for(ResourceLocation i : values) array.add(i.toString());
         return array;
     }
 
@@ -113,6 +147,30 @@ public class TypedJsonObject {
     public TypedJsonObject add(String key, Character value){
         this.root.addProperty(key,value);
         return this;
+    }
+
+    public JsonElement get(String key){
+        return this.root.get(key);
+    }
+
+    public JsonObject getObj(String key){
+        JsonObject aa;
+        try{
+            aa = this.root.get(key).getAsJsonObject();
+        } catch (IllegalStateException e){
+            aa = null;
+        }
+        return aa;
+    }
+
+    public JsonArray getArray(String key){
+        JsonArray aa;
+        try{
+            aa = this.root.get(key).getAsJsonArray();
+        } catch (IllegalStateException e){
+            aa = null;
+        }
+        return aa;
     }
 
     public InputStream toInputStream() {

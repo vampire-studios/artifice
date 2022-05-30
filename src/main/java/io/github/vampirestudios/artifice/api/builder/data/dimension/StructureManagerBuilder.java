@@ -4,9 +4,9 @@ import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
-public class StructureManagerBuilder extends TypedJsonObject<JsonObject> {
+public class StructureManagerBuilder extends TypedJsonObject {
     public StructureManagerBuilder() {
-        super(new JsonObject(), j->j);
+        super(new JsonObject());
         this.root.add("structures", new JsonObject());
     }
 
@@ -15,8 +15,8 @@ public class StructureManagerBuilder extends TypedJsonObject<JsonObject> {
      * @param strongholdSettingsBuilder
      * @return
      */
-    public StructureManagerBuilder strongholdSettings(Processor<StrongholdSettingsBuilder> strongholdSettingsBuilder) {
-        with("stronghold", JsonObject::new, jsonObject -> strongholdSettingsBuilder.process(new StrongholdSettingsBuilder()).buildTo(jsonObject));
+    public StructureManagerBuilder strongholdSettings(StrongholdSettingsBuilder strongholdSettingsBuilder) {
+        join("stronghold", strongholdSettingsBuilder.getData());
         return this;
     }
 
@@ -26,16 +26,16 @@ public class StructureManagerBuilder extends TypedJsonObject<JsonObject> {
      * @param structureConfigBuilder
      * @return
      */
-    public StructureManagerBuilder addStructure(String structureId, Processor<StructureConfigBuilder> structureConfigBuilder) {
-        this.with(this.root.getAsJsonObject("structures"), structureId, JsonObject::new, jsonObject -> structureConfigBuilder.process(new StructureConfigBuilder()).buildTo(jsonObject));
+    public StructureManagerBuilder addStructure(String structureId, StructureConfigBuilder structureConfigBuilder) {
+        this.join(this.getObj("structures"), structureId, structureConfigBuilder.getData());
         return this;
     }
 
 
-    public static class StrongholdSettingsBuilder extends TypedJsonObject<JsonObject> {
+    public static class StrongholdSettingsBuilder extends TypedJsonObject {
 
         protected StrongholdSettingsBuilder() {
-            super(new JsonObject(), j->j);
+            super();
         }
 
         /**
@@ -73,10 +73,10 @@ public class StructureManagerBuilder extends TypedJsonObject<JsonObject> {
         }
     }
 
-    public static class StructureConfigBuilder extends TypedJsonObject<JsonObject> {
+    public static class StructureConfigBuilder extends TypedJsonObject {
 
         protected StructureConfigBuilder() {
-            super(new JsonObject(), j->j);
+            super();
         }
 
         public StructureConfigBuilder spacing(int spacing) {

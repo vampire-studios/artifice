@@ -13,7 +13,7 @@ public class SpringFeatureConfigBuilder extends FeatureConfigBuilder {
     }
 
     public SpringFeatureConfigBuilder fluidState(StateDataBuilder processor) {
-        with("state", JsonObject::new, processor::merge);
+        join("state", processor.buildCopy());
         return this;
     }
 

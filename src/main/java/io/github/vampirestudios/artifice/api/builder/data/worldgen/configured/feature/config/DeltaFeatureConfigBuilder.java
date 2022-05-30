@@ -11,23 +11,23 @@ public class DeltaFeatureConfigBuilder extends FeatureConfigBuilder {
         super();
     }
 
-    public DeltaFeatureConfigBuilder size(Processor<UniformIntDistributionBuilder> processor) {
-        with("size", JsonObject::new, jsonObject -> processor.process(new UniformIntDistributionBuilder()).buildTo(jsonObject));
+    public DeltaFeatureConfigBuilder size(UniformIntDistributionBuilder processor) {
+        join("size", processor.getData());
         return this;
     }
 
-    public DeltaFeatureConfigBuilder rimSize(Processor<UniformIntDistributionBuilder> processor) {
-        with("rim_size", JsonObject::new, jsonObject -> processor.process(new UniformIntDistributionBuilder()).buildTo(jsonObject));
+    public DeltaFeatureConfigBuilder rimSize(UniformIntDistributionBuilder processor) {
+        join("rim_size", processor.getData());
         return this;
     }
 
     public DeltaFeatureConfigBuilder rim(StateDataBuilder processor) {
-        with("rim", JsonObject::new, processor::merge);
+        join("rim", processor.getData());
         return this;
     }
 
     public DeltaFeatureConfigBuilder contents(StateDataBuilder processor) {
-        with("contents", JsonObject::new, processor::merge);
+        join("contents", processor.getData());
         return this;
     }
 }

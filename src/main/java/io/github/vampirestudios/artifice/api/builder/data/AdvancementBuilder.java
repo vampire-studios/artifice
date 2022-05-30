@@ -37,12 +37,11 @@ public final class AdvancementBuilder extends TypedJsonObject {
     /**
      * Add a critera for this advancement to be received.
      * @param name The name of this criteria.
-     * @param settings A callback which will be passed a {@link Criteria}.
+     * @param settings A {@link Criteria}.
      * @return this
      */
     public AdvancementBuilder criteria(String name, Criteria settings) {
-        join("criteria", JsonObject::new, criteria -> with(criteria, name, JsonObject::new, criterion ->
-            settings.process(new Criteria()).buildTo(criterion)));
+        join("criteria", new TypedJsonObject().add(name, settings).getData());
         return this;
     }
 

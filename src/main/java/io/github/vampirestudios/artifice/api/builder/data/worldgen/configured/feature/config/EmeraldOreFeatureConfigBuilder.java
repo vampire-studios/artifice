@@ -11,12 +11,12 @@ public class EmeraldOreFeatureConfigBuilder extends FeatureConfigBuilder {
     }
 
     public EmeraldOreFeatureConfigBuilder state(StateDataBuilder processor) {
-        with("state", JsonObject::new, processor::merge);
+        join("state", processor.getData());
         return this;
     }
 
     public EmeraldOreFeatureConfigBuilder target(StateDataBuilder processor) {
-        with("target", JsonObject::new, processor::merge);
+        join("target", processor.getData());
         return this;
     }
 }

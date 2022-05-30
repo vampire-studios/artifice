@@ -6,9 +6,9 @@ import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
-public class ConfiguredSurfaceBuilder extends TypedJsonObject<JsonResource<JsonObject>> {
+public class ConfiguredSurfaceBuilder extends TypedJsonObject {
     public ConfiguredSurfaceBuilder() {
-        super(new JsonObject(), JsonResource::new);
+        super(new JsonObject());
         this.root.add("config", new JsonObject());
     }
 
@@ -19,7 +19,7 @@ public class ConfiguredSurfaceBuilder extends TypedJsonObject<JsonResource<JsonO
      * @return
      */
     private ConfiguredSurfaceBuilder setBlockState(String id, StateDataBuilder blockStateBuilderProcessor) {
-        with(this.root.getAsJsonObject("config"),id, JsonObject::new, blockStateBuilderProcessor::merge);
+        join(this.root.getAsJsonObject("config"), id, blockStateBuilderProcessor.getData());
         return this;
     }
 

@@ -14,8 +14,8 @@ import net.minecraft.util.Mth;
  * @see ModelBuilder
  */
 @Environment(EnvType.CLIENT)
-public final class ModelElementBuilder extends TypedJsonObject<JsonObject> {
-    ModelElementBuilder() { super(new JsonObject(), j->j); }
+public final class ModelElementBuilder extends TypedJsonObject {
+    ModelElementBuilder() { super(new JsonObject()); }
 
     /**
      * Set the start point of this cuboid.
@@ -51,11 +51,11 @@ public final class ModelElementBuilder extends TypedJsonObject<JsonObject> {
 
     /**
      * Set the rotation of this cuboid.
-     * @param settings A callback which will be passed a {@link Rotation}.
+     * @param settings a {@link Rotation}.
      * @return this
      */
-    public ModelElementBuilder rotation(Processor<Rotation> settings) {
-        with("rotation", JsonObject::new, rotation -> settings.process(new Rotation(rotation)).buildTo(rotation));
+    public ModelElementBuilder rotation(Rotation settings) {
+        this.join("rotation", settings.getData());
         return this;
     }
 
@@ -75,9 +75,9 @@ public final class ModelElementBuilder extends TypedJsonObject<JsonObject> {
      * @param settings A callback which will be passed a {@link Face}.
      * @return this
      */
-    public ModelElementBuilder face(Direction side, Processor<Face> settings) {
-        with("faces", JsonObject::new, faces -> with(faces, side.getName(), JsonObject::new, face ->
-            settings.process(new Face(face)).buildTo(face)));
+    public ModelElementBuilder face(Direction side, Face settings) {
+        join("faces", new JsonObject());
+        join(getObj("faces"), side.getName(), settings.getData());
         return this;
     }
 
@@ -86,8 +86,8 @@ public final class ModelElementBuilder extends TypedJsonObject<JsonObject> {
      * @see ModelElementBuilder
      */
     @Environment(EnvType.CLIENT)
-    public static final class Rotation extends TypedJsonObject<JsonObject> {
-        private Rotation(JsonObject root) { super(root, j->j); }
+    public static final class Rotation extends TypedJsonObject {
+        private Rotation(JsonObject root) { super(root); }
 
         /**
          * Set the origin point of this rotation.
@@ -144,8 +144,8 @@ public final class ModelElementBuilder extends TypedJsonObject<JsonObject> {
      * @see ModelElementBuilder
      */
     @Environment(EnvType.CLIENT)
-    public static final class Face extends TypedJsonObject<JsonObject> {
-        private Face(JsonObject root) { super(root, j->j); }
+    public static final class Face extends TypedJsonObject {
+        private Face(JsonObject root) { super(root); }
 
         /**
          * Set the texture UV to apply to this face. Detected by position within the block if not specified.

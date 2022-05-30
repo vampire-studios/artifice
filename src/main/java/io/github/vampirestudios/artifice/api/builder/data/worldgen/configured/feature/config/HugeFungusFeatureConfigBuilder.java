@@ -11,22 +11,22 @@ public class HugeFungusFeatureConfigBuilder extends FeatureConfigBuilder {
     }
 
     public HugeFungusFeatureConfigBuilder validBaseBlock(StateDataBuilder processor) {
-        with("valid_base_block", JsonObject::new, processor::merge);
+        join("valid_base_block", processor.getData());
         return this;
     }
 
     public HugeFungusFeatureConfigBuilder stemState(StateDataBuilder processor) {
-        with("stem_state", JsonObject::new, processor::merge);
+        join("stem_state", processor.getData());
         return this;
     }
 
     public HugeFungusFeatureConfigBuilder hatState(StateDataBuilder processor) {
-        with("hat_state", JsonObject::new, processor::merge);
+        join("hat_state", processor.getData());
         return this;
     }
 
     public HugeFungusFeatureConfigBuilder decorState(StateDataBuilder processor) {
-        with("decor_state", JsonObject::new, processor::merge);
+        join("decor_state", processor.getData());
         return this;
     }
 

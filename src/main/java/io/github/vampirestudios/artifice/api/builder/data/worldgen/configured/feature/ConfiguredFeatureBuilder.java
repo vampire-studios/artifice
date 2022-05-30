@@ -6,9 +6,9 @@ import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.fe
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
-public class ConfiguredFeatureBuilder extends TypedJsonObject<JsonResource<JsonObject>> {
+public class ConfiguredFeatureBuilder extends TypedJsonObject {
     public ConfiguredFeatureBuilder() {
-        super(new JsonObject(), JsonResource::new);
+        super(new JsonObject());
     }
 
     public ConfiguredFeatureBuilder featureID(String id) {
@@ -16,12 +16,12 @@ public class ConfiguredFeatureBuilder extends TypedJsonObject<JsonResource<JsonO
         return this;
     }
 
-    public <C extends FeatureConfigBuilder> ConfiguredFeatureBuilder featureConfig(Processor<C> processor, C instance) {
-        with("config", JsonObject::new, jsonObject -> processor.process(instance).buildTo(jsonObject));
+    public <C extends FeatureConfigBuilder> ConfiguredFeatureBuilder featureConfig(C processor) {
+        join("config", processor.getData());
         return this;
     }
 
     public ConfiguredFeatureBuilder defaultConfig() {
-        return this.featureConfig(featureConfigBuilder -> {} , new FeatureConfigBuilder());
+        return this.featureConfig(new FeatureConfigBuilder());
     }
 }

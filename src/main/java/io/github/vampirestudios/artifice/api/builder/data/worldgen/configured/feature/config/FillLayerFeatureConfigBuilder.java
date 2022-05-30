@@ -10,7 +10,7 @@ public class FillLayerFeatureConfigBuilder extends FeatureConfigBuilder {
     }
 
     public FillLayerFeatureConfigBuilder state(StateDataBuilder processor) {
-        with("state", JsonObject::new, processor::merge);
+        join("state", processor.getData());
         return this;
     }
 

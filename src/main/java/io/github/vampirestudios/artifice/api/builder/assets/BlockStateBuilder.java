@@ -1,6 +1,7 @@
 package io.github.vampirestudios.artifice.api.builder.assets;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
@@ -10,13 +11,15 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.Map;
+
 /**
  * Builder for a blockstate definition file ({@code namespace:blockstates/blockid.json}).
  * @see <a href="https://minecraft.gamepedia.com/Model#Block_states" target="_blank">Minecraft Wiki</a>
  */
 @Environment(EnvType.CLIENT)
-public final class BlockStateBuilder extends TypedJsonObject<JsonResource<JsonObject>> {
-    public BlockStateBuilder() { super(new JsonObject(), JsonResource::new); }
+public final class BlockStateBuilder extends TypedJsonObject {
+    public BlockStateBuilder() { super(new JsonObject()); }
 
     /**
      * Add a variant for the given state key.
@@ -27,10 +30,9 @@ public final class BlockStateBuilder extends TypedJsonObject<JsonResource<JsonOb
      * @param settings A callback which will be passed a {@link Variant}.
      * @return this
      */
-    public BlockStateBuilder variant(String name, Processor<Variant> settings) {
+    public BlockStateBuilder variant(String name, Variant settings) {
         root.remove("multipart");
-        with("variants", JsonObject::new, variants -> with(variants, name, JsonObject::new, variant ->
-            settings.process(new Variant(variant)).buildTo(variant)));
+        join("variants", new TypedJsonObject().add(name,arrayOf(settings)).getData());
         return this;
     }
 
@@ -43,10 +45,10 @@ public final class BlockStateBuilder extends TypedJsonObject<JsonResource<JsonOb
      * @param settings A callback which will be passed a {@link Variant}.
      * @return this
      */
-    public BlockStateBuilder weightedVariant(String name, Processor<Variant> settings) {
+    public BlockStateBuilder weightedVariant(String name, Variant settings) {
         root.remove("multipart");
-        with("variants", JsonObject::new, variants -> with(variants, name, JsonArray::new, options ->
-           options.add(settings.process(new Variant()).build())));
+        if(getObj("variants") != null && getObj("variants").has(name)) join(getObj("variants"), name, settings.getData());
+        else join("variants", new TypedJsonObject().add(name,arrayOf(settings)).getData());
         return this;
     }
 
@@ -58,9 +60,9 @@ public final class BlockStateBuilder extends TypedJsonObject<JsonResource<JsonOb
      * @param settings A callback which will be passed a {@link Case}.
      * @return this
      */
-    public BlockStateBuilder multipartCase(Processor<Case> settings) {
+    public BlockStateBuilder multipartCase(Case settings) {
         root.remove("variants");
-        with("multipart", JsonArray::new, cases -> cases.add(settings.process(new Case()).build()));
+        join("multipart", arrayOf(settings) );
         return this;
     }
 
@@ -69,9 +71,9 @@ public final class BlockStateBuilder extends TypedJsonObject<JsonResource<JsonOb
      * @see BlockStateBuilder
      */
     @Environment(EnvType.CLIENT)
-    public static final class Variant extends TypedJsonObject<JsonObject> {
-        private Variant() { super(new JsonObject(), j->j); }
-        private Variant(JsonObject root) { super(root, j->j); }
+    public static final class Variant extends TypedJsonObject {
+        public Variant() { super(new JsonObject()); }
+        private Variant(JsonObject root) { super(root); }
 
         /**
          * Set the model this variant should use.
@@ -135,8 +137,8 @@ public final class BlockStateBuilder extends TypedJsonObject<JsonResource<JsonOb
      * @see BlockStateBuilder
      */
     @Environment(EnvType.CLIENT)
-    public static final class Case extends TypedJsonObject<JsonObject> {
-        private Case() { super(new JsonObject(), j->j); }
+    public static final class Case extends TypedJsonObject {
+        private Case() { super(new JsonObject()); }
 
         /**
          * Set the condition for this case to be applied.
@@ -146,10 +148,16 @@ public final class BlockStateBuilder extends TypedJsonObject<JsonResource<JsonOb
          * @return this
          */
         public Case when(String name, String state) {
-            with("when", JsonObject::new, when -> {
-                when.remove("OR");
-                when.addProperty(name, state);
-            });
+            join("when", new TypedJsonObject().add(name, state).getData());
+            JsonObject condit = this.getObj("when");
+            if(condit.has("OR")){
+                JsonObject or = condit.getAsJsonObject("OR");
+                for (Map.Entry<String, JsonElement> a : condit.entrySet()) {
+                    condit.add(a.getKey(), a.getValue());
+                    or.remove(a.getKey());
+                }
+                condit.remove("OR");
+            }
             return this;
         }
 
@@ -161,10 +169,16 @@ public final class BlockStateBuilder extends TypedJsonObject<JsonResource<JsonOb
          * @return this
          */
         public Case whenAny(String name, String state) {
-            with("when", JsonObject::new, when -> with(when, "OR", JsonArray::new, cases -> {
-                when.entrySet().forEach(e -> { if(!e.getKey().equals("OR")) when.remove(e.getKey()); });
-                cases.add(new JsonObjectBuilder().add(name, state).getData());
-            }));
+            JsonObject condit = this.getObj("when");
+            if(condit != null && !condit.has("OR")){
+                TypedJsonObject or = new TypedJsonObject();
+                for (Map.Entry<String, JsonElement> a : condit.entrySet()) {
+                    or.add(a.getKey(),a.getValue());
+                    condit.remove(a.getKey());
+                }
+                condit.add("OR", or.getData());
+            }
+            join("when", new TypedJsonObject().add(name, state).getData());
             return this;
         }
 
@@ -174,19 +188,19 @@ public final class BlockStateBuilder extends TypedJsonObject<JsonResource<JsonOb
          * @param settings A callback which will be passed a {@link Variant}.
          * @return this
          */
-        public Case apply(Processor<Variant> settings) {
-            root.add("apply", settings.process(new Variant()).build());
+        public Case apply(Variant settings) {
+            root.add("apply", settings.getData());
             return this;
         }
 
         /**
          * Set the variant to be applied if the condition matches, with multiple weighted random options.
          * Calling this multiple times will add to the list instead of overwriting.
-         * @param settings A callback which will be passed a {@link Variant}.
+         * @param settings A {@link Variant}.
          * @return this
          */
-        public Case weightedApply(Processor<Variant> settings) {
-            with("apply", JsonArray::new, options -> options.add(settings.process(new Variant()).build()));
+        public Case weightedApply(Variant settings) {
+            join("apply", settings.getData());
             return this;
         }
     }

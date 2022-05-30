@@ -6,9 +6,9 @@ import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.Processor;
 import net.minecraft.resources.ResourceLocation;
 
-public class DimensionBuilder extends TypedJsonObject<JsonResource<JsonObject>> {
+public class DimensionBuilder extends TypedJsonObject {
     public DimensionBuilder() {
-        super(new JsonObject(), JsonResource::new);
+        super(new JsonObject());
     }
 
     /**
@@ -24,12 +24,11 @@ public class DimensionBuilder extends TypedJsonObject<JsonResource<JsonObject>> 
     /**
      * Make a Chunk Generator.
      * @param generatorBuilder
-     * @param generatorBuilderInstance
      * @param <T> A class extending ChunkGeneratorTypeBuilder.
      * @return
      */
-    public <T extends ChunkGeneratorTypeBuilder> DimensionBuilder generator(Processor<T> generatorBuilder, T generatorBuilderInstance) {
-        with("generator", JsonObject::new, generator -> generatorBuilder.process(generatorBuilderInstance).buildTo(generator));
+    public <T extends ChunkGeneratorTypeBuilder> DimensionBuilder generator(T generatorBuilder) {
+        join("generator", generatorBuilder.getData() );
         return this;
     }
 
@@ -38,8 +37,8 @@ public class DimensionBuilder extends TypedJsonObject<JsonResource<JsonObject>> 
      * @param generatorBuilder
      * @return
      */
-    public DimensionBuilder noiseGenerator(Processor<ChunkGeneratorTypeBuilder.NoiseChunkGeneratorTypeBuilder> generatorBuilder) {
-        return this.generator(generatorBuilder, new ChunkGeneratorTypeBuilder.NoiseChunkGeneratorTypeBuilder());
+    public DimensionBuilder noiseGenerator(ChunkGeneratorTypeBuilder.NoiseChunkGeneratorTypeBuilder generatorBuilder) {
+        return this.generator(generatorBuilder);
     }
 
     /**
@@ -47,8 +46,8 @@ public class DimensionBuilder extends TypedJsonObject<JsonResource<JsonObject>> 
      * @param generatorBuilder
      * @return
      */
-    public DimensionBuilder flatGenerator(Processor<ChunkGeneratorTypeBuilder.FlatChunkGeneratorTypeBuilder> generatorBuilder) {
-        return this.generator(generatorBuilder, new ChunkGeneratorTypeBuilder.FlatChunkGeneratorTypeBuilder());
+    public DimensionBuilder flatGenerator(ChunkGeneratorTypeBuilder.FlatChunkGeneratorTypeBuilder generatorBuilder) {
+        return this.generator(generatorBuilder);
     }
 
     /**

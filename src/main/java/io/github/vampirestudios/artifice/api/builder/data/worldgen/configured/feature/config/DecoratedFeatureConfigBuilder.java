@@ -11,8 +11,8 @@ public class DecoratedFeatureConfigBuilder extends FeatureConfigBuilder {
         super();
     }
 
-    public DecoratedFeatureConfigBuilder feature(Processor<ConfiguredSubFeatureBuilder> processor) {
-        with("feature", JsonObject::new, jsonObject -> processor.process(new ConfiguredSubFeatureBuilder()).buildTo(jsonObject));
+    public DecoratedFeatureConfigBuilder feature(ConfiguredSubFeatureBuilder processor) {
+        join("feature", processor.getData());
         return this;
     }
 
@@ -21,8 +21,8 @@ public class DecoratedFeatureConfigBuilder extends FeatureConfigBuilder {
         return this;
     }
 
-    public DecoratedFeatureConfigBuilder decorator(Processor<ConfiguredDecoratorBuilder> processor) {
-        with("decorator", JsonObject::new, jsonObject -> processor.process(new ConfiguredDecoratorBuilder()).buildTo(jsonObject));
+    public DecoratedFeatureConfigBuilder decorator(ConfiguredDecoratorBuilder processor) {
+        join("decorator", processor.getData());
         return this;
     }
 

@@ -4,10 +4,10 @@ import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
-public class RuleTestBuilder extends TypedJsonObject<JsonObject> {
+public class RuleTestBuilder extends TypedJsonObject {
 
     public RuleTestBuilder() {
-        super(new JsonObject(), j->j);
+        super(new JsonObject());
     }
 
     public <R extends RuleTestBuilder> R predicateType(String type) {
@@ -44,7 +44,7 @@ public class RuleTestBuilder extends TypedJsonObject<JsonObject> {
         }
 
         public BlockStateRuleTestBuilder blockState(StateDataBuilder processor) {
-            with("block_state", JsonObject::new, processor::merge);
+            join("block_state", processor.getData());
             return this;
         }
     }
@@ -88,7 +88,7 @@ public class RuleTestBuilder extends TypedJsonObject<JsonObject> {
         }
 
         public RandomBlockStateMatchRuleTestBuilder blockState(StateDataBuilder processor) {
-            with("block_state", JsonObject::new, processor::merge);
+            join("block_state", processor.getData());
             return this;
         }
 

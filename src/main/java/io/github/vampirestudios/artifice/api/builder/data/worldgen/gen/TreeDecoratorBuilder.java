@@ -5,10 +5,10 @@ import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.BlockStateProviderBuilder;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
-public class TreeDecoratorBuilder extends TypedJsonObject<JsonObject> {
+public class TreeDecoratorBuilder extends TypedJsonObject {
 
     public TreeDecoratorBuilder() {
-        super(new JsonObject(), j->j);
+        super(new JsonObject());
     }
 
     public <D extends TreeDecoratorBuilder> D type(String type) {
@@ -69,8 +69,8 @@ public class TreeDecoratorBuilder extends TypedJsonObject<JsonObject> {
             this.type("minecraft:alter_ground");
         }
 
-        public <P extends BlockStateProviderBuilder> AlterGroundTreeDecoratorBuilder provider(Processor<P> processor, P instance) {
-            with("provider", JsonObject::new, jsonObject -> processor.process(instance).buildTo(jsonObject));
+        public <P extends BlockStateProviderBuilder> AlterGroundTreeDecoratorBuilder provider(P processor) {
+            join("provider", processor.getData());
             return this;
         }
     }

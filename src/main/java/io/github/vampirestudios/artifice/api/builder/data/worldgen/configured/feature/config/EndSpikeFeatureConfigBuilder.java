@@ -25,14 +25,14 @@ public class EndSpikeFeatureConfigBuilder extends FeatureConfigBuilder {
         return this;
     }
 
-    public EndSpikeFeatureConfigBuilder addSpike(Processor<SpikeBuilder> processor) {
-        this.root.getAsJsonArray("spikes").add(processor.process(new SpikeBuilder()).buildTo(new JsonObject()));
+    public EndSpikeFeatureConfigBuilder addSpike(SpikeBuilder processor) {
+        this.root.getAsJsonArray("spikes").add(processor.getData());
         return this;
     }
 
-    public static class SpikeBuilder extends TypedJsonObject<JsonObject> {
+    public static class SpikeBuilder extends TypedJsonObject {
         public SpikeBuilder() {
-            super(new JsonObject(), j->j);
+            super();
         }
 
         public SpikeBuilder centerX(int centerX) {

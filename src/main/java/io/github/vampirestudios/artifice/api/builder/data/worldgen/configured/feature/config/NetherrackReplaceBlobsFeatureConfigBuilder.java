@@ -11,18 +11,18 @@ public class NetherrackReplaceBlobsFeatureConfigBuilder extends FeatureConfigBui
         super();
     }
 
-    public NetherrackReplaceBlobsFeatureConfigBuilder radius(Processor<UniformIntDistributionBuilder> processor) {
-        with("radius", JsonObject::new, jsonObject -> processor.process(new UniformIntDistributionBuilder()).buildTo(jsonObject));
+    public NetherrackReplaceBlobsFeatureConfigBuilder radius(UniformIntDistributionBuilder processor) {
+        join("radius", processor.getData());
         return this;
     }
 
     public NetherrackReplaceBlobsFeatureConfigBuilder target(StateDataBuilder processor) {
-        with("target", JsonObject::new, processor::merge);
+        join("target", processor.getData());
         return this;
     }
 
     public NetherrackReplaceBlobsFeatureConfigBuilder state(StateDataBuilder processor) {
-        with("state", JsonObject::new, processor::merge);
+        join("state", processor.getData());
         return this;
     }
 }

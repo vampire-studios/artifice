@@ -11,8 +11,8 @@ import net.fabricmc.api.Environment;
  * @see <a href="https://minecraft.gamepedia.com/Resource_pack#Language" target="_blank">Minecraft Wiki</a>
  */
 @Environment(EnvType.CLIENT)
-public final class TranslationBuilder extends TypedJsonObject<JsonResource<JsonObject>> {
-    public TranslationBuilder() { super(new JsonObject(), JsonResource::new); }
+public final class TranslationBuilder extends TypedJsonObject {
+    public TranslationBuilder() { super(new JsonObject()); }
 
     /**
      * Add a translation entry.

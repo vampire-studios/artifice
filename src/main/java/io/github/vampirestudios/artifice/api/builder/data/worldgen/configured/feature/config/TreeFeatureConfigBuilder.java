@@ -27,38 +27,38 @@ public class TreeFeatureConfigBuilder extends FeatureConfigBuilder {
         return this;
     }
 
-    public <P extends BlockStateProviderBuilder> TreeFeatureConfigBuilder dirtProvider(Processor<P> providerProcessor, P instance) {
-        with("dirt_provider", JsonObject::new, jsonObject -> providerProcessor.process(instance).buildTo(jsonObject));
+    public <P extends BlockStateProviderBuilder> TreeFeatureConfigBuilder dirtProvider(P providerProcessor) {
+        join("dirt_provider", providerProcessor.getData());
         return this;
     }
 
-    public <P extends BlockStateProviderBuilder> TreeFeatureConfigBuilder trunkProvider(Processor<P> providerProcessor, P instance) {
-        with("trunk_provider", JsonObject::new, jsonObject -> providerProcessor.process(instance).buildTo(jsonObject));
+    public <P extends BlockStateProviderBuilder> TreeFeatureConfigBuilder trunkProvider(P providerProcessor) {
+        join("trunk_provider", providerProcessor.getData());
         return this;
     }
 
-    public <P extends BlockStateProviderBuilder> TreeFeatureConfigBuilder foliageProvider(Processor<P> providerProcessor, P instance) {
-        with("foliage_provider", JsonObject::new, jsonObject -> providerProcessor.process(instance).buildTo(jsonObject));
+    public <P extends BlockStateProviderBuilder> TreeFeatureConfigBuilder foliageProvider(P providerProcessor) {
+        join("foliage_provider", providerProcessor.getData());
         return this;
     }
 
-    public <P extends FoliagePlacerBuilder> TreeFeatureConfigBuilder foliagePlacer(Processor<P> providerProcessor, P instance) {
-        with("foliage_placer", JsonObject::new, jsonObject -> providerProcessor.process(instance).buildTo(jsonObject));
+    public <P extends FoliagePlacerBuilder> TreeFeatureConfigBuilder foliagePlacer(P providerProcessor) {
+        join("foliage_placer", providerProcessor.getData());
         return this;
     }
 
-    public <P extends TrunkPlacerBuilder> TreeFeatureConfigBuilder trunkPlacer(Processor<P> providerProcessor, P instance) {
-        with("trunk_placer", JsonObject::new, jsonObject -> providerProcessor.process(instance).buildTo(jsonObject));
+    public <P extends TrunkPlacerBuilder> TreeFeatureConfigBuilder trunkPlacer(P providerProcessor) {
+        join("trunk_placer", providerProcessor.getData());
         return this;
     }
 
-    public <P extends FeatureSizeBuilder> TreeFeatureConfigBuilder minimumSize(Processor<P> providerProcessor, P instance) {
-        with("minimum_size", JsonObject::new, jsonObject -> providerProcessor.process(instance).buildTo(jsonObject));
+    public <P extends FeatureSizeBuilder> TreeFeatureConfigBuilder minimumSize(P providerProcessor) {
+        join("minimum_size", providerProcessor.getData());
         return this;
     }
 
-    public <D extends TreeDecoratorBuilder> TreeFeatureConfigBuilder addDecorator(Processor<D> processor, D instance) {
-        this.root.getAsJsonArray("decorators").add(processor.process(instance).buildTo(new JsonObject()));
+    public <D extends TreeDecoratorBuilder> TreeFeatureConfigBuilder addDecorator(D processor) {
+        this.root.getAsJsonArray("decorators").add(processor.getData());
         return this;
     }
 

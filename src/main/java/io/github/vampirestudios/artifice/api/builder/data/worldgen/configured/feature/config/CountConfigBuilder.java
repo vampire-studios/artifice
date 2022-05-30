@@ -14,8 +14,8 @@ public class CountConfigBuilder extends FeatureConfigBuilder {
         return this;
     }
 
-    public CountConfigBuilder count(Processor<UniformIntDistributionBuilder> processor) {
-        with("count", JsonObject::new, jsonObject -> processor.process(new UniformIntDistributionBuilder()).buildTo(jsonObject));
+    public CountConfigBuilder count(UniformIntDistributionBuilder processor) {
+        join("count", processor.getData());
         return this;
     }
 }

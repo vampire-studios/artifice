@@ -8,9 +8,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
-public final class DimensionTypeBuilder extends TypedJsonObject<JsonResource<JsonObject>> {
+public final class DimensionTypeBuilder extends TypedJsonObject {
     public DimensionTypeBuilder() {
-        super(new JsonObject(), JsonResource::new);
+        super(new JsonObject());
     }
 
     /**
@@ -123,11 +123,7 @@ public final class DimensionTypeBuilder extends TypedJsonObject<JsonResource<Jso
      * @return this
      */
     public DimensionTypeBuilder infiniburn(ResourceLocation... infiniburns) {
-        jsonArray("infiniburn", jsonArrayBuilder -> {
-            for (ResourceLocation infiniburn : infiniburns) {
-                jsonArrayBuilder.add(infiniburn.toString());
-            }
-        });
+        this.add("infiniburn", arrayOf(infiniburns));
         return this;
     }
 

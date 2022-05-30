@@ -10,13 +10,13 @@ public class BasaltColumnsFeatureConfigBuilder extends FeatureConfigBuilder {
         super();
     }
 
-    public BasaltColumnsFeatureConfigBuilder reach(Processor<UniformIntDistributionBuilder> processor) {
-        with("reach", JsonObject::new, jsonObject -> processor.process(new UniformIntDistributionBuilder()).buildTo(jsonObject));
+    public BasaltColumnsFeatureConfigBuilder reach(UniformIntDistributionBuilder processor) {
+        join("reach", processor.getData());
         return this;
     }
 
-    public BasaltColumnsFeatureConfigBuilder height(Processor<UniformIntDistributionBuilder> processor) {
-        with("height", JsonObject::new, jsonObject -> processor.process(new UniformIntDistributionBuilder()).buildTo(jsonObject));
+    public BasaltColumnsFeatureConfigBuilder height(UniformIntDistributionBuilder processor) {
+        join("height", processor.getData());
         return this;
     }
 }

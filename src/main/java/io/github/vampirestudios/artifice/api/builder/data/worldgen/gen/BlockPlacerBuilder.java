@@ -3,10 +3,10 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen.gen;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 
-public class BlockPlacerBuilder extends TypedJsonObject<JsonObject> {
+public class BlockPlacerBuilder extends TypedJsonObject {
 
     public BlockPlacerBuilder() {
-        super(new JsonObject(), j->j);
+        super(new JsonObject());
     }
 
     public <P extends BlockPlacerBuilder> P type(String type) {

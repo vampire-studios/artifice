@@ -10,8 +10,8 @@ public class BlockPileFeatureConfigBuilder extends FeatureConfigBuilder {
         super();
     }
 
-    public <P extends BlockStateProviderBuilder> BlockPileFeatureConfigBuilder stateProvider(Processor<P> processor, P instance) {
-        with("state_provider", JsonObject::new, jsonObject -> processor.process(instance).buildTo(jsonObject));
+    public <P extends BlockStateProviderBuilder> BlockPileFeatureConfigBuilder stateProvider(P processor) {
+        join("state_provider", processor.getData());
         return this;
     }
 }

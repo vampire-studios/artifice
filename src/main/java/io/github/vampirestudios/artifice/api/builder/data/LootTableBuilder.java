@@ -40,12 +40,12 @@ public final class LootTableBuilder extends TypedJsonObject {
      * @see LootTableBuilder
      */
     public static final class Pool extends TypedJsonObject {
-        private Pool() { super(new JsonObject()); }
+        private Pool() { super(); }
 
         /**
          * Add an entry to this pool.
          * @param settings A callback which will be passed an {@link Entry}.
-         * @return this
+         * @return this {@link Pool}
          */
         public Pool entry(Entry settings) {
             join("entries", arrayOf(settings));
@@ -57,20 +57,19 @@ public final class LootTableBuilder extends TypedJsonObject {
          * The specific properties of this vary by condition, so this falls through to direct JSON building.
          *
          * @param id The condition ID.
-         * @param settings A callback which will be passed a {@link JsonObjectBuilder}.
-         * @return this
+         * @param settings A {@link TypedJsonObject}.
+         * @return this {@link Pool}
          * @see <a href="https://minecraft.gamepedia.com/Loot_table#Conditions" target="_blank">Minecraft Wiki</a>
          */
-        public Pool condition(ResourceLocation id, Processor<JsonObjectBuilder> settings) {
-            with("conditions", JsonArray::new, conditions ->
-                conditions.add(settings.process(new JsonObjectBuilder().add("condition", id.toString())).getData()));
+        public Pool condition(ResourceLocation id, TypedJsonObject settings) {
+            join("conditions", arrayOf(settings.add("condition", id.toString())) );
             return this;
         }
 
         /**
          * Set the number of rolls to apply this pool for.
          * @param rolls The number of rolls.
-         * @return this
+         * @return this {@link Pool}
          */
         public Pool rolls(int rolls) {
             root.addProperty("rolls", rolls);
@@ -184,8 +183,7 @@ public final class LootTableBuilder extends TypedJsonObject {
              * @see <a href="https://minecraft.gamepedia.com/Loot_table#Functions" target="_blank">Minecraft Wiki</a>
              */
             public Entry function(ResourceLocation id, Function settings) {
-                join("functions", JsonArray::new, functions ->
-                    functions.add(settings.process(new Function(new JsonObjectBuilder().add("function", id.toString()).getData())).getData()));
+                join("functions", arrayOf(settings.add("function", id.toString())) );
                 return this;
             }
 
@@ -194,13 +192,12 @@ public final class LootTableBuilder extends TypedJsonObject {
              * The specific properties of this vary by condition, so this falls through to direct JSON building.
              *
              * @param id The condition ID.
-             * @param settings A callback which will be passed a {@link JsonObjectBuilder}.
+             * @param settings A callback which will be passed a {@link TypedJsonObject}.
              * @return this
              * @see <a href="https://minecraft.gamepedia.com/Loot_table#Conditions" target="_blank">Minecraft Wiki</a>
              */
-            public Entry condition(ResourceLocation id, Processor<JsonObjectBuilder> settings) {
-                with("conditions", JsonArray::new, conditions ->
-                        conditions.add(settings.process(new JsonObjectBuilder().add("condition", id.toString())).getData()));
+            public Entry condition(ResourceLocation id, TypedJsonObject settings) {
+                join("conditions", arrayOf(settings.add("condition", id.toString())) );
                 return this;
             }
 

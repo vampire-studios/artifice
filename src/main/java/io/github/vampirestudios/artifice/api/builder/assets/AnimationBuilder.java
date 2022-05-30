@@ -14,9 +14,8 @@ import net.fabricmc.api.Environment;
  * @see <a href="https://minecraft.gamepedia.com/Resource_pack#Animation" target="_blank">Minecraft Wiki</a>
  */
 @Environment(EnvType.CLIENT)
-public final class AnimationBuilder extends TypedJsonObject<JsonResource<JsonObject>> {
-    public AnimationBuilder() { super(new JsonObject(), anim ->
-        new JsonResource<>(new JsonObjectBuilder().add("animation", anim).build())); }
+public final class AnimationBuilder extends TypedJsonObject {
+    public AnimationBuilder() { super(new JsonObject());}
 
     /**
      * Set whether this animation should interpolate between frames with a frametime &gt; 1 between them.
@@ -95,7 +94,7 @@ public final class AnimationBuilder extends TypedJsonObject<JsonResource<JsonObj
          * @return this
          */
         public FrameOrder frame(int index, int frametime) {
-            frames.add(new JsonObjectBuilder().add("index", index).add("time", frametime).build());
+            frames.add(new JsonObjectBuilder().add("index", index).add("time", frametime).getData());
             return this;
         }
 

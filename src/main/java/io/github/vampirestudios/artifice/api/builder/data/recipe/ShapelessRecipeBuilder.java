@@ -2,6 +2,7 @@ package io.github.vampirestudios.artifice.api.builder.data.recipe;
 
 import com.google.gson.JsonArray;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.util.Processor;
 import net.minecraft.resources.ResourceLocation;
 
@@ -18,8 +19,7 @@ public final class ShapelessRecipeBuilder extends RecipeBuilder<ShapelessRecipeB
      * @return this
      */
     public ShapelessRecipeBuilder ingredientItem(ResourceLocation id) {
-        with("ingredients", JsonArray::new, ingredients ->
-            ingredients.add(new JsonObjectBuilder().add("item", id.toString()).getData()));
+        join("ingredients", arrayOf(new TypedJsonObject().add("item", id.toString())));
         return this;
     }
 
@@ -29,8 +29,7 @@ public final class ShapelessRecipeBuilder extends RecipeBuilder<ShapelessRecipeB
      * @return this
      */
     public ShapelessRecipeBuilder ingredientTag(ResourceLocation id) {
-        with("ingredients", JsonArray::new, ingredients ->
-            ingredients.add(new JsonObjectBuilder().add("tag", id.toString()).getData()));
+        join("ingredients", arrayOf(new TypedJsonObject().add("tag", id.toString())));
         return this;
     }
 
@@ -39,9 +38,8 @@ public final class ShapelessRecipeBuilder extends RecipeBuilder<ShapelessRecipeB
      * @param settings A callback which will be passed a {@link MultiIngredientBuilder}.
      * @return this
      */
-    public ShapelessRecipeBuilder multiIngredient(Processor<MultiIngredientBuilder> settings) {
-        with("ingredients", JsonArray::new, ingredients ->
-            ingredients.add(settings.process(new MultiIngredientBuilder()).build()));
+    public ShapelessRecipeBuilder multiIngredient(MultiIngredientBuilder settings) {
+        join("ingredients", arrayOf(settings.build()));
         return this;
     }
 

@@ -1,13 +1,15 @@
 package io.github.vampirestudios.artifice.api.builder.data.dimension;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.structure.SpawnsBuilder;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
-public class ChunkGeneratorTypeBuilder extends TypedJsonObject<JsonObject> {
+public class ChunkGeneratorTypeBuilder extends TypedJsonObject {
 
     protected ChunkGeneratorTypeBuilder() {
-        super(new JsonObject(), j->j);
+        super(new JsonObject());
     }
 
     /**
@@ -24,12 +26,11 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonObject<JsonObject> {
     /**
      * Set the biome Source.
      * @param biomeSourceBuilder
-     * @param biomeSourceBuilderInstance
      * @param <T>
      * @return
      */
-    public <T extends BiomeSourceBuilder> ChunkGeneratorTypeBuilder biomeSource(Processor<T> biomeSourceBuilder, T biomeSourceBuilderInstance) {
-        with("biome_source", JsonObject::new, biomeSource -> biomeSourceBuilder.process(biomeSourceBuilderInstance).buildTo(biomeSource));
+    public <T extends BiomeSourceBuilder> ChunkGeneratorTypeBuilder biomeSource(T biomeSourceBuilder) {
+        join("biome_source", biomeSourceBuilder.getData());
         return this;
     }
 
@@ -74,8 +75,8 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonObject<JsonObject> {
          * @param biomeSourceBuilder
          * @return this
          */
-        public NoiseChunkGeneratorTypeBuilder vanillaLayeredBiomeSource(Processor<BiomeSourceBuilder.VanillaLayeredBiomeSourceBuilder> biomeSourceBuilder) {
-            biomeSource(biomeSourceBuilder, new BiomeSourceBuilder.VanillaLayeredBiomeSourceBuilder());
+        public NoiseChunkGeneratorTypeBuilder vanillaLayeredBiomeSource(BiomeSourceBuilder.VanillaLayeredBiomeSourceBuilder biomeSourceBuilder) {
+            biomeSource(biomeSourceBuilder);
             return this;
         }
 
@@ -84,8 +85,8 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonObject<JsonObject> {
          * @param biomeSourceBuilder
          * @return this
          */
-        public NoiseChunkGeneratorTypeBuilder multiNoiseBiomeSource(Processor<BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder> biomeSourceBuilder) {
-            biomeSource(biomeSourceBuilder, new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder());
+        public NoiseChunkGeneratorTypeBuilder multiNoiseBiomeSource(BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder biomeSourceBuilder) {
+            biomeSource(biomeSourceBuilder);
             return this;
         }
 
@@ -94,8 +95,8 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonObject<JsonObject> {
          * @param biomeSourceBuilder
          * @return this
          */
-        public NoiseChunkGeneratorTypeBuilder checkerboardBiomeSource(Processor<BiomeSourceBuilder.CheckerboardBiomeSourceBuilder> biomeSourceBuilder) {
-            biomeSource(biomeSourceBuilder, new BiomeSourceBuilder.CheckerboardBiomeSourceBuilder());
+        public NoiseChunkGeneratorTypeBuilder checkerboardBiomeSource(BiomeSourceBuilder.CheckerboardBiomeSourceBuilder biomeSourceBuilder) {
+            biomeSource(biomeSourceBuilder);
             return this;
         }
 
@@ -104,8 +105,8 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonObject<JsonObject> {
          * @param biomeSourceBuilder
          * @return this
          */
-        public NoiseChunkGeneratorTypeBuilder fixedBiomeSource(Processor<BiomeSourceBuilder.FixedBiomeSourceBuilder> biomeSourceBuilder) {
-            biomeSource(biomeSourceBuilder, new BiomeSourceBuilder.FixedBiomeSourceBuilder());
+        public NoiseChunkGeneratorTypeBuilder fixedBiomeSource(BiomeSourceBuilder.FixedBiomeSourceBuilder biomeSourceBuilder) {
+            biomeSource(biomeSourceBuilder);
             return this;
         }
 
@@ -162,14 +163,14 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonObject<JsonObject> {
          * @return this
          */
         public FlatChunkGeneratorTypeBuilder addLayer(LayersBuilder... layersBuilder) {
-            jsonArray(this.root.getAsJsonObject("settings"), "layers", jsonArrayBuilder -> {
-                for (LayersBuilder spawnsBuilder : layersBuilder) {
-                    jsonArrayBuilder.addObject(jsonObjectBuilder -> jsonObjectBuilder
-                            .add("block", spawnsBuilder.block())
-                            .add("height", spawnsBuilder.height())
-                    );
-                }
-            });
+
+            JsonArray aaa = new JsonArray();
+            for (LayersBuilder spawnsBuilder : layersBuilder) {
+                aaa.add(new TypedJsonObject()
+                        .add("block", spawnsBuilder.block())
+                        .add("height", spawnsBuilder.height()).getData());
+            }
+            this.join(getObj("settings"),"layers", aaa);
             return this;
         }
 

@@ -15,7 +15,7 @@ public class SimpleBlockFeatureConfigBuilder extends FeatureConfigBuilder {
     }
 
     public SimpleBlockFeatureConfigBuilder toPlace(StateDataBuilder processor) {
-        with("to_place", JsonObject::new, processor::merge);
+        join("to_place", processor.buildCopy());
         return this;
     }
 

@@ -4,9 +4,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 
-public class NoiseConfigBuilder extends TypedJsonObject<JsonObject> {
+public class NoiseConfigBuilder extends TypedJsonObject {
     public NoiseConfigBuilder() {
-        super(new JsonObject(), j->j);
+        super(new JsonObject());
     }
 
     public NoiseConfigBuilder height(int height) {
@@ -133,7 +133,7 @@ public class NoiseConfigBuilder extends TypedJsonObject<JsonObject> {
     public NoiseConfigBuilder terrainShaper(JsonObject offset, double factor, double jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
     public NoiseConfigBuilder terrainShaper(double offset, double factor, JsonObject jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}
 
-    public JsonObject spline(String noise, JsonObject... points) {
+    public static JsonObject spline(String noise, JsonObject... points) {
         JsonObject obj = new JsonObject();
         obj.addProperty("coordinate", noise);
         JsonArray ary = new JsonArray();
@@ -144,7 +144,7 @@ public class NoiseConfigBuilder extends TypedJsonObject<JsonObject> {
         return obj;
     }
 
-    public JsonObject point(double location, double derivative, Object value, int aa) {
+    public static JsonObject point(double location, double derivative, Object value, int aa) {
         JsonObject obj = new JsonObject();
         obj.addProperty("location", location);
         obj.addProperty("derivative", derivative);
@@ -153,10 +153,10 @@ public class NoiseConfigBuilder extends TypedJsonObject<JsonObject> {
         else throw new IllegalArgumentException("value must be spline or double");
         return obj;
     }
-    public JsonObject point(double location, double derivative, JsonObject value){
+    public static JsonObject point(double location, double derivative, JsonObject value){
         return point(location,derivative,value,0);
     }
-    public JsonObject point(double location, double derivative, double value){
+    public static JsonObject point(double location, double derivative, double value){
         return point(location,derivative,value,0);
     }
 

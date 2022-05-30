@@ -423,8 +423,8 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
             this.add("recipes/", id, ".json", r -> f.process(r.type(new ResourceLocation("blasting"))), SmithingRecipeBuilder::new);
         }
 
-        private <T extends TypedJsonObject<? extends JsonResource>> void add(String path, ResourceLocation id, String ext, Processor<T> f, Supplier<T> ctor) {
-            this.add(IdUtils.wrapPath(path, id, ext), f.process(ctor.get()).build());
+        private <T extends TypedJsonObject> void add(String path, ResourceLocation id, String ext, Processor<T> f, Supplier<T> ctor) {
+            this.add(IdUtils.wrapPath(path, id, ext), new JsonResource(f.process(ctor.get()).getData()));
         }
 
         private <T extends TypedJsonObject> void add(String path, ResourceLocation id, String ext, T f) {

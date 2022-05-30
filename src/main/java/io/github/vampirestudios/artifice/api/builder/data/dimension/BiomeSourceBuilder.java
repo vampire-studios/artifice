@@ -5,10 +5,10 @@ import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
-public class BiomeSourceBuilder extends TypedJsonObject<JsonObject> {
+public class BiomeSourceBuilder extends TypedJsonObject {
 
     public BiomeSourceBuilder() {
-        super(new JsonObject(), j->j);
+        super(new JsonObject());
     }
 
     /**
@@ -80,14 +80,14 @@ public class BiomeSourceBuilder extends TypedJsonObject<JsonObject> {
          * @param biomeBuilder
          * @return
          */
-        public MultiNoiseBiomeSourceBuilder addBiome(Processor<BiomeBuilder> biomeBuilder) {
-            with("biomes", JsonArray::new, biomeArray -> biomeArray.add(biomeBuilder.process(new BiomeBuilder()).buildTo(new JsonObject())));
+        public MultiNoiseBiomeSourceBuilder addBiome(BiomeBuilder biomeBuilder) {
+            join("biomes", arrayOf(biomeBuilder));
             return this;
         }
 
-        public static class BiomeBuilder extends TypedJsonObject<JsonObject> {
+        public static class BiomeBuilder extends TypedJsonObject {
             protected BiomeBuilder() {
-                super(new JsonObject(), j->j);
+                super(new JsonObject());
             }
 
             /**
@@ -105,15 +105,15 @@ public class BiomeSourceBuilder extends TypedJsonObject<JsonObject> {
              * @param biomeSettingsBuilder
              * @return
              */
-            public BiomeBuilder parameters(Processor<BiomeParametersBuilder> biomeSettingsBuilder) {
-                with("parameters", JsonObject::new, biomeSettings -> biomeSettingsBuilder.process(new BiomeParametersBuilder()).buildTo(biomeSettings));
+            public BiomeBuilder parameters(BiomeParametersBuilder biomeSettingsBuilder) {
+                join("parameters", biomeSettingsBuilder.getData());
                 return this;
             }
         }
 
-        public static class BiomeParametersBuilder extends TypedJsonObject<JsonObject> {
+        public static class BiomeParametersBuilder extends TypedJsonObject {
             protected BiomeParametersBuilder() {
-                super(new JsonObject(), j->j);
+                super(new JsonObject());
             }
 
             /**
@@ -176,8 +176,8 @@ public class BiomeSourceBuilder extends TypedJsonObject<JsonObject> {
          * @param noiseSettings
          * @return this
          */
-        public MultiNoiseBiomeSourceBuilder altitudeNoise(Processor<NoiseSettings> noiseSettings) {
-            with("altitude_noise", JsonObject::new, jsonObject -> noiseSettings.process(new NoiseSettings()).buildTo(jsonObject));
+        public MultiNoiseBiomeSourceBuilder altitudeNoise(NoiseSettings noiseSettings) {
+            join("altitude_noise", noiseSettings.getData());
             return this;
         }
 
@@ -185,8 +185,8 @@ public class BiomeSourceBuilder extends TypedJsonObject<JsonObject> {
          * @param noiseSettings
          * @return this
          */
-        public MultiNoiseBiomeSourceBuilder weirdnessNoise(Processor<NoiseSettings> noiseSettings) {
-            with("weirdness_noise", JsonObject::new, jsonObject -> noiseSettings.process(new NoiseSettings()).buildTo(jsonObject));
+        public MultiNoiseBiomeSourceBuilder weirdnessNoise(NoiseSettings noiseSettings) {
+            join("weirdness_noise", noiseSettings.getData());
             return this;
         }
 
@@ -194,8 +194,8 @@ public class BiomeSourceBuilder extends TypedJsonObject<JsonObject> {
          * @param noiseSettings
          * @return this
          */
-        public MultiNoiseBiomeSourceBuilder temperatureNoise(Processor<NoiseSettings> noiseSettings) {
-            with("temperature_noise", JsonObject::new, jsonObject -> noiseSettings.process(new NoiseSettings()).buildTo(jsonObject));
+        public MultiNoiseBiomeSourceBuilder temperatureNoise(NoiseSettings noiseSettings) {
+            join("temperature_noise", noiseSettings.getData());
             return this;
         }
 
@@ -203,14 +203,14 @@ public class BiomeSourceBuilder extends TypedJsonObject<JsonObject> {
          * @param noiseSettings
          * @return this
          */
-        public MultiNoiseBiomeSourceBuilder humidityNoise(Processor<NoiseSettings> noiseSettings) {
-            with("humidity_noise", JsonObject::new, jsonObject -> noiseSettings.process(new NoiseSettings()).buildTo(jsonObject));
+        public MultiNoiseBiomeSourceBuilder humidityNoise(NoiseSettings noiseSettings) {
+            join("humidity_noise", noiseSettings.getData());
             return this;
         }
 
-        public static class NoiseSettings extends TypedJsonObject<JsonObject> {
+        public static class NoiseSettings extends TypedJsonObject {
             protected NoiseSettings() {
-                super(new JsonObject(), j->j);
+                super(new JsonObject());
             }
 
             /**
@@ -228,18 +228,14 @@ public class BiomeSourceBuilder extends TypedJsonObject<JsonObject> {
              * @return this
              */
             public NoiseSettings amplitudes(float... amplitudes) {
-                jsonArray("amplitudes", jsonArrayBuilder -> {
-                    for (float amplitude : amplitudes) {
-                        jsonArrayBuilder.add(amplitude);
-                    }
-                });
+                this.join("amplitudes", arrayOf(amplitudes));
                 return this;
             }
         }
 
-        public static class AmplitudesBuilder extends TypedJsonObject<JsonObject> {
+        public static class AmplitudesBuilder extends TypedJsonObject {
             protected AmplitudesBuilder() {
-                super(new JsonObject(), j->j);
+                super(new JsonObject());
             }
 
             /**

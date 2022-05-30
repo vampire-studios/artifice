@@ -11,13 +11,13 @@ public class OreFeatureConfigBuilder extends FeatureConfigBuilder {
         super();
     }
 
-    public <R extends RuleTestBuilder> OreFeatureConfigBuilder targetRule(Processor<R> processor, R instance) {
-        with("target", JsonObject::new, jsonObject -> processor.process(instance).buildTo(jsonObject));
+    public <R extends RuleTestBuilder> OreFeatureConfigBuilder targetRule(R processor) {
+        join("target", processor.getData());
         return this;
     }
 
     public OreFeatureConfigBuilder state(StateDataBuilder processor) {
-        with("target", JsonObject::new, processor::merge);
+        join("state", processor.getData());
         return this;
     }
 

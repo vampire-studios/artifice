@@ -14,7 +14,7 @@ public class DiskFeatureConfigBuilder extends FeatureConfigBuilder {
     }
 
     public DiskFeatureConfigBuilder state(StateDataBuilder processor) {
-        with("state", JsonObject::new, processor::merge);
+        join("state", processor.getData());
         return this;
     }
 
@@ -23,8 +23,8 @@ public class DiskFeatureConfigBuilder extends FeatureConfigBuilder {
         return this;
     }
 
-    public DiskFeatureConfigBuilder radius(Processor<UniformIntDistributionBuilder> processor) {
-        with("radius", JsonObject::new, jsonObject -> processor.process(new UniformIntDistributionBuilder()).buildTo(jsonObject));
+    public DiskFeatureConfigBuilder radius(UniformIntDistributionBuilder processor) {
+        join("radius", processor.getData());
         return this;
     }
 

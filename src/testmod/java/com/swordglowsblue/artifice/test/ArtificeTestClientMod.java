@@ -2,6 +2,7 @@ package com.swordglowsblue.artifice.test;
 
 import io.github.vampirestudios.artifice.api.Artifice;
 import io.github.vampirestudios.artifice.api.ArtificeResourcePack;
+import io.github.vampirestudios.artifice.api.builder.assets.BlockStateBuilder;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -28,10 +29,10 @@ public class ArtificeTestClientMod implements ClientModInitializer {
 					.parent(makeResourceLocation("block/test_block")));
 
 			pack.addBlockState(makeResourceLocation("test_block"), state -> state
-					.weightedVariant("", variant -> variant
+					.weightedVariant("", new BlockStateBuilder.Variant()
 							.model(makeResourceLocation("block/test_block"))
 							.weight(3))
-					.weightedVariant("", variant -> variant
+					.weightedVariant("", new BlockStateBuilder.Variant()
 							.model(new ResourceLocation("block/coarse_dirt"))));
 
 			pack.addBlockModel(makeResourceLocation("test_block"), model -> model

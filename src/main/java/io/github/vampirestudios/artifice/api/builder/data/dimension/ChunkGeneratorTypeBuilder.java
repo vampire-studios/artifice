@@ -71,18 +71,7 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonObject {
         }
 
         /**
-         * Build a vanilla layered biome source.
-         * @param biomeSourceBuilder
-         * @return this
-         */
-        public NoiseChunkGeneratorTypeBuilder vanillaLayeredBiomeSource(BiomeSourceBuilder.VanillaLayeredBiomeSourceBuilder biomeSourceBuilder) {
-            biomeSource(biomeSourceBuilder);
-            return this;
-        }
-
-        /**
          * Build a multi-noise biome source.
-         * @param biomeSourceBuilder
          * @return this
          */
         public NoiseChunkGeneratorTypeBuilder multiNoiseBiomeSource(BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder biomeSourceBuilder) {
@@ -92,7 +81,6 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonObject {
 
         /**
          * Build a checkerboard biome source.
-         * @param biomeSourceBuilder
          * @return this
          */
         public NoiseChunkGeneratorTypeBuilder checkerboardBiomeSource(BiomeSourceBuilder.CheckerboardBiomeSourceBuilder biomeSourceBuilder) {
@@ -102,7 +90,6 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonObject {
 
         /**
          * Build a fixed biome source.
-         * @param biomeSourceBuilder
          * @return this
          */
         public NoiseChunkGeneratorTypeBuilder fixedBiomeSource(BiomeSourceBuilder.FixedBiomeSourceBuilder biomeSourceBuilder) {

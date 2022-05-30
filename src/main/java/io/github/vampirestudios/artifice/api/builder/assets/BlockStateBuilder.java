@@ -47,7 +47,9 @@ public final class BlockStateBuilder extends TypedJsonObject {
      */
     public BlockStateBuilder weightedVariant(String name, Variant settings) {
         root.remove("multipart");
-        if(getObj("variants") != null && getObj("variants").has(name)) join(getObj("variants"), name, settings.getData());
+        if(getObj("variants") != null && getObj("variants").has(name)){
+            join(getObj("variants"), name, arrayOf(settings.getData()));
+        }
         else join("variants", new TypedJsonObject().add(name,arrayOf(settings)).getData());
         return this;
     }

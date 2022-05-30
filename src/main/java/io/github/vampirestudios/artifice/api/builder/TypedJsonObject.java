@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonArray;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -153,22 +154,28 @@ public class TypedJsonObject {
         return this.root.get(key);
     }
 
+    @Nullable
     public JsonObject getObj(String key){
-        JsonObject aa;
-        try{
-            aa = this.root.get(key).getAsJsonObject();
-        } catch (IllegalStateException e){
-            aa = null;
+        JsonObject aa = null;
+        if(this.root.has(key)){
+            try{
+                aa = this.root.get(key).getAsJsonObject();
+            } catch (IllegalStateException e){
+                aa = null;
+            }
         }
         return aa;
     }
 
+    @Nullable
     public JsonArray getArray(String key){
-        JsonArray aa;
-        try{
-            aa = this.root.get(key).getAsJsonArray();
-        } catch (IllegalStateException e){
-            aa = null;
+        JsonArray aa = null;
+        if(this.root.has(key)){
+            try{
+                aa = this.root.get(key).getAsJsonArray();
+            } catch (IllegalStateException e){
+                aa = null;
+            }
         }
         return aa;
     }

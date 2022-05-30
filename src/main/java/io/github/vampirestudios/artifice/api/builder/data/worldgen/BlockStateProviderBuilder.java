@@ -16,6 +16,9 @@ public class BlockStateProviderBuilder extends TypedJsonObject {
         this.root.addProperty("type", type);
         return (P)this;
     }
+    public static SimpleBlockStateProviderBuilder simpleProvider(StateDataBuilder processor){
+        return new SimpleBlockStateProviderBuilder().state(processor);
+    }
 
     public static class SimpleBlockStateProviderBuilder extends BlockStateProviderBuilder {
         public SimpleBlockStateProviderBuilder() {

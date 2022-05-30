@@ -14,22 +14,19 @@ public class FloatProviderBuilders extends TypedJsonObject {
 		return this;
 	}
 
-	public static FloatProviderBuilders uniform(String name, float minInclusive, float maxExclusive) {
+	public static FloatProviderBuilders uniform(float minInclusive, float maxExclusive) {
 		FloatProviderBuilders builder = new FloatProviderBuilders();
 
 		TypedJsonObject value = new TypedJsonObject()
 			.add("min_inclusive", minInclusive)
 			.add("max_exclusive", maxExclusive);
-		TypedJsonObject uniform = new TypedJsonObject()
-			.add("type", "minecraft:uniform")
+		builder.add("type", "minecraft:uniform")
 			.add("value", value.getData());
-
-		builder.add(name, uniform.getData());
 
 		return builder;
 	}
 
-	public FloatProviderBuilders clampedNormal(String name, float mean, float deviation, float min, float max) {
+	public FloatProviderBuilders clampedNormal(float mean, float deviation, float min, float max) {
 		FloatProviderBuilders builder = new FloatProviderBuilders();
 
 		TypedJsonObject value = new TypedJsonObject()
@@ -37,27 +34,21 @@ public class FloatProviderBuilders extends TypedJsonObject {
 				.add("deviation", deviation)
 				.add("min", min)
 				.add("max", max);
-		TypedJsonObject uniform = new TypedJsonObject()
-				.add("type", "minecraft:clamped_normal")
+		builder.add("type", "minecraft:clamped_normal")
 				.add("value", value.getData());
-
-		builder.add(name, uniform.getData());
 
 		return builder;
 	}
 
-	public FloatProviderBuilders trapezoid(String name, float min, float max, float plateau) {
+	public FloatProviderBuilders trapezoid(float min, float max, float plateau) {
 		FloatProviderBuilders builder = new FloatProviderBuilders();
 
 		TypedJsonObject value = new TypedJsonObject()
 				.add("min", min)
 				.add("max", max)
 				.add("plateau", plateau);
-		TypedJsonObject uniform = new TypedJsonObject()
-				.add("type", "minecraft:trapezoid")
+		builder.add("type", "minecraft:trapezoid")
 				.add("value", value.getData());
-
-		builder.add(name, uniform.getData());
 
 		return builder;
 	}

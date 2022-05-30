@@ -14,65 +14,45 @@ public class HeightProviderBuilders extends TypedJsonObject {
 		return this;
 	}
 
-	public static HeightProviderBuilders uniform(String name, YOffsetBuilder minInclusive, YOffsetBuilder maxInclusive) {
+	public static HeightProviderBuilders uniform(YOffsetBuilder minInclusive, YOffsetBuilder maxInclusive) {
 		HeightProviderBuilders builder = new HeightProviderBuilders();
 
-		TypedJsonObject value = new TypedJsonObject()
+		builder.add("type", "minecraft:uniform")
 				.add("min_inclusive", minInclusive)
 				.add("max_inclusive", maxInclusive);
-		TypedJsonObject uniform = new TypedJsonObject()
-				.add("type", "minecraft:uniform")
-				.add("value", value.getData());
-
-		builder.add(name, uniform.getData());
 
 		return builder;
 	}
 
-	public HeightProviderBuilders biasedToBottom(String name, YOffsetBuilder minInclusive, YOffsetBuilder maxInclusive, int inner) {
+	public HeightProviderBuilders biasedToBottom(YOffsetBuilder minInclusive, YOffsetBuilder maxInclusive, int inner) {
 		HeightProviderBuilders builder = new HeightProviderBuilders();
 
-		TypedJsonObject value = new TypedJsonObject()
+		builder.add("type", "minecraft:biased_to_bottom")
 				.add("min_inclusive", minInclusive)
 				.add("max_inclusive", maxInclusive)
 				.add("inner",inner);
-		TypedJsonObject uniform = new TypedJsonObject()
-				.add("type", "minecraft:uniform")
-				.add("value", value);
-
-		builder.add(name, uniform.getData());
 
 		return builder;
 	}
 
-	public HeightProviderBuilders veryBiasedToBottom(String name, YOffsetBuilder minInclusive, YOffsetBuilder maxInclusive, int inner) {
+	public HeightProviderBuilders veryBiasedToBottom(YOffsetBuilder minInclusive, YOffsetBuilder maxInclusive, int inner) {
 		HeightProviderBuilders builder = new HeightProviderBuilders();
 
-		TypedJsonObject value = new TypedJsonObject()
+		builder.add("type", "minecraft:very_biased_to_bottom")
 				.add("min_inclusive", minInclusive)
 				.add("max_inclusive", maxInclusive)
 				.add("inner",inner);
-		TypedJsonObject uniform = new TypedJsonObject()
-				.add("type", "minecraft:uniform")
-				.add("value", value);
-
-		builder.add(name, uniform.getData());
 
 		return builder;
 	}
 
-	public HeightProviderBuilders trapezoid(String name, YOffsetBuilder minInclusive, YOffsetBuilder maxInclusive, int plateau) {
+	public HeightProviderBuilders trapezoid(YOffsetBuilder minInclusive, YOffsetBuilder maxInclusive, int plateau) {
 		HeightProviderBuilders builder = new HeightProviderBuilders();
 
-		TypedJsonObject value = new TypedJsonObject()
+		builder.add("type", "minecraft:trapezoid")
 				.add("min_inclusive", minInclusive)
 				.add("max_inclusive", maxInclusive)
 				.add("plateau",plateau);
-		TypedJsonObject uniform = new TypedJsonObject()
-				.add("type", "minecraft:uniform")
-				.add("value", value);
-
-		builder.add(name, uniform.getData());
 
 		return builder;
 	}

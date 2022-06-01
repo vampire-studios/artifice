@@ -73,6 +73,7 @@ public class StructureSetBuilder extends TypedJsonBuilder<JsonResource<JsonObjec
 		return this;
 	}
 
-	public record StructureEntry(ResourceLocation structure, int weight) {}
+	public record StructureEntry(ResourceLocation structure, int weight) {
+	}
 
 }

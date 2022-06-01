@@ -4,22 +4,30 @@ import io.github.vampirestudios.artifice.api.Artifice;
 import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.dimension.BiomeSourceBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.dimension.ChunkGeneratorTypeBuilder.FlatChunkGeneratorTypeBuilder.LayersBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.BlockStateProviderBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.SurfaceRulesBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.YOffsetBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.dimension.DimensionBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.*;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.HeightProviderBuilders.UniformHeightProviderBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.biome.BiomeBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.ConfiguredCarverBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.ConfiguredFeatureBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.PlacedFeatureBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config.FeatureConfigBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config.TreeFeatureConfigBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.placementmodifiers.BiomePlacementModifier;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.placementmodifiers.InSquarePlacementModifier;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.FeatureSizeBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.FoliagePlacerBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.TrunkPlacerBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.structure.MobSpawnOverrideRuleBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.structure.SpawnOverridesBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.structure.SpawnsBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.structure.StructureBuilder;
 import io.github.vampirestudios.artifice.api.resource.StringResource;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -32,6 +40,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class ArtificeTestMod implements ModInitializer {
 	private static final Item.Properties itemSettings = new Item.Properties().tab(CreativeModeTab.TAB_MISC);
@@ -107,7 +116,7 @@ public class ArtificeTestMod implements ModInitializer {
 					.hasSkylight(true).coordinate_scale(1.0).logicalHeight(512).height(512).minimumY(-256)
 			);*/
 
-			pack.addDimension(id("test_dimension"), dimensionBuilder -> dimensionBuilder
+			pack.addDimension(id("test_dimension"), new DimensionBuilder()
 					.dimensionType(/*testDimension.location()*/new ResourceLocation("overworld"))
 					.flatGenerator(flatChunkGeneratorTypeBuilder -> flatChunkGeneratorTypeBuilder
 							.addLayer(
@@ -119,7 +128,7 @@ public class ArtificeTestMod implements ModInitializer {
 					)
 			);
 
-			pack.addDimension(id("test_dimension2"), dimensionBuilder -> dimensionBuilder
+			pack.addDimension(id("test_dimension2"), new DimensionBuilder()
 					.dimensionType(/*testDimension.location()*/new ResourceLocation("overworld"))
 					.flatGenerator(flatChunkGeneratorTypeBuilder -> flatChunkGeneratorTypeBuilder
 							.lakes(false).features(true)
@@ -132,76 +141,77 @@ public class ArtificeTestMod implements ModInitializer {
 					)
 			);
 
-			pack.addDimension(id("test_dimension_custom"), dimensionBuilder -> {
-				dimensionBuilder.dimensionType(/*testDimensionCustom.location()*/new ResourceLocation("overworld"));
-				dimensionBuilder.noiseGenerator(noiseChunkGeneratorTypeBuilder -> {
-					noiseChunkGeneratorTypeBuilder.multiNoiseBiomeSource(multiNoiseBiomeSourceBuilder -> multiNoiseBiomeSourceBuilder.biomes(
-							new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
-								.biome(id("test_biome").toString())
-								.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
-									.temperature(0).humidity(1).continentalness(0).erosion(0)
-									.weirdness(0).depth(1).offset(0)
-								),
-							new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
-								.biome(id("test_biome2").toString())
-								.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
-									.temperature(0).humidity(0).continentalness(0).erosion(-0.5F)
-									.weirdness(0).depth(1).offset(0)
-								),
-							new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
-								.biome(id("test_biome3").toString())
-								.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
-									.temperature(0).humidity(1).continentalness(0.1F).erosion(0)
-									.weirdness(0).depth(1).offset(0)
-								),
-							new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
-								.biome(id("test_biome4").toString())
-								.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
-									.temperature(0).humidity(1).continentalness(0).erosion(0.2F)
-									.weirdness(0).depth(1).offset(0)
-								)
-					));
-					noiseChunkGeneratorTypeBuilder.noiseSettings("minecraft:overworld");
-				});
-			});
+			pack.addDimension(id("test_dimension_custom"), new DimensionBuilder()
+					.dimensionType(/*testDimensionCustom.location()*/new ResourceLocation("overworld"))
+					.noiseGenerator(noiseChunkGeneratorTypeBuilder -> {
+						noiseChunkGeneratorTypeBuilder.multiNoiseBiomeSource(multiNoiseBiomeSourceBuilder -> multiNoiseBiomeSourceBuilder.biomes(
+								new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
+										.biome(id("test_biome").toString())
+										.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
+												.temperature(0).humidity(1).continentalness(0).erosion(0)
+												.weirdness(0).depth(1).offset(0)
+										),
+								new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
+										.biome(id("test_biome2").toString())
+										.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
+												.temperature(0).humidity(0).continentalness(0).erosion(-0.5F)
+												.weirdness(0).depth(1).offset(0)
+										),
+								new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
+										.biome(id("test_biome3").toString())
+										.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
+												.temperature(0).humidity(1).continentalness(0.1F).erosion(0)
+												.weirdness(0).depth(1).offset(0)
+										),
+								new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
+										.biome(id("test_biome4").toString())
+										.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
+												.temperature(0).humidity(1).continentalness(0).erosion(0.2F)
+												.weirdness(0).depth(1).offset(0)
+										)
+						));
+						noiseChunkGeneratorTypeBuilder.noiseSettings("minecraft:overworld");
+					})
+			);
 
-			pack.addDimension(id("test_dimension_custom2"), dimensionBuilder -> {
-				dimensionBuilder.dimensionType(/*testDimensionCustom.location()*/new ResourceLocation("overworld"));
-				dimensionBuilder.noiseGenerator(noiseChunkGeneratorTypeBuilder -> {
-					noiseChunkGeneratorTypeBuilder.multiNoiseBiomeSource(multiNoiseBiomeSourceBuilder -> multiNoiseBiomeSourceBuilder.biomes(
-							new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
-									.biome(id("test_biome").toString())
-									.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
-											.temperature(0).humidity(1).continentalness(0).erosion(0)
-											.weirdness(0).depth(1).offset(0)
-									),
-							new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
-									.biome(id("test_biome2").toString())
-									.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
-											.temperature(0).humidity(0).continentalness(0).erosion(-0.5F)
-											.weirdness(0).depth(1).offset(0)
-									),
-							new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
-									.biome(id("test_biome3").toString())
-									.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
-											.temperature(0).humidity(1).continentalness(0.1F).erosion(0)
-											.weirdness(0).depth(1).offset(0)
-									),
-							new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
-									.biome(id("test_biome4").toString())
-									.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
-											.temperature(0).humidity(1).continentalness(0).erosion(0.2F)
-											.weirdness(0).depth(1).offset(0)
-									)
-					));
-					noiseChunkGeneratorTypeBuilder.noiseSettings("artifice:test_dimension");
-				});
-			});
+			pack.addDimension(id("test_dimension_custom2"), new DimensionBuilder()
+					.dimensionType(/*testDimensionCustom.location()*/new ResourceLocation("overworld"))
+					.noiseGenerator(noiseChunkGeneratorTypeBuilder -> {
+						noiseChunkGeneratorTypeBuilder.multiNoiseBiomeSource(multiNoiseBiomeSourceBuilder -> multiNoiseBiomeSourceBuilder.biomes(
+								new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
+										.biome(id("test_biome").toString())
+										.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
+												.temperature(0).humidity(1).continentalness(0).erosion(0)
+												.weirdness(0).depth(1).offset(0)
+										),
+								new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
+										.biome(id("test_biome2").toString())
+										.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
+												.temperature(0).humidity(0).continentalness(0).erosion(-0.5F)
+												.weirdness(0).depth(1).offset(0)
+										),
+								new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
+										.biome(id("test_biome3").toString())
+										.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
+												.temperature(0).humidity(1).continentalness(0.1F).erosion(0)
+												.weirdness(0).depth(1).offset(0)
+										),
+								new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
+										.biome(id("test_biome4").toString())
+										.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
+												.temperature(0).humidity(1).continentalness(0).erosion(0.2F)
+												.weirdness(0).depth(1).offset(0)
+										)
+						));
+						noiseChunkGeneratorTypeBuilder.noiseSettings("artifice:test_dimension");
+					})
+			);
 
-			pack.addBiome(id("test_biome"), biomeBuilder -> biomeBuilder.precipitation(Biome.Precipitation.RAIN)
+			pack.addBiome(id("test_biome"), new BiomeBuilder()
+					.precipitation(Biome.Precipitation.RAIN)
 					.temperature(0.8F).downfall(0.4F)
-					.addSpawnCosts("minecraft:bee", new BiomeBuilder.SpawnDensityBuilder(0.12, 1))
-					.addSpawnCosts("minecraft:cat", new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
+					.addSpawnCosts(EntityType.BEE, new BiomeBuilder.SpawnDensityBuilder(0.12, 1))
+					.addSpawnCosts(EntityType.CAT, new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
 					.effects(biomeEffectsBuilder -> {
 						biomeEffectsBuilder.waterColor(4159204);
 						biomeEffectsBuilder.waterFogColor(329011);
@@ -210,10 +220,11 @@ public class ArtificeTestMod implements ModInitializer {
 					}).addAirCarvers(id("test_carver").toString())
 			);
 
-			pack.addBiome(id("test_biome2"), biomeBuilder -> biomeBuilder.precipitation(Biome.Precipitation.RAIN)
+			pack.addBiome(id("test_biome2"), new BiomeBuilder()
+					.precipitation(Biome.Precipitation.RAIN)
 					.temperature(0.8F).downfall(0.4F)
-					.addSpawnCosts("minecraft:spider", new BiomeBuilder.SpawnDensityBuilder(0.6, 1))
-					.addSpawnCosts("minecraft:cat", new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
+					.addSpawnCosts(EntityType.SPIDER, new BiomeBuilder.SpawnDensityBuilder(0.6, 1))
+					.addSpawnCosts(EntityType.CAT, new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
 					.effects(biomeEffectsBuilder -> {
 						biomeEffectsBuilder.waterColor(4159204);
 						biomeEffectsBuilder.waterFogColor(329011);
@@ -222,10 +233,11 @@ public class ArtificeTestMod implements ModInitializer {
 					}).addAirCarvers(id("test_carver").toString())
 			);
 
-			pack.addBiome(id("test_biome3"), biomeBuilder -> biomeBuilder.precipitation(Biome.Precipitation.RAIN)
+			pack.addBiome(id("test_biome3"), new BiomeBuilder()
+					.precipitation(Biome.Precipitation.RAIN)
 					.temperature(2.0F).downfall(0.4F)
-					.addSpawnCosts("minecraft:bee", new BiomeBuilder.SpawnDensityBuilder(0.12, 1))
-					.addSpawnCosts("minecraft:cat", new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
+					.addSpawnCosts(EntityType.BEE, new BiomeBuilder.SpawnDensityBuilder(0.12, 1))
+					.addSpawnCosts(EntityType.CAT, new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
 					.effects(biomeEffectsBuilder -> {
 						biomeEffectsBuilder.waterColor(4159204);
 						biomeEffectsBuilder.waterFogColor(329011);
@@ -234,10 +246,11 @@ public class ArtificeTestMod implements ModInitializer {
 					}).addAirCarvers(id("test_carver").toString())
 			);
 
-			pack.addBiome(id("test_biome4"), biomeBuilder -> biomeBuilder.precipitation(Biome.Precipitation.RAIN)
+			pack.addBiome(id("test_biome4"), new BiomeBuilder()
+					.precipitation(Biome.Precipitation.RAIN)
 					.temperature(1.4F).downfall(1.0F)
-					.addSpawnCosts("minecraft:bee", new BiomeBuilder.SpawnDensityBuilder(0.12, 1))
-					.addSpawnCosts("minecraft:cat", new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
+					.addSpawnCosts(EntityType.BEE, new BiomeBuilder.SpawnDensityBuilder(0.12, 1))
+					.addSpawnCosts(EntityType.CAT, new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
 					.effects(biomeEffectsBuilder -> {
 						biomeEffectsBuilder.waterColor(4159204);
 						biomeEffectsBuilder.waterFogColor(329011);
@@ -246,145 +259,125 @@ public class ArtificeTestMod implements ModInitializer {
 					}).addAirCarvers(id("test_carver").toString())
 			);
 
-			pack.addStructure(id("test_structure"), configuredStructureFeatureBuilder -> {
-				configuredStructureFeatureBuilder.type("minecraft:village");
-				configuredStructureFeatureBuilder.singleBiome("minecraft:plains");
-				configuredStructureFeatureBuilder.adoptNoise(false);
-				configuredStructureFeatureBuilder.spawnOverrides(spawnOverridesBuilder -> {});
-				configuredStructureFeatureBuilder.featureConfig(featureConfigBuilder -> {
-					featureConfigBuilder.jsonString("start_pool", "minecraft:village/desert/town_centers");
-					featureConfigBuilder.jsonNumber("size", 6);
-				});
-			});
-
-			pack.addStructure(id("test_structure2"), structureBuilder -> {
-				structureBuilder.type("minecraft:village");
-				structureBuilder.singleBiome("minecraft:nether_wastes");
-				structureBuilder.adoptNoise(true);
-				structureBuilder.spawnOverrides(spawnOverridesBuilder ->
-						spawnOverridesBuilder.monster(mobSpawnOverrideRuleBuilder ->
-								mobSpawnOverrideRuleBuilder.pieceBoundingBox().spawns(
-										new SpawnsBuilder("minecraft:piglin", 5, 4, 4),
-										new SpawnsBuilder("minecraft:piglin_brute", 5, 4, 4),
-										new SpawnsBuilder("minecraft:zombified_piglin", 5, 4, 4)
-								)
-						)
-				);
-				structureBuilder.featureConfig(featureConfigBuilder -> {
-					featureConfigBuilder.jsonString("start_pool", "minecraft:village/desert/town_centers");
-					featureConfigBuilder.jsonNumber("size", 6);
-				});
-			});
-
-			pack.addConfiguredCarver(id("test_carver"), carverBuilder ->
-					carverBuilder
-							.probability(0.15F)
-							.type("minecraft:cave")
-							.y(heightProviderBuilders -> heightProviderBuilders.uniform("y",
-									uniformHeightProviderBuilder -> uniformHeightProviderBuilder
-											.minInclusive(YOffsetBuilder.aboveBottom(8))
-											.maxInclusive(YOffsetBuilder.absolute(180))
-							))
-							.yScale(heightProviderBuilders -> heightProviderBuilders.uniform("yScale",
-									uniformHeightProviderBuilder -> uniformHeightProviderBuilder
-											.minAndMaxInclusive(0.1F, 0.9F)
-							))
-							.lavaLevel(YOffsetBuilder.aboveBottom(8))
-							.horizontalRadiusModifier(heightProviderBuilders -> heightProviderBuilders.uniform("horizontal_radius_modifier",
-									uniformHeightProviderBuilder -> uniformHeightProviderBuilder
-											.minAndMaxInclusive(1.7F, 2.4F)
-							))
-							.verticalRadiusModifier(heightProviderBuilders -> heightProviderBuilders.uniform("vertical_radius_modifier",
-									uniformHeightProviderBuilder -> uniformHeightProviderBuilder
-											.minAndMaxInclusive(1.5F, 2.1F)
-							))
-							.floorLevel(heightProviderBuilders -> heightProviderBuilders.uniform("floor_level",
-									uniformHeightProviderBuilder -> uniformHeightProviderBuilder
-											.minAndMaxInclusive(-1F, -0.4F)
-							))
+			pack.addStructure(id("test_structure"), new StructureBuilder()
+					.type("minecraft:village")
+					.singleBiome("minecraft:plains")
+					.adoptNoise(false)
+					.spawnOverrides(new SpawnOverridesBuilder())
+					.featureConfig(new FeatureConfigBuilder()
+							.startPool("minecraft:village/desert/town_centers").size(6)
+					)
 			);
 
-			// gotta wait on noise config
-			pack.addNoiseSettingsBuilder(id("test_dimension"),noiseSettingsBuilder ->
-					noiseSettingsBuilder.defaultBlock(new StateDataBuilder().name("minecraft:stone"))
-							.defaultFluid(new StateDataBuilder().name("minecraft:lava").setProperty("level", "0"))
-							.seaLevel(65).legacyRandomSource(false).aquifersEnabled(true)
-							.disableMobGeneration(false).aquifersEnabled(true).oreVeinsEnabled(true)
-							.oreVeinsEnabled(true).noiseConfig(noiseConfigBuilder -> noiseConfigBuilder
-									.minimumY(-64).height(384).sizeHorizontal(1).sizeVertical(2)
-							).noiseRouter().surfaceRules(builder -> builder.sequence(surfaceRulesBuilder ->
-									surfaceRulesBuilder.condition(
-											surfaceRulesBuilder1 -> surfaceRulesBuilder1.verticalGradient(
-													"bebrock",
-													YOffsetBuilder.aboveBottom(0),
-													YOffsetBuilder.aboveBottom(5)
-											),
-											surfaceRulesBuilder1 -> surfaceRulesBuilder1.block(stateDataBuilder -> stateDataBuilder.name("minecraft:bedrock"))
-									), surfaceRulesBuilder ->
-									surfaceRulesBuilder.condition(
-											SurfaceRulesBuilder::aboveMainSurface,
-											surfaceRulesBuilder1 -> surfaceRulesBuilder1.sequence(surfaceRulesBuilder2 ->
-															surfaceRulesBuilder2.condition(
-																	surfaceRulesBuilder3 -> surfaceRulesBuilder3.biome(id("test_biome").toString()),
-																	surfaceRulesBuilder3 -> surfaceRulesBuilder3.block(stateDataBuilder -> stateDataBuilder.name("artifice:test_block"))
-															),
-													surfaceRulesBuilder2 -> surfaceRulesBuilder2.block(stateDataBuilder -> stateDataBuilder.name("minecraft:grass_block"))
-											)
-									), surfaceRulesBuilder ->
-									surfaceRulesBuilder.condition(
-											surfaceRulesBuilder1 -> surfaceRulesBuilder1.verticalGradient(
-													"tuff",
-													YOffsetBuilder.absolute(0),
-													YOffsetBuilder.absolute(16)
-											),
-											surfaceRulesBuilder1 -> surfaceRulesBuilder1.block(stateDataBuilder -> stateDataBuilder.name("minecraft:tuff"))
-									), surfaceRulesBuilder ->
-									surfaceRulesBuilder.condition(
-											surfaceRulesBuilder1 -> surfaceRulesBuilder1.verticalGradient(
-													"deepslate",
-													YOffsetBuilder.absolute(-16),
-													YOffsetBuilder.absolute(0)
-											),
-											surfaceRulesBuilder1 -> surfaceRulesBuilder1.block(stateDataBuilder -> stateDataBuilder.name("minecraft:deepslate").setProperty("axis", "y"))
+			pack.addStructure(id("test_structure2"), new StructureBuilder()
+					.type("minecraft:village")
+					.singleBiome("minecraft:nether_wastes")
+					.adoptNoise(true)
+					.spawnOverrides(new SpawnOverridesBuilder()
+							.monster(new MobSpawnOverrideRuleBuilder()
+									.pieceBoundingBox().spawns(
+											new SpawnsBuilder("minecraft:piglin", 5, 4, 4),
+											new SpawnsBuilder("minecraft:piglin_brute", 5, 4, 4),
+											new SpawnsBuilder("minecraft:zombified_piglin", 5, 4, 4)
 									)
-							))
+							)
+					)
+					.featureConfig(new FeatureConfigBuilder()
+							.startPool("minecraft:village/desert/town_centers")
+							.size(6)
+					)
+			);
+
+			pack.addConfiguredCarver(id("test_carver"), new ConfiguredCarverBuilder()
+					.probability(0.15F)
+					.type("minecraft:cave")
+					.y(new HeightProviderBuilders().uniform("y",
+							UniformHeightProviderBuilder.minAndMaxInclusive(
+									YOffsetBuilder.aboveBottom(8),
+									YOffsetBuilder.absolute(180)
+							)
+					))
+					.yScale(new HeightProviderBuilders().uniform("yScale",
+							UniformHeightProviderBuilder.minAndMaxInclusive(
+									0.1F, 0.9F
+							)
+					))
+					.lavaLevel(YOffsetBuilder.aboveBottom(8))
+					.horizontalRadiusModifier(new HeightProviderBuilders().uniform("horizontal_radius_modifier",
+							UniformHeightProviderBuilder.minAndMaxInclusive(
+									1.7F, 2.4F
+							)
+					))
+					.verticalRadiusModifier(new HeightProviderBuilders().uniform("vertical_radius_modifier",
+							UniformHeightProviderBuilder.minAndMaxInclusive(
+									1.5F, 2.1F
+							)
+					))
+					.floorLevel(new HeightProviderBuilders().uniform("floor_level",
+							UniformHeightProviderBuilder.minAndMaxInclusive(
+									-1F, -0.4F
+							)
+					))
+			);
+
+			pack.addNoiseSettingsBuilder(id("test_dimension"), new NoiseSettingsBuilder()
+					.defaultBlock(new StateDataBuilder().name(Blocks.STONE))
+					.defaultFluid(new StateDataBuilder().name("minecraft:lava").setProperty(Map.entry("level", "0")))
+					.seaLevel(65).legacyRandomSource(false).aquifersEnabled(true)
+					.disableMobGeneration(false).aquifersEnabled(true).oreVeinsEnabled(true)
+					.oreVeinsEnabled(true).noiseConfig(-64, 384, 1, 2)
+					.noiseRouter().surfaceRules(new SurfaceRulesBuilder().sequence(
+							new SurfaceRulesBuilder().condition(
+									new SurfaceRulesBuilder().verticalGradient(
+											"bebrock",
+											YOffsetBuilder.aboveBottom(0),
+											YOffsetBuilder.aboveBottom(5)
+									),
+									new SurfaceRulesBuilder().block(new StateDataBuilder().name(Blocks.BEDROCK))
+							), new SurfaceRulesBuilder().condition(
+									SurfaceRulesBuilder.aboveMainSurface(),
+									new SurfaceRulesBuilder().sequence(new SurfaceRulesBuilder().condition(
+													new SurfaceRulesBuilder().biome(id("test_biome")),
+													new SurfaceRulesBuilder().block(new StateDataBuilder().name(testBlock))
+											),
+											new SurfaceRulesBuilder().block(new StateDataBuilder().name(Blocks.GRASS_BLOCK))
+									)
+							), new SurfaceRulesBuilder().condition(
+									new SurfaceRulesBuilder().verticalGradient(
+											"tuff",
+											YOffsetBuilder.absolute(0),
+											YOffsetBuilder.absolute(16)
+									),
+									new SurfaceRulesBuilder().block(new StateDataBuilder().name(Blocks.TUFF))
+							), new SurfaceRulesBuilder().condition(
+									new SurfaceRulesBuilder().verticalGradient("deepslate", YOffsetBuilder.absolute(-16),
+											YOffsetBuilder.absolute(0)
+									),
+									new SurfaceRulesBuilder().block(new StateDataBuilder().name(Blocks.DEEPSLATE).setProperty(Map.entry("axis", "y")))
+							)
+					))
 			);
 			//not even going to touch this until we get everything else working
 			// Tested, it works now. Wasn't in 20w28a.
-			pack.addConfiguredFeature(id("test_featureee"), configuredFeatureBuilder ->
-				configuredFeatureBuilder.featureID("minecraft:tree")
-					.featureConfig(treeFeatureConfigBuilder ->
-						treeFeatureConfigBuilder
+			pack.addConfiguredFeature(id("test_featureee"), new ConfiguredFeatureBuilder()
+					.featureID("minecraft:tree").featureConfig(new TreeFeatureConfigBuilder()
 							.ignoreVines(true)
 							.maxWaterDepth(5)
-							.dirtProvider(simpleBlockStateProviderBuilder ->
-										simpleBlockStateProviderBuilder.state(blockStateDataBuilder ->
-												blockStateDataBuilder.name("minecraft:dirt")),
-								new BlockStateProviderBuilder.SimpleBlockStateProviderBuilder()
-							).trunkProvider(simpleBlockStateProviderBuilder ->
-											simpleBlockStateProviderBuilder.state(blockStateDataBuilder ->
-													blockStateDataBuilder.name("minecraft:oak_log")
-															.setProperty("axis", "y")),
-									new BlockStateProviderBuilder.SimpleBlockStateProviderBuilder()
-							).foliageProvider(simpleBlockStateProviderBuilder ->
-									simpleBlockStateProviderBuilder.state(blockStateDataBuilder ->
-											blockStateDataBuilder.name("minecraft:spruce_leaves")
-													.setProperty("persistent", "false")
-													.setProperty("distance", "7")
-									), new BlockStateProviderBuilder.SimpleBlockStateProviderBuilder()
-							).foliagePlacer(foliagePlacerBuilder ->
-											foliagePlacerBuilder.height(2).offset(1).radius(2),
-									new FoliagePlacerBuilder.BlobFoliagePlacerBuilder()
-							).trunkPlacer(fancyTrunkPlacerBuilder ->
-											fancyTrunkPlacerBuilder.baseHeight(12).heightRandA(3).heightRandB(4),
-									new TrunkPlacerBuilder.FancyTrunkPlacerBuilder()
-							).minimumSize(twoLayersFeatureSizeBuilder ->
-											twoLayersFeatureSizeBuilder.limit(10).lowerSize(1).upperSize(9),
-									new FeatureSizeBuilder.TwoLayersFeatureSizeBuilder()
-							).heightmap(Heightmap.Types.OCEAN_FLOOR), new TreeFeatureConfigBuilder()
+							.dirtProvider(new BlockStateProviderBuilder.SimpleBlockStateProviderBuilder()
+									.state(new StateDataBuilder().name(Blocks.DIRT))
+							).trunkProvider(new BlockStateProviderBuilder.SimpleBlockStateProviderBuilder()
+									.state(new StateDataBuilder().name(Blocks.OAK_LOG).setProperty(Map.entry("axis", "y")))
+							).foliageProvider(new BlockStateProviderBuilder.SimpleBlockStateProviderBuilder()
+									.state(new StateDataBuilder().name(Blocks.SPRUCE_LEAVES).setProperty(Map.entry("persistent", "false"), Map.entry("distance", "7")))
+							).foliagePlacer(new FoliagePlacerBuilder.BlobFoliagePlacerBuilder().height(2).offset(1).radius(2))
+							.trunkPlacer(new TrunkPlacerBuilder.FancyTrunkPlacerBuilder().baseHeight(12)
+									.heightRandA(3).heightRandB(4)
+							).minimumSize(new FeatureSizeBuilder.TwoLayersFeatureSizeBuilder().limit(10).lowerSize(1).upperSize(9))
+							.heightmap(Heightmap.Types.OCEAN_FLOOR)
 					));
 			// Should be working but Minecraft coders did something wrong and the default feature is being return when it shouldn't resulting in a crash.
-			pack.addPlacedFeature(id("test_placed_feature"), configuredFeatureBuilder -> configuredFeatureBuilder.feature("artifice:test_featureee")
+			pack.addPlacedFeature(id("test_placed_feature"), new PlacedFeatureBuilder()
+					.feature("artifice:test_featureee")
 					.placementModifiers(new BiomePlacementModifier(), new InSquarePlacementModifier())
 			);
 

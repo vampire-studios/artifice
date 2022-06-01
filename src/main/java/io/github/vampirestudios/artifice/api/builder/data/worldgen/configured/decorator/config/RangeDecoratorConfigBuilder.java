@@ -2,22 +2,22 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.d
 
 public class RangeDecoratorConfigBuilder extends DecoratorConfigBuilder {
 
-    public RangeDecoratorConfigBuilder() {
-        super();
-    }
+	public RangeDecoratorConfigBuilder() {
+		super();
+	}
 
-    public RangeDecoratorConfigBuilder bottomOffset(int bottomOffset) {
-        this.root.addProperty("bottom_offset", bottomOffset);
-        return this;
-    }
+	public RangeDecoratorConfigBuilder bottomOffset(int bottomOffset) {
+		this.root.addProperty("bottom_offset", bottomOffset);
+		return this;
+	}
 
-    public RangeDecoratorConfigBuilder topOffset(int topOffset) {
-        this.root.addProperty("top_offset", topOffset);
-        return this;
-    }
+	public RangeDecoratorConfigBuilder topOffset(int topOffset) {
+		this.root.addProperty("top_offset", topOffset);
+		return this;
+	}
 
-    public RangeDecoratorConfigBuilder maximum(int maximum) {
-        this.root.addProperty("maximum", maximum);
-        return this;
-    }
+	public RangeDecoratorConfigBuilder maximum(int maximum) {
+		this.root.addProperty("maximum", maximum);
+		return this;
+	}
 }

@@ -2,12 +2,12 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.d
 
 public class ChanceDecoratorConfigBuilder extends DecoratorConfigBuilder {
 
-    public ChanceDecoratorConfigBuilder() {
-        super();
-    }
+	public ChanceDecoratorConfigBuilder() {
+		super();
+	}
 
-    public ChanceDecoratorConfigBuilder chance(int chance) {
-        this.root.addProperty("chance", chance);
-        return this;
-    }
+	public ChanceDecoratorConfigBuilder chance(int chance) {
+		this.root.addProperty("chance", chance);
+		return this;
+	}
 }

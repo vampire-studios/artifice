@@ -4,10 +4,11 @@ import io.github.vampirestudios.artifice.api.ArtificeResourcePack;
 import io.github.vampirestudios.artifice.common.ClientOnly;
 import io.github.vampirestudios.artifice.common.ClientResourcePackProfileLike;
 import io.github.vampirestudios.artifice.common.ServerResourcePackProfileLike;
-import java.util.function.Consumer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
+
+import java.util.function.Consumer;
 
 public class DynamicResourcePackFactory<T extends ArtificeResourcePack.ResourcePackBuilder> implements ClientResourcePackProfileLike, ServerResourcePackProfileLike {
 

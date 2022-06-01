@@ -1,50 +1,60 @@
 package com.swordglowsblue.artifice.test;
 
 import io.github.vampirestudios.artifice.api.Artifice;
+import io.github.vampirestudios.artifice.api.ArtificeClientResourcePackEntrypoint;
 import io.github.vampirestudios.artifice.api.ArtificeResourcePack;
-import net.fabricmc.api.ClientModInitializer;
+import io.github.vampirestudios.artifice.api.ArtificeServerResourcePackEntrypoint;
+import io.github.vampirestudios.artifice.api.builder.assets.BlockStateBuilder;
+import io.github.vampirestudios.artifice.api.builder.assets.ModelBuilder;
+import io.github.vampirestudios.artifice.api.builder.assets.TranslationBuilder;
+import io.github.vampirestudios.artifice.api.util.Processor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.io.IOException;
 
-public class ArtificeTestClientMod implements ClientModInitializer {
+public class ArtificeTestClientMod implements ArtificeClientResourcePackEntrypoint, ArtificeServerResourcePackEntrypoint {
 	private static ResourceLocation makeResourceLocation(String name) {
 		return new ResourceLocation("artifice", name);
 	}
 
 	@Environment(EnvType.CLIENT)
 	public void onInitializeClient() {
-		Artifice.registerAssetPack("artifice:testmod", pack -> {
-			pack.setDisplayName("Artifice Test Resources");
-			pack.setDescription("Resources for the Artifice test mod");
+		Artifice.registerAssetPack(makeResourceLocation("testing"), clientResourcePackBuilder -> {
 
-			pack.addItemModel(makeResourceLocation("test_item"), model -> model
+		});
+		Artifice.registerAssetPack(makeResourceLocation("test_texture_pack"), pack -> {
+			pack.setDisplayName(Component.literal("Artifice Test Resources"));
+			pack.setDescription(Component.literal("Resources for the Artifice test mod"));
+
+			pack.addItemModel(makeResourceLocation("test_item"), new ModelBuilder()
 					.parent(new ResourceLocation("item/generated"))
 					.texture("layer0", new ResourceLocation("block/sand"))
 					.texture("layer1", new ResourceLocation("block/dead_bush")));
-			pack.addItemModel(makeResourceLocation("test_block"), model -> model
+			pack.addItemModel(makeResourceLocation("test_block"), new ModelBuilder()
 					.parent(makeResourceLocation("block/test_block")));
 
-			pack.addBlockState(makeResourceLocation("test_block"), state -> state
-					.weightedVariant("", variant -> variant
+			pack.addBlockState(makeResourceLocation("test_block"), new BlockStateBuilder()
+					.weightedVariant("", new BlockStateBuilder.Variant()
 							.model(makeResourceLocation("block/test_block"))
 							.weight(3))
-					.weightedVariant("", variant -> variant
+					.weightedVariant("", new BlockStateBuilder.Variant()
 							.model(new ResourceLocation("block/coarse_dirt"))));
 
-			pack.addBlockModel(makeResourceLocation("test_block"), model -> model
+			pack.addBlockModel(makeResourceLocation("test_block"), new ModelBuilder()
 					.parent(new ResourceLocation("block/cube_all"))
 					.texture("all", new ResourceLocation("item/diamond_sword")));
 
-			pack.addTranslations(makeResourceLocation("en_us"), translations -> translations
+			pack.addTranslations(makeResourceLocation("en_us"), new TranslationBuilder()
 					.entry("item.artifice.test_item", "Artifice Test Item")
 					.entry("block.artifice.test_block", "Artifice Test Block"));
 			pack.addLanguage("ar_tm", "Artifice", "Test Mod", false);
-			pack.addTranslations(makeResourceLocation("ar_tm"), translations -> translations
+			pack.addTranslations(makeResourceLocation("ar_tm"), new TranslationBuilder()
 					.entry("item.artifice.test_item", "Artifice Test Item in custom lang")
 					.entry("block.artifice.test_block", "Artifice Test Block in custom lang"));
+
 			try {
 				pack.dumpResources("testing_assets", "assets");
 			} catch (IOException e) {
@@ -55,4 +65,23 @@ public class ArtificeTestClientMod implements ClientModInitializer {
 		Artifice.registerAssetPack(makeResourceLocation("testmod2"), ArtificeResourcePack.ClientResourcePackBuilder::setOptional);
 	}
 
+	@Override
+	public void generateClientResourcePack(Processor<ArtificeResourcePack.ClientResourcePackBuilder> builder) {
+
+	}
+
+	@Override
+	public ResourceLocation getClientID() {
+		return null;
+	}
+
+	@Override
+	public void generateServerResourcePack(Processor<ArtificeResourcePack.ServerResourcePackBuilder> builder) {
+
+	}
+
+	@Override
+	public ResourceLocation getServerID() {
+		return null;
+	}
 }

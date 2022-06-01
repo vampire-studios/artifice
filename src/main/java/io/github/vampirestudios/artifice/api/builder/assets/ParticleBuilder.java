@@ -13,16 +13,19 @@ import net.minecraft.resources.ResourceLocation;
  */
 @Environment(EnvType.CLIENT)
 public final class ParticleBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
-    public ParticleBuilder() { super(new JsonObject(), JsonResource::new); }
+	public ParticleBuilder() {
+		super(new JsonObject(), JsonResource::new);
+	}
 
-    /**
-     * Add a texture to this particle.
-     * Calling this multiple times will add to the list instead of overwriting.
-     * @param id The texure ID ({@code namespace:textureid}).
-     * @return this
-     */
-    public ParticleBuilder texture(ResourceLocation id) {
-        with("textures", JsonArray::new, textures -> textures.add(id.toString()));
-        return this;
-    }
+	/**
+	 * Add a texture to this particle.
+	 * Calling this multiple times will add to the list instead of overwriting.
+	 *
+	 * @param id The texure ID ({@code namespace:textureid}).
+	 * @return this
+	 */
+	public ParticleBuilder texture(ResourceLocation id) {
+		with("textures", JsonArray::new, textures -> textures.add(id.toString()));
+		return this;
+	}
 }

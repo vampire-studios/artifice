@@ -7,6 +7,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 
 public class ArtificeRegistry {
+
     /**
      * The {@link Registry} for client-side resource packs.
      */

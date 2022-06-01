@@ -40,7 +40,7 @@ public class TestChunkGenerator extends ChunkGenerator {
 	private final Registry<Biome> biomeRegistry;
 
 	public TestChunkGenerator(Registry<StructureSet> registry, Registry<Biome> registry2, boolean testBool) {
-		super(registry, Optional.empty(), new FixedBiomeSource(registry2.getOrCreateHolder(Biomes.PLAINS)));
+		super(registry, Optional.empty(), new FixedBiomeSource(registry2.getOrCreateHolderOrThrow(Biomes.PLAINS)));
 		this.testBool = testBool;
 		this.biomeRegistry = registry2;
 	}

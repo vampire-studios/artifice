@@ -6,7 +6,7 @@ import net.minecraft.world.level.levelgen.DensityFunction;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 
 public class JsonHelper {
-	
+
 	private JsonObject jsonObject;
 
 	public JsonHelper(JsonObject jsonObject) {
@@ -73,7 +73,6 @@ public class JsonHelper {
 	public enum DensityType {
 		INTERPOLATED("minecraft:interpolated"),
 		BLEND_DENSITY("minecraft:blend_density"),
-		SLIDE("minecraft:slide"),
 		RANGE_CHOICE("minecraft:range_choice"),
 		ADD("minecraft:add"),
 		MIN("minecraft:min"),

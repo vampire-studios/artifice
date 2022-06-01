@@ -6,12 +6,12 @@ import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class SingleStateFeatureConfigBuilder extends FeatureConfigBuilder {
 
-    public SingleStateFeatureConfigBuilder() {
-        super();
-    }
+	public SingleStateFeatureConfigBuilder() {
+		super();
+	}
 
-    public SingleStateFeatureConfigBuilder state(Processor<StateDataBuilder> processor) {
-        with("state", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
-        return this;
-    }
+	public SingleStateFeatureConfigBuilder state(Processor<StateDataBuilder> processor) {
+		with("state", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
+		return this;
+	}
 }

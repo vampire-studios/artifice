@@ -5,7 +5,7 @@ import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 
 public class MobSpawnOverrideRuleBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
-	protected MobSpawnOverrideRuleBuilder() {
+	public MobSpawnOverrideRuleBuilder() {
 		super(new JsonObject(), JsonResource::new);
 	}
 
@@ -23,10 +23,10 @@ public class MobSpawnOverrideRuleBuilder extends TypedJsonBuilder<JsonResource<J
 		jsonArray("spawns", jsonArrayBuilder -> {
 			for (SpawnsBuilder spawnsBuilder : spawnsBuilders) {
 				jsonArrayBuilder.addObject(jsonObjectBuilder -> jsonObjectBuilder
-					.add("type", spawnsBuilder.type())
-					.add("weight", spawnsBuilder.weight())
-					.add("minCount", spawnsBuilder.minCount())
-					.add("maxCount", spawnsBuilder.maxCount()));
+						.add("type", spawnsBuilder.type())
+						.add("weight", spawnsBuilder.weight())
+						.add("minCount", spawnsBuilder.minCount())
+						.add("maxCount", spawnsBuilder.maxCount()));
 			}
 		});
 		return this;

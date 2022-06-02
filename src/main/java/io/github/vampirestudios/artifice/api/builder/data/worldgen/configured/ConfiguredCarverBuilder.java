@@ -1,16 +1,15 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured;
 
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.FloatProviderBuilders;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.HeightProviderBuilders;
-import io.github.vampirestudios.artifice.api.resource.JsonResource;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.YOffsetBuilder;
 
-import java.util.Map;
-
-public class ConfiguredCarverBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
-	public ConfiguredCarverBuilder() {
-		super(new JsonObject(), JsonResource::new);
-	}
+public class ConfiguredCarverBuilder extends TypedJsonObject {
+    public ConfiguredCarverBuilder() {
+        super(new JsonObject());
+    }
 
 	/**
 	 * @param id ID of an existing carver.
@@ -21,35 +20,35 @@ public class ConfiguredCarverBuilder extends TypedJsonBuilder<JsonResource<JsonO
 		return this;
 	}
 
-	public ConfiguredCarverBuilder y(HeightProviderBuilders processor) {
-		with(this.root.getAsJsonObject("config"), "y", JsonObject::new, processor::buildTo);
-		return this;
-	}
+    public ConfiguredCarverBuilder y(HeightProviderBuilders processor) {
+        join(this.root.getAsJsonObject("config"), "y", processor.build());
+        return this;
+    }
 
-	public ConfiguredCarverBuilder yScale(HeightProviderBuilders processor) {
-		with(this.root.getAsJsonObject("config"), "yScale", JsonObject::new, processor::buildTo);
-		return this;
-	}
+    public ConfiguredCarverBuilder yScale(FloatProviderBuilders processor) {
+        join(this.root.getAsJsonObject("config"), "yScale", processor.build());
+        return this;
+    }
 
-	public ConfiguredCarverBuilder lavaLevel(Map.Entry<String, Integer> obj) {
-		with(this.root.getAsJsonObject("config"), "lava_level", JsonObject::new, jsonObject -> jsonObject.addProperty(obj.getKey(), obj.getValue()));
-		return this;
-	}
+    public ConfiguredCarverBuilder lavaLevel(YOffsetBuilder obj) {
+        join(this.root.getAsJsonObject("config"), "lava_level", obj.build());
+        return this;
+    }
 
-	public ConfiguredCarverBuilder horizontalRadiusModifier(HeightProviderBuilders processor) {
-		with(this.root.getAsJsonObject("config"), "horizontal_radius_multiplier", JsonObject::new, processor::buildTo);
-		return this;
-	}
+    public ConfiguredCarverBuilder horizontalRadiusModifier(FloatProviderBuilders processor) {
+        join(this.root.getAsJsonObject("config"), "horizontal_radius_multiplier", processor.build());
+        return this;
+    }
 
-	public ConfiguredCarverBuilder verticalRadiusModifier(HeightProviderBuilders processor) {
-		with(this.root.getAsJsonObject("config"), "vertical_radius_multiplier", JsonObject::new, processor::buildTo);
-		return this;
-	}
+    public ConfiguredCarverBuilder verticalRadiusModifier(FloatProviderBuilders processor) {
+        join(this.root.getAsJsonObject("config"), "vertical_radius_multiplier", processor.build());
+        return this;
+    }
 
-	public ConfiguredCarverBuilder floorLevel(HeightProviderBuilders processor) {
-		with(this.root.getAsJsonObject("config"), "floor_level", JsonObject::new, processor::buildTo);
-		return this;
-	}
+    public ConfiguredCarverBuilder floorLevel(FloatProviderBuilders processor) {
+        join(this.root.getAsJsonObject("config"), "floor_level", processor.build());
+        return this;
+    }
 
 	public ConfiguredCarverBuilder probability(float probability) {
 		try {

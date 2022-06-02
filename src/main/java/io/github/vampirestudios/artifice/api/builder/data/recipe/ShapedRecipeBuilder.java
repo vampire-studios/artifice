@@ -1,7 +1,7 @@
 package io.github.vampirestudios.artifice.api.builder.data.recipe;
 
-import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import net.minecraft.resources.ResourceLocation;
 
 /**
@@ -27,42 +27,38 @@ public final class ShapedRecipeBuilder extends RecipeBuilder<ShapedRecipeBuilder
 		return this;
 	}
 
-	/**
-	 * Add an ingredient item.
-	 *
-	 * @param key The key in the recipe pattern corresponding to this ingredient.
-	 * @param id  The item ID.
-	 * @return this
-	 */
-	public ShapedRecipeBuilder ingredientItem(Character key, ResourceLocation id) {
-		with("key", JsonObject::new, ingredients ->
-				ingredients.add(key.toString(), new JsonObjectBuilder().add("item", id.toString()).build()));
-		return this;
-	}
+    /**
+     * Add an ingredient item.
+     * @param key The key in the recipe pattern corresponding to this ingredient.
+     * @param id The item ID.
+     * @return this
+     */
+    public ShapedRecipeBuilder ingredientItem(Character key, ResourceLocation id) {
+        join("key", new TypedJsonObject().add(key.toString(), new TypedJsonObject().add("item", id.toString()).build()).build());
+        return this;
+    }
 
-	/**
-	 * Add an ingredient item as any of the given tag.
-	 *
-	 * @param key The key in the recipe pattern corresponding to this ingredient.
-	 * @param id  The tag ID.
-	 * @return this
-	 */
-	public ShapedRecipeBuilder ingredientTag(Character key, ResourceLocation id) {
-		with("key", JsonObject::new, ingredients -> ingredients.add(key.toString(), new JsonObjectBuilder().add("tag", id.toString()).build()));
-		return this;
-	}
+    /**
+     * Add an ingredient item as any of the given tag.
+     * @param key The key in the recipe pattern corresponding to this ingredient.
+     * @param id The tag ID.
+     * @return this
+     */
+    public ShapedRecipeBuilder ingredientTag(Character key, ResourceLocation id) {
+        join("key", new TypedJsonObject().add(key.toString(), new TypedJsonObject().add("tag", id.toString()).build()).build());
+        return this;
+    }
 
-	/**
-	 * Add an ingredient item as one of a list of options.
-	 *
-	 * @param key      The key in the recipe pattern corresponding to this ingredient.
-	 * @param settings A callback which will be passed a {@link MultiIngredientBuilder}.
-	 * @return this
-	 */
-	public ShapedRecipeBuilder multiIngredient(Character key, MultiIngredientBuilder settings) {
-		with("key", JsonObject::new, ingredients -> ingredients.add(key.toString(), settings.build()));
-		return this;
-	}
+    /**
+     * Add an ingredient item as one of a list of options.
+     * @param key The key in the recipe pattern corresponding to this ingredient.
+     * @param settings A callback which will be passed a {@link MultiIngredientBuilder}.
+     * @return this
+     */
+    public ShapedRecipeBuilder multiIngredient(Character key, MultiIngredientBuilder settings) {
+        join("key", new TypedJsonObject().add(key.toString(), settings.build()).build());
+        return this;
+    }
 
 	/**
 	 * Set the item produced by this recipe.

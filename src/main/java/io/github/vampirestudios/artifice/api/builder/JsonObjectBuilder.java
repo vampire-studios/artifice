@@ -4,10 +4,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.util.Processor;
 
-public class JsonObjectBuilder extends TypedJsonBuilder<JsonObject> {
-	public JsonObjectBuilder() {
-		super(new JsonObject(), j -> j);
-	}
+public class JsonObjectBuilder extends TypedJsonObject {
+    public JsonObjectBuilder() { super(new JsonObject()); }
+    public JsonObjectBuilder(JsonObject root) { super(root); }
 
 	public JsonObjectBuilder(JsonObject root) {
 		super(root, j -> j);
@@ -38,13 +37,13 @@ public class JsonObjectBuilder extends TypedJsonBuilder<JsonObject> {
 		return this;
 	}
 
-	public JsonObjectBuilder addObject(String name, Processor<JsonObjectBuilder> settings) {
-		root.add(name, settings.process(new JsonObjectBuilder()).build());
+    public JsonObjectBuilder addObject(String name, JsonObjectBuilder settings) {
+        root.add(name, settings.build());
 		return this;
 	}
 
-	public JsonObjectBuilder addArray(String name, Processor<JsonArrayBuilder> settings) {
-		root.add(name, settings.process(new JsonArrayBuilder()).build());
+    public JsonObjectBuilder addArray(String name, jsonArrayBuilder settings) {
+        root.add(name, settings.build());
 		return this;
 	}
 }

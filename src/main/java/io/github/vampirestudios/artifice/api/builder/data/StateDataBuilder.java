@@ -8,29 +8,30 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.Map;
 
-public class StateDataBuilder extends TypedJsonBuilder<JsonObject> {
+public class StateDataBuilder extends TypedJsonObject {
 
 	private final JsonObject jsonObject = new JsonObject();
 
 	public StateDataBuilder() {
-		super(new JsonObject(), j -> j);
+        super(new JsonObject());
 	}
 
-	public StateDataBuilder name(Block block) {
-		return this.name(Registry.BLOCK.getKey(block).toString());
+	public static StateDataBuilder name(Block block) {
+		return name(Registry.BLOCK.getKey(block).toString());
 	}
 
-	public StateDataBuilder name(ResourceLocation id) {
-		return this.name(id.toString());
+	public static StateDataBuilder name(ResourceLocation id) {
+		return name(id.toString());
 	}
 
 	/**
 	 * Set the id of the block.
 	 */
-	public StateDataBuilder name(String id) {
-		this.root.addProperty("Name", id);
-		return this;
-	}
+	public static StateDataBuilder name(String id) {
+        StateDataBuilder builder = new StateDataBuilder();
+        builder.root.addProperty("Name", id);
+        return builder;
+    }
 
 	/**
 	 * Set a property to a state.

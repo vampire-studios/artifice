@@ -2,12 +2,12 @@ package io.github.vampirestudios.artifice.api.builder.data.dimension;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 
-public class NoiseConfigBuilder extends TypedJsonBuilder<JsonObject> {
-	public NoiseConfigBuilder() {
-		super(new JsonObject(), j -> j);
-	}
+public class NoiseConfigBuilder extends TypedJsonObject {
+    public NoiseConfigBuilder() {
+        super(new JsonObject());
+    }
 
 	public NoiseConfigBuilder height(int height) {
 		this.root.addProperty("height", height);

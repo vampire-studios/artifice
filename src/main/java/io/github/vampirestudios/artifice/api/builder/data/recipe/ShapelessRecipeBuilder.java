@@ -1,7 +1,7 @@
 package io.github.vampirestudios.artifice.api.builder.data.recipe;
 
-import com.google.gson.JsonArray;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import net.minecraft.resources.ResourceLocation;
 
 /**
@@ -15,40 +15,35 @@ public final class ShapelessRecipeBuilder extends RecipeBuilder<ShapelessRecipeB
 		type(new ResourceLocation("crafting_shapeless"));
 	}
 
-	/**
-	 * Add an ingredient item.
-	 *
-	 * @param id The item ID.
-	 * @return this
-	 */
-	public ShapelessRecipeBuilder ingredientItem(ResourceLocation id) {
-		with("ingredients", JsonArray::new, ingredients ->
-				ingredients.add(new JsonObjectBuilder().add("item", id.toString()).build()));
-		return this;
-	}
+    /**
+     * Add an ingredient item.
+     * @param id The item ID.
+     * @return this
+     */
+    public ShapelessRecipeBuilder ingredientItem(ResourceLocation id) {
+        join("ingredients", arrayOf(new TypedJsonObject().add("item", id.toString())));
+        return this;
+    }
 
-	/**
-	 * Add an ingredient item as any of the given tag.
-	 *
-	 * @param id The tag ID.
-	 * @return this
-	 */
-	public ShapelessRecipeBuilder ingredientTag(ResourceLocation id) {
-		with("ingredients", JsonArray::new, ingredients ->
-				ingredients.add(new JsonObjectBuilder().add("tag", id.toString()).build()));
-		return this;
-	}
+    /**
+     * Add an ingredient item as any of the given tag.
+     * @param id The tag ID.
+     * @return this
+     */
+    public ShapelessRecipeBuilder ingredientTag(ResourceLocation id) {
+        join("ingredients", arrayOf(new TypedJsonObject().add("tag", id.toString())));
+        return this;
+    }
 
-	/**
-	 * Add an ingredient item as one of a list of options.
-	 *
-	 * @param settings A callback which will be passed a {@link MultiIngredientBuilder}.
-	 * @return this
-	 */
-	public ShapelessRecipeBuilder multiIngredient(MultiIngredientBuilder settings) {
-		with("ingredients", JsonArray::new, ingredients -> ingredients.add(settings.build()));
-		return this;
-	}
+    /**
+     * Add an ingredient item as one of a list of options.
+     * @param settings A callback which will be passed a {@link MultiIngredientBuilder}.
+     * @return this
+     */
+    public ShapelessRecipeBuilder multiIngredient(MultiIngredientBuilder settings) {
+        join("ingredients", arrayOf(settings.build()));
+        return this;
+    }
 
 	/**
 	 * Set the item produced by this recipe.

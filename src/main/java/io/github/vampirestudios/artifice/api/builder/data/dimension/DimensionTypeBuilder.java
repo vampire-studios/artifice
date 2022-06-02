@@ -2,16 +2,16 @@ package io.github.vampirestudios.artifice.api.builder.data.dimension;
 
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.TagResourceLocation;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
-public final class DimensionTypeBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
-	public DimensionTypeBuilder() {
-		super(new JsonObject(), JsonResource::new);
-	}
+public final class DimensionTypeBuilder extends TypedJsonObject {
+    public DimensionTypeBuilder() {
+        super(new JsonObject());
+    }
 
 	/**
 	 * Defines if the dimension is ultrawarm like the nether.
@@ -119,20 +119,16 @@ public final class DimensionTypeBuilder extends TypedJsonBuilder<JsonResource<Js
 		return infiniburn(new TagResourceLocation(infiniburn.location()));
 	}
 
-	/**
-	 * A list of blocks of which will not stop burning in the dimension.
-	 *
-	 * @param infiniburns The block tag id.
-	 * @return this
-	 */
-	public DimensionTypeBuilder infiniburn(ResourceLocation... infiniburns) {
-		jsonArray("infiniburn", jsonArrayBuilder -> {
-			for (ResourceLocation infiniburn : infiniburns) {
-				jsonArrayBuilder.add(infiniburn.toString());
-			}
-		});
-		return this;
-	}
+    /**
+     * A list of blocks of which will not stop burning in the dimension.
+     *
+     * @param infiniburns The block tag id.
+     * @return this
+     */
+    public DimensionTypeBuilder infiniburn(ResourceLocation... infiniburns) {
+        this.add("infiniburn", arrayOf(infiniburns));
+        return this;
+    }
 
 	/**
 	 * Defines the bottom position of the dimension

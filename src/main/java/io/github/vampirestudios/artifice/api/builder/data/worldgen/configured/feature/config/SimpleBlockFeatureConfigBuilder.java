@@ -1,9 +1,7 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class SimpleBlockFeatureConfigBuilder extends FeatureConfigBuilder {
 
@@ -14,23 +12,23 @@ public class SimpleBlockFeatureConfigBuilder extends FeatureConfigBuilder {
 		this.root.add("place_under", new JsonArray());
 	}
 
-	public SimpleBlockFeatureConfigBuilder toPlace(Processor<StateDataBuilder> processor) {
-		with("to_place", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
-		return this;
-	}
+    public SimpleBlockFeatureConfigBuilder toPlace(StateDataBuilder processor) {
+        join("to_place", processor.build());
+        return this;
+    }
 
-	public SimpleBlockFeatureConfigBuilder addPlaceOn(Processor<StateDataBuilder> processor) {
-		this.root.getAsJsonArray("place_on").add(processor.process(new StateDataBuilder()).buildTo(new JsonObject()));
-		return this;
-	}
+    public SimpleBlockFeatureConfigBuilder addPlaceOn(StateDataBuilder processor) {
+        this.root.getAsJsonArray("place_on").add(processor.build());
+        return this;
+    }
 
-	public SimpleBlockFeatureConfigBuilder addPlaceIn(Processor<StateDataBuilder> processor) {
-		this.root.getAsJsonArray("place_in").add(processor.process(new StateDataBuilder()).buildTo(new JsonObject()));
-		return this;
-	}
+    public SimpleBlockFeatureConfigBuilder addPlaceIn(StateDataBuilder processor) {
+        this.root.getAsJsonArray("place_in").add(processor.build());
+        return this;
+    }
 
-	public SimpleBlockFeatureConfigBuilder addPlaceUnder(Processor<StateDataBuilder> processor) {
-		this.root.getAsJsonArray("place_under").add(processor.process(new StateDataBuilder()).buildTo(new JsonObject()));
-		return this;
-	}
+    public SimpleBlockFeatureConfigBuilder addPlaceUnder(StateDataBuilder processor) {
+        this.root.getAsJsonArray("place_under").add(processor.build());
+        return this;
+    }
 }

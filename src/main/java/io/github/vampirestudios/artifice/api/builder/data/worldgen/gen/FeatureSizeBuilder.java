@@ -1,13 +1,13 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.gen;
 
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 
-public class FeatureSizeBuilder extends TypedJsonBuilder<JsonObject> {
+public class FeatureSizeBuilder extends TypedJsonObject {
 
-	public FeatureSizeBuilder() {
-		super(new JsonObject(), j -> j);
-	}
+    public FeatureSizeBuilder() {
+        super(new JsonObject());
+    }
 
 	public FeatureSizeBuilder type(String type) {
 		this.root.addProperty("type", type);

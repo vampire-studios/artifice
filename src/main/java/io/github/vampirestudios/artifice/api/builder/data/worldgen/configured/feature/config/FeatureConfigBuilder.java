@@ -4,9 +4,9 @@ import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
 import net.minecraft.resources.ResourceLocation;
 
-public class FeatureConfigBuilder extends TypedJsonBuilder<JsonObject> {
+public class FeatureConfigBuilder extends TypedJsonObject {
 	public FeatureConfigBuilder() {
-		super(new JsonObject(), j -> j);
+        super(new JsonObject());
 	}
 
 	public FeatureConfigBuilder startPool(ResourceLocation startPool) {

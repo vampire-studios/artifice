@@ -2,13 +2,13 @@ package io.github.vampirestudios.artifice.api.builder.data.dimension;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 
-public class BiomeSourceBuilder extends TypedJsonBuilder<JsonObject> {
+public class BiomeSourceBuilder extends TypedJsonObject {
 
-	public BiomeSourceBuilder() {
-		super(new JsonObject(), j -> j);
-	}
+    public BiomeSourceBuilder() {
+        super(new JsonObject());
+    }
 
 	/**
 	 * Set the type of the biome source.
@@ -17,6 +17,16 @@ public class BiomeSourceBuilder extends TypedJsonBuilder<JsonObject> {
 		this.root.addProperty("type", type);
 		return (T) this;
 	}
+
+	public static MultiNoiseBiomeSourceBuilder multiNoise() {
+        return new MultiNoiseBiomeSourceBuilder();
+    }
+    public static MultiNoiseBiomeSourceBuilder.BiomeBuilder noiseBiome(String id, MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder biomeSettingsBuilder) {
+        return new MultiNoiseBiomeSourceBuilder.BiomeBuilder().biome(id).parameters(biomeSettingsBuilder);
+    }
+    public static MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder noiseBiomeParameters() {
+        return new MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder();
+    }
 
 	public static class MultiNoiseBiomeSourceBuilder extends BiomeSourceBuilder {
 		public MultiNoiseBiomeSourceBuilder() {
@@ -44,31 +54,31 @@ public class BiomeSourceBuilder extends TypedJsonBuilder<JsonObject> {
 			return this;
 		}
 
-		public static class BiomeBuilder extends TypedJsonBuilder<JsonObject> {
-			public BiomeBuilder() {
-				super(new JsonObject(), j -> j);
-			}
+        /**
+         * Add biome.
+         */
+        public MultiNoiseBiomeSourceBuilder biomes(BiomeBuilder... biomeBuilder) {
+            join("biomes", arrayOf(biomeBuilder));
+            return this;
+        }
 
-			/**
-			 * Set the biome ID.
-			 */
-			public BiomeBuilder biome(String id) {
-				this.root.addProperty("biome", id);
-				return this;
-			}
+        public static class BiomeBuilder extends TypedJsonObject {
+            public BiomeBuilder() {
+                super(new JsonObject());
+            }
 
 			/**
 			 * Build biome parameters.
 			 */
 			public BiomeBuilder parameters(BiomeParametersBuilder biomeSettingsBuilder) {
-				with("parameters", JsonObject::new, biomeSettingsBuilder::buildTo);
+                join("parameters", biomeSettingsBuilder.build());
 				return this;
 			}
 		}
 
-		public static class BiomeParametersBuilder extends TypedJsonBuilder<JsonObject> {
+		public static class BiomeParametersBuilder extends TypedJsonObject {
 			public BiomeParametersBuilder() {
-				super(new JsonObject(), j -> j);
+                super(new JsonObject());
 			}
 
 			public BiomeParametersBuilder temperature(float temperature) {
@@ -183,6 +193,10 @@ public class BiomeSourceBuilder extends TypedJsonBuilder<JsonObject> {
 		}
 	}
 
+	public static CheckerboardBiomeSourceBuilder checkerBoard(int scale, String... biomeID) {
+        return new CheckerboardBiomeSourceBuilder().scale(scale).addBiome(biomeID);
+    }
+
 	public static class CheckerboardBiomeSourceBuilder extends BiomeSourceBuilder {
 
 		public CheckerboardBiomeSourceBuilder() {
@@ -203,6 +217,10 @@ public class BiomeSourceBuilder extends TypedJsonBuilder<JsonObject> {
 			return this;
 		}
 	}
+
+	public static FixedBiomeSourceBuilder fixed(String biomeID) {
+        return new FixedBiomeSourceBuilder().biome(biomeID);
+    }
 
 	public static class FixedBiomeSourceBuilder extends BiomeSourceBuilder {
 		public FixedBiomeSourceBuilder() {

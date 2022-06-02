@@ -1,18 +1,16 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config;
 
-import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class FillLayerFeatureConfigBuilder extends FeatureConfigBuilder {
 	public FillLayerFeatureConfigBuilder() {
 		super();
 	}
 
-	public FillLayerFeatureConfigBuilder state(Processor<StateDataBuilder> processor) {
-		with("state", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
-		return this;
-	}
+    public FillLayerFeatureConfigBuilder state(StateDataBuilder processor) {
+        join("state", processor.build());
+        return this;
+    }
 
 	public FillLayerFeatureConfigBuilder height(int height) {
 		if (height > 255) throw new IllegalArgumentException("height can't be higher than 255! Found " + height);

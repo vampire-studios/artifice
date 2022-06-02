@@ -6,18 +6,18 @@ public class CountNoiseDecoratorConfigBuilder extends DecoratorConfigBuilder {
 		super();
 	}
 
-	public CountNoiseDecoratorConfigBuilder noiseLevel(double noiseLevel) {
-		this.root.addProperty("noise_level", noiseLevel);
-		return this;
-	}
+    public CountNoiseDecoratorConfigBuilder noiseLevel(double noiseLevel) {
+        add("noise_level", noiseLevel);
+        return this;
+    }
 
-	public CountNoiseDecoratorConfigBuilder belowNoise(int belowNoise) {
-		this.root.addProperty("below_noise", belowNoise);
-		return this;
-	}
+    public CountNoiseDecoratorConfigBuilder belowNoise(int belowNoise) {
+        add("below_noise", belowNoise);
+        return this;
+    }
 
-	public CountNoiseDecoratorConfigBuilder aboveNoise(int aboveNoise) {
-		this.root.addProperty("above_noise", aboveNoise);
-		return this;
-	}
+    public CountNoiseDecoratorConfigBuilder aboveNoise(int aboveNoise) {
+        add("above_noise", aboveNoise);
+        return this;
+    }
 }

@@ -1,9 +1,7 @@
 package io.github.vampirestudios.artifice.api.builder.assets;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
-import io.github.vampirestudios.artifice.api.resource.JsonResource;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
@@ -14,10 +12,8 @@ import net.minecraft.resources.ResourceLocation;
  * @see <a href="https://minecraft.gamepedia.com/Model" target="_blank">Minecraft Wiki</a>
  */
 @Environment(EnvType.CLIENT)
-public final class ModelBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
-	public ModelBuilder() {
-		super(new JsonObject(), JsonResource::new);
-	}
+public final class ModelBuilder extends TypedJsonObject {
+    public ModelBuilder() { super(new JsonObject()); }
 
 	/**
 	 * Set the parent model for this model to inherit from.
@@ -30,41 +26,37 @@ public final class ModelBuilder extends TypedJsonBuilder<JsonResource<JsonObject
 		return this;
 	}
 
-	/**
-	 * Associate a texture with the given variable name.
-	 *
-	 * @param name The texture variable name.
-	 * @param path The texture ID ({@code namespace:type/textureid}).
-	 * @return this
-	 */
-	public ModelBuilder texture(String name, ResourceLocation path) {
-		with("textures", JsonObject::new, textures -> textures.addProperty(name, path.toString()));
-		return this;
-	}
+    /**
+     * Associate a texture with the given variable name.
+     * @param name The texture variable name.
+     * @param path The texture ID ({@code namespace:type/textureid}).
+     * @return this
+     */
+    public ModelBuilder texture(String name, ResourceLocation path) {
+        join("textures", new TypedJsonObject().add(name, path.toString()).build());
+        return this;
+    }
 
-	/**
-	 * Modify the display transformation properties of this model for the given display position.
-	 *
-	 * @param name     The position name (e.g. {@code thirdperson_righthand}).
-	 * @param settings A callback which will be passed a {@link Display}.
-	 * @return this
-	 */
-	public ModelBuilder display(String name, Display settings) {
-		with("display", JsonObject::new, display ->
-				display.add(name, settings.build()));
-		return this;
-	}
+    /**
+     * Modify the display transformation properties of this model for the given display position.
+     * @param name The position name (e.g. {@code thirdperson_righthand}).
+     * @param settings A callback which will be passed a {@link Display}.
+     * @return this
+     */
+    public ModelBuilder display(String name, Display settings) {
+        join("display", new TypedJsonObject().add(name, settings).build());
+        return this;
+    }
 
-	/**
-	 * Add an element to this model.
-	 *
-	 * @param settings A callback which will be passed a {@link ModelElementBuilder}.
-	 * @return this
-	 */
-	public ModelBuilder element(ModelElementBuilder settings) {
-		with("elements", JsonArray::new, elements -> elements.add(settings.build()));
-		return this;
-	}
+    /**
+     * Add an element to this model.
+     * @param settings A callback which will be passed a {@link ModelElementBuilder}.
+     * @return this
+     */
+    public ModelBuilder element(ModelElementBuilder settings) {
+        join("elements", arrayOf(settings));
+        return this;
+    }
 
 	/**
 	 * Set whether this model should use ambient occlusion for lighting. Only applicable for block models.
@@ -77,27 +69,23 @@ public final class ModelBuilder extends TypedJsonBuilder<JsonResource<JsonObject
 		return this;
 	}
 
-	/**
-	 * Add a property override to this model. Only applicable for item models.
-	 *
-	 * @param settings A callback which will be passed a {@link Override}.
-	 * @return this
-	 */
-	public ModelBuilder override(Override settings) {
-		with("overrides", JsonArray::new, overrides -> overrides.add(settings.build()));
-		return this;
-	}
+    /**
+     * Add a property override to this model. Only applicable for item models.
+     * @param settings A callback which will be passed a {@link Override}.
+     * @return this
+     */
+    public ModelBuilder override(Override settings) {
+        join("predicate", arrayOf(settings));
+        return this;
+    }
 
-	/**
-	 * Builder for model display settings.
-	 *
-	 * @see ModelBuilder
-	 */
-	@Environment(EnvType.CLIENT)
-	public static final class Display extends TypedJsonBuilder<JsonObject> {
-		public Display() {
-			super(new JsonObject(), j -> j);
-		}
+    /**
+     * Builder for model display settings.
+     * @see ModelBuilder
+     */
+    @Environment(EnvType.CLIENT)
+    public static final class Display extends TypedJsonObject {
+        public Display() { super(); }
 
 		/**
 		 * Set the rotation of this model around each axis.
@@ -139,30 +127,26 @@ public final class ModelBuilder extends TypedJsonBuilder<JsonResource<JsonObject
 		}
 	}
 
-	/**
-	 * Builder for an item model property override.
-	 *
-	 * @see ModelBuilder
-	 */
-	@Environment(EnvType.CLIENT)
-	public static final class Override extends TypedJsonBuilder<JsonObject> {
-		public Override() {
-			super(new JsonObject(), j -> j);
-		}
+    /**
+     * Builder for an item model property override.
+     * @see ModelBuilder
+     */
+    @Environment(EnvType.CLIENT)
+    public static final class Override extends TypedJsonObject {
+        public Override() { super(); }
 
-		/**
-		 * Set the required value of the given property.
-		 * Calling this multiple times will require all properties to match.
-		 *
-		 * @param name  The item property tag.
-		 * @param value The required integer value.
-		 * @return this
-		 * @see <a href="https://minecraft.gamepedia.com/Model#Item_tags">Minecraft Wiki</a>
-		 */
-		public Override predicate(String name, int value) {
-			with("predicate", JsonObject::new, predicate -> predicate.addProperty(name, value));
-			return this;
-		}
+        /**
+         * Set the required value of the given property.
+         * Calling this multiple times will require all properties to match.
+         * @param name The item property tag.
+         * @param value The required integer value.
+         * @return this
+         * @see <a href="https://minecraft.gamepedia.com/Model#Item_tags">Minecraft Wiki</a>
+         */
+        public Override predicate(String name, int value) {
+            join("predicate", new TypedJsonObject().add(name, value).build());
+            return this;
+        }
 
 		/**
 		 * Set the model to be used instead of this one if the predicate matches.

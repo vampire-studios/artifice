@@ -2,8 +2,7 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.f
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 
 public class RandomFeatureConfigBuilder extends FeatureConfigBuilder {
 
@@ -17,16 +16,16 @@ public class RandomFeatureConfigBuilder extends FeatureConfigBuilder {
 		return this;
 	}
 
-	public RandomFeatureConfigBuilder addConfiguredFeature(Processor<RandomFeatureEntryBuilder> processor) {
-		this.root.getAsJsonArray("features").add(processor.process(new RandomFeatureEntryBuilder()).buildTo(new JsonObject()));
-		return this;
-	}
+    public RandomFeatureConfigBuilder addConfiguredFeature(RandomFeatureEntryBuilder processor) {
+        this.root.getAsJsonArray("features").add(processor.build());
+        return this;
+    }
 
-	public static class RandomFeatureEntryBuilder extends TypedJsonBuilder<JsonObject> {
+    public static class RandomFeatureEntryBuilder extends TypedJsonObject {
 
-		public RandomFeatureEntryBuilder() {
-			super(new JsonObject(), j -> j);
-		}
+        public RandomFeatureEntryBuilder() {
+            super(new JsonObject());
+        }
 
 		public RandomFeatureEntryBuilder chance(float chance) {
 			if (chance > 1.0F) throw new IllegalArgumentException("chance can't be higher than 1.0F! Found " + chance);

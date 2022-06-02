@@ -1,9 +1,7 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class SpringFeatureConfigBuilder extends FeatureConfigBuilder {
 
@@ -12,10 +10,10 @@ public class SpringFeatureConfigBuilder extends FeatureConfigBuilder {
 		this.root.add("valid_blocks", new JsonArray());
 	}
 
-	public SpringFeatureConfigBuilder fluidState(Processor<StateDataBuilder> processor) {
-		with("state", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
-		return this;
-	}
+    public SpringFeatureConfigBuilder fluidState(StateDataBuilder processor) {
+        join("state", processor.build());
+        return this;
+    }
 
 	public SpringFeatureConfigBuilder addValidBlock(String blockID) {
 		this.root.getAsJsonArray("valid_blocks").add(blockID);

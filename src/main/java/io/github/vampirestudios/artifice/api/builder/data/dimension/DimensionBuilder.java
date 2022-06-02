@@ -1,14 +1,13 @@
 package io.github.vampirestudios.artifice.api.builder.data.dimension;
 
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
-import io.github.vampirestudios.artifice.api.resource.JsonResource;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import net.minecraft.resources.ResourceLocation;
 
-public class DimensionBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
-	public DimensionBuilder() {
-		super(new JsonObject(), JsonResource::new);
-	}
+public class DimensionBuilder extends TypedJsonObject {
+    public DimensionBuilder() {
+        super(new JsonObject());
+    }
 
 	/**
 	 * Set the dimension type.
@@ -18,27 +17,34 @@ public class DimensionBuilder extends TypedJsonBuilder<JsonResource<JsonObject>>
 		return this;
 	}
 
-	/**
-	 * Make a Chunk Generator.
-	 */
-	public <T extends ChunkGeneratorTypeBuilder> DimensionBuilder generator(T generatorBuilderInstance) {
-		with("generator", JsonObject::new, generatorBuilderInstance::buildTo);
-		return this;
-	}
+    /**
+     * Make a Chunk Generator.
+     * @param generatorBuilder
+     * @param <T> A class extending ChunkGeneratorTypeBuilder.
+     * @return
+     */
+    public <T extends ChunkGeneratorTypeBuilder> DimensionBuilder generator(T generatorBuilder) {
+        join("generator", generatorBuilder.build() );
+        return this;
+    }
 
-	/**
-	 * Make a noise based Chunk Generator.
-	 */
-	public DimensionBuilder noiseGenerator(ChunkGeneratorTypeBuilder.NoiseChunkGeneratorTypeBuilder generatorBuilder) {
-		return this.generator(generatorBuilder);
-	}
+    /**
+     * Make a noise based Chunk Generator.
+     * @param generatorBuilder
+     * @return
+     */
+    public DimensionBuilder noiseGenerator(ChunkGeneratorTypeBuilder.NoiseChunkGeneratorTypeBuilder generatorBuilder) {
+        return this.generator(generatorBuilder);
+    }
 
-	/**
-	 * Make a flat Chunk Generator.
-	 */
-	public DimensionBuilder flatGenerator(ChunkGeneratorTypeBuilder.FlatChunkGeneratorTypeBuilder generatorBuilder) {
-		return this.generator(generatorBuilder);
-	}
+    /**
+     * Make a flat Chunk Generator.
+     * @param generatorBuilder
+     * @return
+     */
+    public DimensionBuilder flatGenerator(ChunkGeneratorTypeBuilder.FlatChunkGeneratorTypeBuilder generatorBuilder) {
+        return this.generator(generatorBuilder);
+    }
 
 	/**
 	 * Use with a Chunk Generator which doesn't need any configuration. Example: Debug Mode Generator.

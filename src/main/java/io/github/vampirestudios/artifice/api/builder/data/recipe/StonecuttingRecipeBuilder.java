@@ -36,16 +36,15 @@ public final class StonecuttingRecipeBuilder extends RecipeBuilder<StonecuttingR
 		return this;
 	}
 
-	/**
-	 * Set the item being cut as one of a list of options.
-	 *
-	 * @param settings A callback which will be passed a {@link MultiIngredientBuilder}.
-	 * @return this
-	 */
-	public StonecuttingRecipeBuilder multiIngredient(MultiIngredientBuilder settings) {
-		root.add("ingredient", settings.build());
-		return this;
-	}
+    /**
+     * Set the item being cut as one of a list of options.
+     * @param settings A callback which will be passed a {@link MultiIngredientBuilder}.
+     * @return this
+     */
+    public StonecuttingRecipeBuilder multiIngredient(MultiIngredientBuilder settings) {
+        root.add("ingredient", settings.build());
+        return this;
+    }
 
 	/**
 	 * Set the item produced by this recipe.

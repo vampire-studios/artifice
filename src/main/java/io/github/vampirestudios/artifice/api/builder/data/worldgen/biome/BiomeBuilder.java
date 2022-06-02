@@ -13,16 +13,16 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
-public class BiomeBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
+public class BiomeBuilder extends TypedJsonObject {
 	public BiomeBuilder() {
-		super(new JsonObject(), JsonResource::new);
-		this.root.add("carvers", new JsonObject());
-		this.root.add("features", new JsonArray());
+        super(new JsonObject());
+		this.add("carvers", new JsonObject());
+		this.add("features", new JsonArray());
 		for (GenerationStep.Decoration step : GenerationStep.Decoration.values()) {
 			this.root.getAsJsonArray("features").add(new JsonArray());
 		}
-		this.root.add("spawn_costs", new JsonObject());
-		this.root.add("spawners", new JsonObject());
+		this.add("spawn_costs", new JsonObject());
+		this.add("spawners", new JsonObject());
 		for (MobCategory spawnGroup : MobCategory.values()) {
 			this.root.getAsJsonObject("spawners").add(spawnGroup.getName(), new JsonArray());
 		}

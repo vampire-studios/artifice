@@ -1,11 +1,9 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.BlockStateProviderBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.BlockPlacerBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class RandomPatchFeatureConfigBuilder extends FeatureConfigBuilder {
 
@@ -15,25 +13,25 @@ public class RandomPatchFeatureConfigBuilder extends FeatureConfigBuilder {
 		this.root.add("blacklist", new JsonArray());
 	}
 
-	public <P extends BlockStateProviderBuilder> RandomPatchFeatureConfigBuilder stateProvider(Processor<P> processor, P instance) {
-		with("state_provider", JsonObject::new, jsonObject -> processor.process(instance).buildTo(jsonObject));
-		return this;
-	}
+    public <P extends BlockStateProviderBuilder> RandomPatchFeatureConfigBuilder stateProvider(P processor, P instance) {
+        join("state_provider", processor.build());
+        return this;
+    }
 
-	public <P extends BlockPlacerBuilder> RandomPatchFeatureConfigBuilder blockPlacer(Processor<P> processor, P instance) {
-		with("block_placer", JsonObject::new, jsonObject -> processor.process(instance).buildTo(jsonObject));
-		return this;
-	}
+    public <P extends BlockPlacerBuilder> RandomPatchFeatureConfigBuilder blockPlacer(P processor, P instance) {
+        join("block_placer", processor.build());
+        return this;
+    }
 
-	public RandomPatchFeatureConfigBuilder addBlockToWhitelist(Processor<StateDataBuilder> processor) {
-		this.root.getAsJsonArray("whitelist").add(processor.process(new StateDataBuilder()).buildTo(new JsonObject()));
-		return this;
-	}
+    public RandomPatchFeatureConfigBuilder addBlockToWhitelist(StateDataBuilder processor) {
+        this.root.getAsJsonArray("whitelist").add(processor.build());
+        return this;
+    }
 
-	public RandomPatchFeatureConfigBuilder addBlockToBlacklist(Processor<StateDataBuilder> processor) {
-		this.root.getAsJsonArray("blacklist").add(processor.process(new StateDataBuilder()).buildTo(new JsonObject()));
-		return this;
-	}
+    public RandomPatchFeatureConfigBuilder addBlockToBlacklist(StateDataBuilder processor) {
+        this.root.getAsJsonArray("blacklist").add(processor.build());
+        return this;
+    }
 
 	public RandomPatchFeatureConfigBuilder tries(int tries) {
 		this.root.addProperty("tries", tries);

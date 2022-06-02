@@ -362,6 +362,45 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
 		 * @param f  A callback which will be passed an {@link PlacedFeatureBuilder} to create the feature.
 		 */
 		void addPlacedFeature(ResourceLocation id, PlacedFeatureBuilder f);
+        /**
+         * Add an item tag with the given ID.
+         *
+         * @param id The ID of the tag, which will be converted into the correct path.
+         * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
+         */
+        void addItemTag(ResourceLocation id, TagBuilder f);
+
+        /**
+         * Add a block tag with the given ID.
+         *
+         * @param id The ID of the tag, which will be converted into the correct path.
+         * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
+         */
+        void addBlockTag(ResourceLocation id, TagBuilder f);
+
+        /**
+         * Add an entity type tag with the given ID.
+         *
+         * @param id The ID of the tag, which will be converted into the correct path.
+         * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
+         */
+        void addEntityTypeTag(ResourceLocation id, TagBuilder f);
+
+        /**
+         * Add a fluid tag with the given ID.
+         *
+         * @param id The ID of the tag, which will be converted into the correct path.
+         * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
+         */
+        void addFluidTag(ResourceLocation id, TagBuilder f);
+
+        /**
+         * Add a function tag with the given ID.
+         *
+         * @param id The ID of the tag, which will be converted into the correct path.
+         * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
+         */
+        void addFunctionTag(ResourceLocation id, TagBuilder f);
 
 		/**
 		 * Add a NoiseSettingsBuilder with the given ID.

@@ -1,8 +1,6 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config;
 
-import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.UniformIntDistributionBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class BasaltColumnsFeatureConfigBuilder extends FeatureConfigBuilder {
 
@@ -10,13 +8,13 @@ public class BasaltColumnsFeatureConfigBuilder extends FeatureConfigBuilder {
 		super();
 	}
 
-	public BasaltColumnsFeatureConfigBuilder reach(Processor<UniformIntDistributionBuilder> processor) {
-		with("reach", JsonObject::new, jsonObject -> processor.process(new UniformIntDistributionBuilder()).buildTo(jsonObject));
-		return this;
-	}
+    public BasaltColumnsFeatureConfigBuilder reach(UniformIntDistributionBuilder processor) {
+        join("reach", processor.build());
+        return this;
+    }
 
-	public BasaltColumnsFeatureConfigBuilder height(Processor<UniformIntDistributionBuilder> processor) {
-		with("height", JsonObject::new, jsonObject -> processor.process(new UniformIntDistributionBuilder()).buildTo(jsonObject));
-		return this;
-	}
+    public BasaltColumnsFeatureConfigBuilder height(UniformIntDistributionBuilder processor) {
+        join("height", processor.build());
+        return this;
+    }
 }

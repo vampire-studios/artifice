@@ -6,18 +6,18 @@ public class CountExtraDecoratorConfigBuilder extends DecoratorConfigBuilder {
 		super();
 	}
 
-	public CountExtraDecoratorConfigBuilder count(int count) {
-		this.root.addProperty("count", count);
-		return this;
-	}
+    public CountExtraDecoratorConfigBuilder count(int count) {
+        add("count", count);
+        return this;
+    }
 
-	public CountExtraDecoratorConfigBuilder extraCount(int extraCount) {
-		this.root.addProperty("extra_count", extraCount);
-		return this;
-	}
+    public CountExtraDecoratorConfigBuilder extraCount(int extraCount) {
+        add("extra_count", extraCount);
+        return this;
+    }
 
-	public CountExtraDecoratorConfigBuilder extraChance(float extraChance) {
-		this.root.addProperty("extra_chance", extraChance);
-		return this;
-	}
+    public CountExtraDecoratorConfigBuilder extraChance(float extraChance) {
+        add("extra_chance", extraChance);
+        return this;
+    }
 }

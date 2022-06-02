@@ -58,11 +58,11 @@ public class StructureManagerBuilder extends TypedJsonBuilder<JsonObject> {
 		}
 	}
 
-	public static class StructureConfigBuilder extends TypedJsonBuilder<JsonObject> {
+    public static class StructureConfigBuilder extends TypedJsonObject {
 
-		protected StructureConfigBuilder() {
-			super(new JsonObject(), j -> j);
-		}
+        protected StructureConfigBuilder() {
+            super();
+        }
 
 		public StructureConfigBuilder spacing(int spacing) {
 			if (spacing > 4096) throw new IllegalArgumentException("Count can't be higher than 4096! Found " + spacing);

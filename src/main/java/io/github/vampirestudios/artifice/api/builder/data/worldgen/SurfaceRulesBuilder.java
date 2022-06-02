@@ -1,7 +1,7 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen;
 
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
 import io.github.vampirestudios.artifice.api.util.Processor;
 import net.minecraft.resources.ResourceKey;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SurfaceRulesBuilder extends TypedJsonBuilder<JsonObject> {
+public class SurfaceRulesBuilder extends TypedJsonObject {
 
 	public SurfaceRulesBuilder() {
 		super(new JsonObject(), j -> j);

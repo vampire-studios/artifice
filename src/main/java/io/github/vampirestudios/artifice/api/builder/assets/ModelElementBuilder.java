@@ -1,7 +1,7 @@
 package io.github.vampirestudios.artifice.api.builder.assets;
 
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.Direction;
@@ -14,10 +14,8 @@ import net.minecraft.util.Mth;
  * @see ModelBuilder
  */
 @Environment(EnvType.CLIENT)
-public final class ModelElementBuilder extends TypedJsonBuilder<JsonObject> {
-	ModelElementBuilder() {
-		super(new JsonObject(), j -> j);
-	}
+public final class ModelElementBuilder extends TypedJsonObject {
+    public ModelElementBuilder() { super(new JsonObject()); }
 
 	/**
 	 * Set the start point of this cuboid.
@@ -53,16 +51,15 @@ public final class ModelElementBuilder extends TypedJsonBuilder<JsonObject> {
 		return this;
 	}
 
-	/**
-	 * Set the rotation of this cuboid.
-	 *
-	 * @param settings A callback which will be passed a {@link Rotation}.
-	 * @return this
-	 */
-	public ModelElementBuilder rotation(Rotation settings) {
-		with("rotation", JsonObject::new, settings::buildTo);
-		return this;
-	}
+    /**
+     * Set the rotation of this cuboid.
+     * @param settings a {@link Rotation}.
+     * @return this
+     */
+    public ModelElementBuilder rotation(Rotation settings) {
+        this.join("rotation", settings.build());
+        return this;
+    }
 
 	/**
 	 * Set whether to render shadows on this cuboid.
@@ -75,28 +72,25 @@ public final class ModelElementBuilder extends TypedJsonBuilder<JsonObject> {
 		return this;
 	}
 
-	/**
-	 * Define properties of the face in the given direction.
-	 *
-	 * @param side     The direction of the face.
-	 * @param settings A callback which will be passed a {@link Face}.
-	 * @return this
-	 */
-	public ModelElementBuilder face(Direction side, Face settings) {
-		with("faces", JsonObject::new, faces -> with(faces, side.getName(), JsonObject::new, settings::buildTo));
-		return this;
-	}
+    /**
+     * Define properties of the face in the given direction.
+     * @param side The direction of the face.
+     * @param settings A callback which will be passed a {@link Face}.
+     * @return this
+     */
+    public ModelElementBuilder face(Direction side, Face settings) {
+        join("faces", new JsonObject());
+        join(getObj("faces"), side.getName(), settings.build());
+        return this;
+    }
 
-	/**
-	 * Builder for model element rotation.
-	 *
-	 * @see ModelElementBuilder
-	 */
-	@Environment(EnvType.CLIENT)
-	public static final class Rotation extends TypedJsonBuilder<JsonObject> {
-		private Rotation(JsonObject root) {
-			super(root, j -> j);
-		}
+    /**
+     * Builder for model element rotation.
+     * @see ModelElementBuilder
+     */
+    @Environment(EnvType.CLIENT)
+    public static final class Rotation extends TypedJsonObject {
+        public Rotation(JsonObject root) { super(root); }
 
 		/**
 		 * Set the origin point of this rotation.
@@ -152,16 +146,13 @@ public final class ModelElementBuilder extends TypedJsonBuilder<JsonObject> {
 		}
 	}
 
-	/**
-	 * Builder for a model element face.
-	 *
-	 * @see ModelElementBuilder
-	 */
-	@Environment(EnvType.CLIENT)
-	public static final class Face extends TypedJsonBuilder<JsonObject> {
-		private Face(JsonObject root) {
-			super(root, j -> j);
-		}
+    /**
+     * Builder for a model element face.
+     * @see ModelElementBuilder
+     */
+    @Environment(EnvType.CLIENT)
+    public static final class Face extends TypedJsonObject {
+        public Face(JsonObject root) { super(root); }
 
 		/**
 		 * Set the texture UV to apply to this face. Detected by position within the block if not specified.

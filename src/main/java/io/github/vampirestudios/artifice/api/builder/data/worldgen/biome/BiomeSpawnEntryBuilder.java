@@ -1,13 +1,13 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.biome;
 
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 
-public class BiomeSpawnEntryBuilder extends TypedJsonBuilder<JsonObject> {
+public class BiomeSpawnEntryBuilder extends TypedJsonObject {
 
-	public BiomeSpawnEntryBuilder() {
-		super(new JsonObject(), j -> j);
-	}
+    public BiomeSpawnEntryBuilder() {
+        super(new JsonObject());
+    }
 
 	public BiomeSpawnEntryBuilder entityID(String entityID) {
 		this.root.addProperty("type", entityID);

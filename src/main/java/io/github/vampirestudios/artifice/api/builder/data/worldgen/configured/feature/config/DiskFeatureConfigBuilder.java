@@ -1,10 +1,8 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.UniformIntDistributionBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class DiskFeatureConfigBuilder extends FeatureConfigBuilder {
 
@@ -13,20 +11,20 @@ public class DiskFeatureConfigBuilder extends FeatureConfigBuilder {
 		this.root.add("targets", new JsonArray());
 	}
 
-	public DiskFeatureConfigBuilder state(Processor<StateDataBuilder> processor) {
-		with("state", JsonObject::new, jsonObject -> processor.process(new StateDataBuilder()).buildTo(jsonObject));
-		return this;
-	}
+    public DiskFeatureConfigBuilder state(StateDataBuilder processor) {
+        join("state", processor.build());
+        return this;
+    }
 
 	public DiskFeatureConfigBuilder radius(int radius) {
 		this.root.addProperty("radius", radius);
 		return this;
 	}
 
-	public DiskFeatureConfigBuilder radius(Processor<UniformIntDistributionBuilder> processor) {
-		with("radius", JsonObject::new, jsonObject -> processor.process(new UniformIntDistributionBuilder()).buildTo(jsonObject));
-		return this;
-	}
+    public DiskFeatureConfigBuilder radius(UniformIntDistributionBuilder processor) {
+        join("radius", processor.build());
+        return this;
+    }
 
 	public DiskFeatureConfigBuilder halfHeight(int halfHeight) {
 		if (halfHeight > 4)
@@ -37,8 +35,8 @@ public class DiskFeatureConfigBuilder extends FeatureConfigBuilder {
 		return this;
 	}
 
-	public DiskFeatureConfigBuilder addTarget(Processor<StateDataBuilder> processor) {
-		this.root.getAsJsonArray("targets").add(processor.process(new StateDataBuilder()).buildTo(new JsonObject()));
-		return this;
-	}
+    public DiskFeatureConfigBuilder addTarget(StateDataBuilder processor) {
+        this.root.getAsJsonArray("targets").add(processor.build());
+        return this;
+    }
 }

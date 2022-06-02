@@ -1,12 +1,12 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen;
 
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 
-public class UniformIntDistributionBuilder extends TypedJsonBuilder<JsonObject> {
-	public UniformIntDistributionBuilder() {
-		super(new JsonObject(), j -> j);
-	}
+public class UniformIntDistributionBuilder extends TypedJsonObject{
+    public UniformIntDistributionBuilder() {
+        super(new JsonObject());
+    }
 
 	public UniformIntDistributionBuilder base(int base) {
 		this.root.addProperty("base", base);

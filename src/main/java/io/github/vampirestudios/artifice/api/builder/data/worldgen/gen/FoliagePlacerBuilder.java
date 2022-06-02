@@ -1,15 +1,14 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.gen;
 
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.UniformIntDistributionBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
-public class FoliagePlacerBuilder extends TypedJsonBuilder<JsonObject> {
+public class FoliagePlacerBuilder extends TypedJsonObject {
 
-	public FoliagePlacerBuilder() {
-		super(new JsonObject(), j -> j);
-	}
+    public FoliagePlacerBuilder() {
+        super(new JsonObject());
+    }
 
 	public <P extends FoliagePlacerBuilder> P type(String type) {
 		this.root.addProperty("type", type);
@@ -21,20 +20,20 @@ public class FoliagePlacerBuilder extends TypedJsonBuilder<JsonObject> {
 		return (P) this;
 	}
 
-	public <P extends FoliagePlacerBuilder> P radius(Processor<UniformIntDistributionBuilder> processor) {
-		with("radius", JsonObject::new, jsonObject -> processor.process(new UniformIntDistributionBuilder()).buildTo(jsonObject));
-		return (P) this;
-	}
+    public <P extends FoliagePlacerBuilder> P radius(UniformIntDistributionBuilder processor) {
+        join("radius", processor.build());
+        return (P) this;
+    }
 
 	public <P extends FoliagePlacerBuilder> P offset(int offset) {
 		this.root.addProperty("offset", offset);
 		return (P) this;
 	}
 
-	public <P extends FoliagePlacerBuilder> P offset(Processor<UniformIntDistributionBuilder> processor) {
-		with("offset", JsonObject::new, jsonObject -> processor.process(new UniformIntDistributionBuilder()).buildTo(jsonObject));
-		return (P) this;
-	}
+    public <P extends FoliagePlacerBuilder> P offset(UniformIntDistributionBuilder processor) {
+        join("offset", processor.build());
+        return (P) this;
+    }
 
 	public static class BlobFoliagePlacerBuilder extends FoliagePlacerBuilder {
 
@@ -63,11 +62,11 @@ public class FoliagePlacerBuilder extends TypedJsonBuilder<JsonObject> {
 			return this;
 		}
 
-		public SpruceFoliagePlacerBuilder trunkHeight(Processor<UniformIntDistributionBuilder> processor) {
-			with("trunk_height", JsonObject::new, jsonObject -> processor.process(new UniformIntDistributionBuilder()).buildTo(jsonObject));
-			return this;
-		}
-	}
+        public SpruceFoliagePlacerBuilder trunkHeight(UniformIntDistributionBuilder processor) {
+            join("trunk_height", processor.build());
+            return this;
+        }
+    }
 
 	public static class PineFoliagePlacerBuilder extends FoliagePlacerBuilder {
 
@@ -81,11 +80,11 @@ public class FoliagePlacerBuilder extends TypedJsonBuilder<JsonObject> {
 			return this;
 		}
 
-		public PineFoliagePlacerBuilder trunkHeight(Processor<UniformIntDistributionBuilder> processor) {
-			with("trunk_height", JsonObject::new, jsonObject -> processor.process(new UniformIntDistributionBuilder()).buildTo(jsonObject));
-			return this;
-		}
-	}
+        public PineFoliagePlacerBuilder trunkHeight(UniformIntDistributionBuilder processor) {
+            join("trunk_height", processor.build());
+            return this;
+        }
+    }
 
 	public static class AcaciaFoliagePlacerBuilder extends FoliagePlacerBuilder {
 
@@ -138,11 +137,11 @@ public class FoliagePlacerBuilder extends TypedJsonBuilder<JsonObject> {
 			return this;
 		}
 
-		public MegaPineFoliagePlacerBuilder crownHeight(Processor<UniformIntDistributionBuilder> processor) {
-			with("crown_height", JsonObject::new, jsonObject -> processor.process(new UniformIntDistributionBuilder()).buildTo(jsonObject));
-			return this;
-		}
-	}
+        public MegaPineFoliagePlacerBuilder crownHeight(UniformIntDistributionBuilder processor) {
+            join("crown_height", processor.build());
+            return this;
+        }
+    }
 
 	public static class DarkOakFoliagePlacerBuilder extends FoliagePlacerBuilder {
 

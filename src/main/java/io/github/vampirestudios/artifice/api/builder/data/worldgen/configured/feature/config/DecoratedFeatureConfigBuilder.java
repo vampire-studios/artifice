@@ -1,9 +1,7 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config;
 
-import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.decorator.ConfiguredDecoratorBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.ConfiguredSubFeatureBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class DecoratedFeatureConfigBuilder extends FeatureConfigBuilder {
 
@@ -11,20 +9,20 @@ public class DecoratedFeatureConfigBuilder extends FeatureConfigBuilder {
 		super();
 	}
 
-	public DecoratedFeatureConfigBuilder feature(Processor<ConfiguredSubFeatureBuilder> processor) {
-		with("feature", JsonObject::new, jsonObject -> processor.process(new ConfiguredSubFeatureBuilder()).buildTo(jsonObject));
-		return this;
-	}
+    public DecoratedFeatureConfigBuilder feature(ConfiguredSubFeatureBuilder processor) {
+        join("feature", processor.build());
+        return this;
+    }
 
 	public DecoratedFeatureConfigBuilder feature(String configuredFeatureID) {
 		this.root.addProperty("feature", configuredFeatureID);
 		return this;
 	}
 
-	public DecoratedFeatureConfigBuilder decorator(Processor<ConfiguredDecoratorBuilder> processor) {
-		with("decorator", JsonObject::new, jsonObject -> processor.process(new ConfiguredDecoratorBuilder()).buildTo(jsonObject));
-		return this;
-	}
+    public DecoratedFeatureConfigBuilder decorator(ConfiguredDecoratorBuilder processor) {
+        join("decorator", processor.build());
+        return this;
+    }
 
 	public DecoratedFeatureConfigBuilder decorator(String configuredDecoratorID) {
 		this.root.addProperty("decorator", configuredDecoratorID);

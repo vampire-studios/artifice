@@ -9,7 +9,7 @@ import com.mojang.blaze3d.platform.NativeImage;
 import io.github.vampirestudios.artifice.api.Artifice;
 import io.github.vampirestudios.artifice.api.ArtificeResourcePack;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.assets.*;
 import io.github.vampirestudios.artifice.api.builder.data.AdvancementBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.LootTableBuilder;

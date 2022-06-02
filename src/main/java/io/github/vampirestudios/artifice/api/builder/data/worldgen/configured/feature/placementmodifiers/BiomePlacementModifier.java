@@ -2,6 +2,6 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.f
 
 public class BiomePlacementModifier extends PlacementModifier {
 	public BiomePlacementModifier() {
-		this.root.addProperty("type", "minecraft:biome");
+		add("type", "minecraft:biome");
 	}
 }

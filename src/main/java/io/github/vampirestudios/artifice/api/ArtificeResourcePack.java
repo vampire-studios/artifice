@@ -249,7 +249,7 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
 		 * <p>
 		 * ".png" is automatically appended to the path
 		 */
-		byte[] addTexture(ResourceLocation id, NativeImage image);
+		void addTexture(ResourceLocation id, NativeImage image);
 
 		/**
 		 * Reads, clones, and recolors the texture at the given path, and puts the newly created image in the given id.

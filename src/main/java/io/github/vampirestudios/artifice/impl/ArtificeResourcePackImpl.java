@@ -25,7 +25,10 @@ import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.fe
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.structure.StructureBuilder;
 import io.github.vampirestudios.artifice.api.resource.ArtificeResource;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
-import io.github.vampirestudios.artifice.api.util.*;
+import io.github.vampirestudios.artifice.api.util.CallableFunction;
+import io.github.vampirestudios.artifice.api.util.CountingInputStream;
+import io.github.vampirestudios.artifice.api.util.IdUtils;
+import io.github.vampirestudios.artifice.api.util.Processor;
 import io.github.vampirestudios.artifice.api.virtualpack.ArtificeResourcePackContainer;
 import io.github.vampirestudios.artifice.common.ArtificeRegistry;
 import io.github.vampirestudios.artifice.common.ClientOnly;
@@ -386,9 +389,9 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 		}
 
 		@Override
-		public byte[] addTexture(ResourceLocation id, NativeImage image) {
+		public void addTexture(ResourceLocation id, NativeImage image) {
 			try {
-				return this.addAsset(fix(id, "textures", "png"), image.asByteArray());
+				this.addAsset(fix(id, "textures", "png"), image.asByteArray());
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}

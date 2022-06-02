@@ -243,7 +243,7 @@ public class DensityFunctionBuilder extends TypedJsonBuilder<JsonResource<JsonOb
 	}
 
 	/**
-	 * If the input is negative, returns half of the input. Otherwise, it returns the input. (<code>x < 0 ? x/2 : x</code>)
+	 * If the input is negative, returns half of the input. Otherwise, it returns the input. (<code>x &lt; 0 ? x/2 : x</code>)
 	 *
 	 * @param argument The input density function
 	 * @return {@link DensityFunctionBuilder}
@@ -397,7 +397,7 @@ public class DensityFunctionBuilder extends TypedJsonBuilder<JsonResource<JsonOb
 	}
 
 	/**
-	 * If the input is negative, returns a quarter of the input. Otherwise, it returns the input. (<code>x < 0 ? x/4 : x</code>)
+	 * If the input is negative, returns a quarter of the input. Otherwise, it returns the input. (<code>x &lt; 0 ? x/4 : x</code>)
 	 *
 	 * @param argument The input density function
 	 * @return {@link DensityFunctionBuilder}

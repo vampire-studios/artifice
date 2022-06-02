@@ -1,4 +1,3 @@
 {
-  "pack.source.artifice": "Artifice",
-  "pack.source.builtinArtifice": "built-in: %s"
+  "pack.source.artifice": "Artifice"
 }

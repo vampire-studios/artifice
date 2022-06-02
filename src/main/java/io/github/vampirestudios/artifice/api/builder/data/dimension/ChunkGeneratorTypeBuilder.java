@@ -2,7 +2,6 @@ package io.github.vampirestudios.artifice.api.builder.data.dimension;
 
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class ChunkGeneratorTypeBuilder extends TypedJsonBuilder<JsonObject> {
 
@@ -24,14 +23,9 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonBuilder<JsonObject> {
 
 	/**
 	 * Set the biome Source.
-	 *
-	 * @param biomeSourceBuilder
-	 * @param biomeSourceBuilderInstance
-	 * @param <T>
-	 * @return
 	 */
-	public <T extends BiomeSourceBuilder> ChunkGeneratorTypeBuilder biomeSource(Processor<T> biomeSourceBuilder, T biomeSourceBuilderInstance) {
-		with("biome_source", JsonObject::new, biomeSource -> biomeSourceBuilder.process(biomeSourceBuilderInstance).buildTo(biomeSource));
+	public <T extends BiomeSourceBuilder> ChunkGeneratorTypeBuilder biomeSource(T biomeSourceBuilderInstance) {
+		with("biome_source", JsonObject::new, biomeSourceBuilderInstance::buildTo);
 		return this;
 	}
 
@@ -67,8 +61,8 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonBuilder<JsonObject> {
 		 *
 		 * @return this
 		 */
-		public NoiseChunkGeneratorTypeBuilder multiNoiseBiomeSource(Processor<BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder> biomeSourceBuilder) {
-			biomeSource(biomeSourceBuilder, new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder());
+		public NoiseChunkGeneratorTypeBuilder multiNoiseBiomeSource(BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder biomeSourceBuilder) {
+			biomeSource(biomeSourceBuilder);
 			return this;
 		}
 
@@ -77,8 +71,8 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonBuilder<JsonObject> {
 		 *
 		 * @return this
 		 */
-		public NoiseChunkGeneratorTypeBuilder checkerboardBiomeSource(Processor<BiomeSourceBuilder.CheckerboardBiomeSourceBuilder> biomeSourceBuilder) {
-			biomeSource(biomeSourceBuilder, new BiomeSourceBuilder.CheckerboardBiomeSourceBuilder());
+		public NoiseChunkGeneratorTypeBuilder checkerboardBiomeSource(BiomeSourceBuilder.CheckerboardBiomeSourceBuilder biomeSourceBuilder) {
+			biomeSource(biomeSourceBuilder);
 			return this;
 		}
 
@@ -87,8 +81,8 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonBuilder<JsonObject> {
 		 *
 		 * @return this
 		 */
-		public NoiseChunkGeneratorTypeBuilder fixedBiomeSource(Processor<BiomeSourceBuilder.FixedBiomeSourceBuilder> biomeSourceBuilder) {
-			biomeSource(biomeSourceBuilder, new BiomeSourceBuilder.FixedBiomeSourceBuilder());
+		public NoiseChunkGeneratorTypeBuilder fixedBiomeSource(BiomeSourceBuilder.FixedBiomeSourceBuilder biomeSourceBuilder) {
+			biomeSource(biomeSourceBuilder);
 			return this;
 		}
 

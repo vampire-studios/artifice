@@ -15,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 public final class MultiIngredientBuilder {
 	private final JsonArray ingredients = new JsonArray();
 
-	MultiIngredientBuilder() {
+	public MultiIngredientBuilder() {
 	}
 
 	/**
@@ -40,7 +40,7 @@ public final class MultiIngredientBuilder {
 		return this;
 	}
 
-	JsonArray build() {
+	public JsonArray build() {
 		return ingredients;
 	}
 }

@@ -2,8 +2,11 @@ package com.swordglowsblue.artifice.test;
 
 import io.github.vampirestudios.artifice.api.Artifice;
 import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.dimension.BiomeSourceBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.dimension.BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.dimension.BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.dimension.ChunkGeneratorTypeBuilder.FlatChunkGeneratorTypeBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.dimension.ChunkGeneratorTypeBuilder.FlatChunkGeneratorTypeBuilder.LayersBuilder;
+import io.github.vampirestudios.artifice.api.builder.data.dimension.ChunkGeneratorTypeBuilder.NoiseChunkGeneratorTypeBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.dimension.DimensionBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.*;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.HeightProviderBuilders.UniformHeightProviderBuilder;
@@ -118,7 +121,7 @@ public class ArtificeTestMod implements ModInitializer {
 
 			pack.addDimension(id("test_dimension"), new DimensionBuilder()
 					.dimensionType(/*testDimension.location()*/new ResourceLocation("overworld"))
-					.flatGenerator(flatChunkGeneratorTypeBuilder -> flatChunkGeneratorTypeBuilder
+					.flatGenerator(new FlatChunkGeneratorTypeBuilder()
 							.addLayer(
 									new LayersBuilder("minecraft:bedrock", 2),
 									new LayersBuilder("minecraft:deepslate", 10),
@@ -130,8 +133,7 @@ public class ArtificeTestMod implements ModInitializer {
 
 			pack.addDimension(id("test_dimension2"), new DimensionBuilder()
 					.dimensionType(/*testDimension.location()*/new ResourceLocation("overworld"))
-					.flatGenerator(flatChunkGeneratorTypeBuilder -> flatChunkGeneratorTypeBuilder
-							.lakes(false).features(true)
+					.flatGenerator(new FlatChunkGeneratorTypeBuilder().lakes(false).features(true)
 							.addLayer(
 									new LayersBuilder("minecraft:bedrock", 2),
 									new LayersBuilder("minecraft:deepslate", 10),
@@ -143,68 +145,66 @@ public class ArtificeTestMod implements ModInitializer {
 
 			pack.addDimension(id("test_dimension_custom"), new DimensionBuilder()
 					.dimensionType(/*testDimensionCustom.location()*/new ResourceLocation("overworld"))
-					.noiseGenerator(noiseChunkGeneratorTypeBuilder -> {
-						noiseChunkGeneratorTypeBuilder.multiNoiseBiomeSource(multiNoiseBiomeSourceBuilder -> multiNoiseBiomeSourceBuilder.biomes(
-								new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
-										.biome(id("test_biome").toString())
-										.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
-												.temperature(0).humidity(1).continentalness(0).erosion(0)
-												.weirdness(0).depth(1).offset(0)
-										),
-								new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
-										.biome(id("test_biome2").toString())
-										.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
-												.temperature(0).humidity(0).continentalness(0).erosion(-0.5F)
-												.weirdness(0).depth(1).offset(0)
-										),
-								new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
-										.biome(id("test_biome3").toString())
-										.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
-												.temperature(0).humidity(1).continentalness(0.1F).erosion(0)
-												.weirdness(0).depth(1).offset(0)
-										),
-								new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
-										.biome(id("test_biome4").toString())
-										.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
-												.temperature(0).humidity(1).continentalness(0).erosion(0.2F)
-												.weirdness(0).depth(1).offset(0)
-										)
-						));
-						noiseChunkGeneratorTypeBuilder.noiseSettings("minecraft:overworld");
-					})
+					.noiseGenerator(new NoiseChunkGeneratorTypeBuilder().multiNoiseBiomeSource(
+							new MultiNoiseBiomeSourceBuilder().biomes(
+									new MultiNoiseBiomeSourceBuilder.BiomeBuilder()
+											.biome(id("test_biome").toString())
+											.parameters(new BiomeParametersBuilder()
+													.temperature(0).humidity(1).continentalness(0).erosion(0)
+													.weirdness(0).depth(1).offset(0)
+											),
+									new MultiNoiseBiomeSourceBuilder.BiomeBuilder()
+											.biome(id("test_biome2").toString())
+											.parameters(new BiomeParametersBuilder()
+													.temperature(0).humidity(0).continentalness(0).erosion(-0.5F)
+													.weirdness(0).depth(1).offset(0)
+											),
+									new MultiNoiseBiomeSourceBuilder.BiomeBuilder()
+											.biome(id("test_biome3").toString())
+											.parameters(new BiomeParametersBuilder()
+													.temperature(0).humidity(1).continentalness(0.1F).erosion(0)
+													.weirdness(0).depth(1).offset(0)
+											),
+									new MultiNoiseBiomeSourceBuilder.BiomeBuilder()
+											.biome(id("test_biome4").toString())
+											.parameters(new BiomeParametersBuilder()
+													.temperature(0).humidity(1).continentalness(0).erosion(0.2F)
+													.weirdness(0).depth(1).offset(0)
+											)
+							)).noiseSettings("minecraft:overworld")
+					)
 			);
 
 			pack.addDimension(id("test_dimension_custom2"), new DimensionBuilder()
 					.dimensionType(/*testDimensionCustom.location()*/new ResourceLocation("overworld"))
-					.noiseGenerator(noiseChunkGeneratorTypeBuilder -> {
-						noiseChunkGeneratorTypeBuilder.multiNoiseBiomeSource(multiNoiseBiomeSourceBuilder -> multiNoiseBiomeSourceBuilder.biomes(
-								new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
-										.biome(id("test_biome").toString())
-										.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
-												.temperature(0).humidity(1).continentalness(0).erosion(0)
-												.weirdness(0).depth(1).offset(0)
-										),
-								new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
-										.biome(id("test_biome2").toString())
-										.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
-												.temperature(0).humidity(0).continentalness(0).erosion(-0.5F)
-												.weirdness(0).depth(1).offset(0)
-										),
-								new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
-										.biome(id("test_biome3").toString())
-										.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
-												.temperature(0).humidity(1).continentalness(0.1F).erosion(0)
-												.weirdness(0).depth(1).offset(0)
-										),
-								new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeBuilder()
-										.biome(id("test_biome4").toString())
-										.parameters(new BiomeSourceBuilder.MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder()
-												.temperature(0).humidity(1).continentalness(0).erosion(0.2F)
-												.weirdness(0).depth(1).offset(0)
-										)
-						));
-						noiseChunkGeneratorTypeBuilder.noiseSettings("artifice:test_dimension");
-					})
+					.noiseGenerator(new NoiseChunkGeneratorTypeBuilder().multiNoiseBiomeSource(
+							new MultiNoiseBiomeSourceBuilder().biomes(
+									new MultiNoiseBiomeSourceBuilder.BiomeBuilder()
+											.biome(id("test_biome").toString())
+											.parameters(new BiomeParametersBuilder()
+													.temperature(0).humidity(1).continentalness(0).erosion(0)
+													.weirdness(0).depth(1).offset(0)
+											),
+									new MultiNoiseBiomeSourceBuilder.BiomeBuilder()
+											.biome(id("test_biome2").toString())
+											.parameters(new BiomeParametersBuilder()
+													.temperature(0).humidity(0).continentalness(0).erosion(-0.5F)
+													.weirdness(0).depth(1).offset(0)
+											),
+									new MultiNoiseBiomeSourceBuilder.BiomeBuilder()
+											.biome(id("test_biome3").toString())
+											.parameters(new BiomeParametersBuilder()
+													.temperature(0).humidity(1).continentalness(0.1F).erosion(0)
+													.weirdness(0).depth(1).offset(0)
+											),
+									new MultiNoiseBiomeSourceBuilder.BiomeBuilder()
+											.biome(id("test_biome4").toString())
+											.parameters(new BiomeParametersBuilder()
+													.temperature(0).humidity(1).continentalness(0).erosion(0.2F)
+													.weirdness(0).depth(1).offset(0)
+											)
+							)).noiseSettings("artifice:test_dimension")
+					)
 			);
 
 			pack.addBiome(id("test_biome"), new BiomeBuilder()

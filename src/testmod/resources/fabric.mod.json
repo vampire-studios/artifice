@@ -22,7 +22,7 @@
 
   "entrypoints": {
     "main": [ "com.swordglowsblue.artifice.test.ArtificeTestMod" ],
-    "client": [ "com.swordglowsblue.artifice.test.ArtificeTestClientMod" ]
+    "artifice:asset_pack": ["com.swordglowsblue.artifice.test.ArtificeTestClientMod"]
   },
 
   "depends": {

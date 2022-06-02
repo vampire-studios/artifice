@@ -76,10 +76,6 @@ public final class BlockStateBuilder extends TypedJsonBuilder<JsonResource<JsonO
 			super(new JsonObject(), j -> j);
 		}
 
-		private Variant(JsonObject root) {
-			super(root, j -> j);
-		}
-
 		/**
 		 * Set the model this variant should use.
 		 *
@@ -149,7 +145,7 @@ public final class BlockStateBuilder extends TypedJsonBuilder<JsonResource<JsonO
 	 */
 	@Environment(EnvType.CLIENT)
 	public static final class Case extends TypedJsonBuilder<JsonObject> {
-		private Case() {
+		public Case() {
 			super(new JsonObject(), j -> j);
 		}
 

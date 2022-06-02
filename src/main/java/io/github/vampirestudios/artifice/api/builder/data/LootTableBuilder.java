@@ -46,7 +46,7 @@ public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonOb
 	 * @see LootTableBuilder
 	 */
 	public static final class Pool extends TypedJsonBuilder<JsonObject> {
-		private Pool() {
+		public Pool() {
 			super(new JsonObject(), j -> j);
 		}
 
@@ -127,7 +127,7 @@ public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonOb
 		 * @see Pool
 		 */
 		public static final class Entry extends TypedJsonBuilder<JsonObject> {
-			private Entry() {
+			public Entry() {
 				super(new JsonObject(), j -> j);
 			}
 
@@ -233,7 +233,7 @@ public final class LootTableBuilder extends TypedJsonBuilder<JsonResource<JsonOb
 			 * @see <a href="https://minecraft.gamepedia.com/Loot_table#Functions" target="_blank">Minecraft Wiki</a>
 			 */
 			public static final class Function extends JsonObjectBuilder {
-				private Function(JsonObject func) {
+				public Function(JsonObject func) {
 					super(func);
 				}
 

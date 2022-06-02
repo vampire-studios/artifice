@@ -95,7 +95,7 @@ public final class ModelBuilder extends TypedJsonBuilder<JsonResource<JsonObject
 	 */
 	@Environment(EnvType.CLIENT)
 	public static final class Display extends TypedJsonBuilder<JsonObject> {
-		private Display() {
+		public Display() {
 			super(new JsonObject(), j -> j);
 		}
 
@@ -146,7 +146,7 @@ public final class ModelBuilder extends TypedJsonBuilder<JsonResource<JsonObject
 	 */
 	@Environment(EnvType.CLIENT)
 	public static final class Override extends TypedJsonBuilder<JsonObject> {
-		private Override() {
+		public Override() {
 			super(new JsonObject(), j -> j);
 		}
 

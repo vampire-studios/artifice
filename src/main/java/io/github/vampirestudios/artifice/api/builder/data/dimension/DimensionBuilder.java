@@ -3,7 +3,6 @@ package io.github.vampirestudios.artifice.api.builder.data.dimension;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
-import io.github.vampirestudios.artifice.api.util.Processor;
 import net.minecraft.resources.ResourceLocation;
 
 public class DimensionBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
@@ -13,9 +12,6 @@ public class DimensionBuilder extends TypedJsonBuilder<JsonResource<JsonObject>>
 
 	/**
 	 * Set the dimension type.
-	 *
-	 * @param identifier
-	 * @return
 	 */
 	public DimensionBuilder dimensionType(ResourceLocation identifier) {
 		this.root.addProperty("type", identifier.toString());
@@ -24,35 +20,24 @@ public class DimensionBuilder extends TypedJsonBuilder<JsonResource<JsonObject>>
 
 	/**
 	 * Make a Chunk Generator.
-	 *
-	 * @param generatorBuilder
-	 * @param generatorBuilderInstance
-	 * @param <T>                      A class extending ChunkGeneratorTypeBuilder.
-	 * @return
 	 */
-	public <T extends ChunkGeneratorTypeBuilder> DimensionBuilder generator(Processor<T> generatorBuilder, T generatorBuilderInstance) {
-		with("generator", JsonObject::new, generator -> generatorBuilder.process(generatorBuilderInstance).buildTo(generator));
+	public <T extends ChunkGeneratorTypeBuilder> DimensionBuilder generator(T generatorBuilderInstance) {
+		with("generator", JsonObject::new, generatorBuilderInstance::buildTo);
 		return this;
 	}
 
 	/**
 	 * Make a noise based Chunk Generator.
-	 *
-	 * @param generatorBuilder
-	 * @return
 	 */
-	public DimensionBuilder noiseGenerator(Processor<ChunkGeneratorTypeBuilder.NoiseChunkGeneratorTypeBuilder> generatorBuilder) {
-		return this.generator(generatorBuilder, new ChunkGeneratorTypeBuilder.NoiseChunkGeneratorTypeBuilder());
+	public DimensionBuilder noiseGenerator(ChunkGeneratorTypeBuilder.NoiseChunkGeneratorTypeBuilder generatorBuilder) {
+		return this.generator(generatorBuilder);
 	}
 
 	/**
 	 * Make a flat Chunk Generator.
-	 *
-	 * @param generatorBuilder
-	 * @return
 	 */
-	public DimensionBuilder flatGenerator(Processor<ChunkGeneratorTypeBuilder.FlatChunkGeneratorTypeBuilder> generatorBuilder) {
-		return this.generator(generatorBuilder, new ChunkGeneratorTypeBuilder.FlatChunkGeneratorTypeBuilder());
+	public DimensionBuilder flatGenerator(ChunkGeneratorTypeBuilder.FlatChunkGeneratorTypeBuilder generatorBuilder) {
+		return this.generator(generatorBuilder);
 	}
 
 	/**

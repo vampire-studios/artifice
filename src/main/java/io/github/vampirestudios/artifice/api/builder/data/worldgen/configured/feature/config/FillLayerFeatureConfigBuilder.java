@@ -1,8 +1,6 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config;
 
-import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class FillLayerFeatureConfigBuilder extends FeatureConfigBuilder {
     public FillLayerFeatureConfigBuilder() {
@@ -10,7 +8,7 @@ public class FillLayerFeatureConfigBuilder extends FeatureConfigBuilder {
     }
 
     public FillLayerFeatureConfigBuilder state(StateDataBuilder processor) {
-        join("state", processor.getData());
+        join("state", processor.build());
         return this;
     }
 

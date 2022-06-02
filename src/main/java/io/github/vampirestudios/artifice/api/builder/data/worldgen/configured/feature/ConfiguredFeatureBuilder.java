@@ -3,8 +3,6 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.f
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config.FeatureConfigBuilder;
-import io.github.vampirestudios.artifice.api.resource.JsonResource;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class ConfiguredFeatureBuilder extends TypedJsonObject {
     public ConfiguredFeatureBuilder() {
@@ -17,7 +15,7 @@ public class ConfiguredFeatureBuilder extends TypedJsonObject {
     }
 
     public <C extends FeatureConfigBuilder> ConfiguredFeatureBuilder featureConfig(C processor) {
-        join("config", processor.getData());
+        join("config", processor.build());
         return this;
     }
 

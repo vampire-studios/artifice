@@ -8,7 +8,6 @@ import com.mojang.bridge.game.PackType;
 import io.github.vampirestudios.artifice.api.ArtificeResourcePack;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.assets.*;
 import io.github.vampirestudios.artifice.api.builder.data.AdvancementBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.LootTableBuilder;
@@ -76,12 +75,12 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
             packMeta = new JsonObjectBuilder()
                     .add("pack_format", SharedConstants.getCurrentVersion().getPackVersion(PackType.RESOURCE))
                     .add("description", description != null ? description : "In-memory resource pack created with Artifice")
-                    .getData();
+                    .build();
         } else {
             packMeta = new JsonObjectBuilder()
                     .add("pack_format", SharedConstants.getCurrentVersion().getPackVersion(PackType.DATA))
                     .add("description", description != null ? description : "In-memory data pack created with Artifice")
-                    .getData();
+                    .build();
         }
 
         JsonObject languageMeta = new JsonObject();
@@ -92,7 +91,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
         JsonObjectBuilder builder = new JsonObjectBuilder();
         builder.add("pack", packMeta);
         if (languages.size() > 0) builder.add("language", languageMeta);
-        this.metadata = new JsonResource<>(builder.getData());
+        this.metadata = new JsonResource<>(builder.build());
     }
 
     private boolean isClient() {
@@ -110,7 +109,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
                             .add("name", def.getName())
                             .add("region", def.getRegion())
                             .add("bidirectional", def.isBidirectional())
-                            .getData());
+                            .build());
         }
     }
 
@@ -192,12 +191,12 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
                 packMeta = new JsonObjectBuilder()
                         .add("pack_format", SharedConstants.getCurrentVersion().getPackVersion(PackType.RESOURCE))
                         .add("description", description != null ? description : "In-memory resource pack created with Artifice")
-                        .getData();
+                        .build();
             } else {
                 packMeta = new JsonObjectBuilder()
                         .add("pack_format", SharedConstants.getCurrentVersion().getPackVersion(PackType.DATA))
                         .add("description", description != null ? description : "In-memory data pack created with Artifice")
-                        .getData();
+                        .build();
             }
 
             JsonObject languageMeta = new JsonObject();
@@ -208,7 +207,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
             JsonObjectBuilder builder = new JsonObjectBuilder();
             builder.add("pack", packMeta);
             if (languages.size() > 0) builder.add("language", languageMeta);
-            JsonResource<JsonObject> mcmeta = new JsonResource<>(builder.getData());
+            JsonResource<JsonObject> mcmeta = new JsonResource<>(builder.build());
             new Thread(() -> {
                 writeResourceFile(new File(filePath + "/pack.mcmeta"), mcmeta);
                 resources.forEach((id, resource) -> {
@@ -434,11 +433,11 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
         }
 
         private <T extends TypedJsonObject> void add(String path, ResourceLocation id, String ext, Processor<T> f, Supplier<T> ctor) {
-            this.add(IdUtils.wrapPath(path, id, ext), new JsonResource(f.process(ctor.get()).getData()));
+            this.add(IdUtils.wrapPath(path, id, ext), new JsonResource(f.process(ctor.get()).build()));
         }
 
         private <T extends TypedJsonObject> void add(String path, ResourceLocation id, String ext, T f) {
-            this.add(IdUtils.wrapPath(path, id, ext), new JsonResource(f.getData()));
+            this.add(IdUtils.wrapPath(path, id, ext), new JsonResource(f.build()));
         }
     }
 

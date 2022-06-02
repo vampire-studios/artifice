@@ -1,9 +1,7 @@
 package io.github.vampirestudios.artifice.api.builder.data.recipe;
 
-import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.util.Processor;
 import net.minecraft.resources.ResourceLocation;
 
 /**
@@ -31,7 +29,7 @@ public final class ShapedRecipeBuilder extends RecipeBuilder<ShapedRecipeBuilder
      * @return this
      */
     public ShapedRecipeBuilder ingredientItem(Character key, ResourceLocation id) {
-        join("key", new TypedJsonObject().add(key.toString(), new TypedJsonObject().add("item", id.toString()).getData()).getData());
+        join("key", new TypedJsonObject().add(key.toString(), new TypedJsonObject().add("item", id.toString()).build()).build());
         return this;
     }
 
@@ -42,7 +40,7 @@ public final class ShapedRecipeBuilder extends RecipeBuilder<ShapedRecipeBuilder
      * @return this
      */
     public ShapedRecipeBuilder ingredientTag(Character key, ResourceLocation id) {
-        join("key", new TypedJsonObject().add(key.toString(), new TypedJsonObject().add("tag", id.toString()).getData()).getData());
+        join("key", new TypedJsonObject().add(key.toString(), new TypedJsonObject().add("tag", id.toString()).build()).build());
         return this;
     }
 
@@ -53,7 +51,7 @@ public final class ShapedRecipeBuilder extends RecipeBuilder<ShapedRecipeBuilder
      * @return this
      */
     public ShapedRecipeBuilder multiIngredient(Character key, MultiIngredientBuilder settings) {
-        join("key", new TypedJsonObject().add(key.toString(), settings.build()).getData());
+        join("key", new TypedJsonObject().add(key.toString(), settings.build()).build());
         return this;
     }
 
@@ -64,7 +62,7 @@ public final class ShapedRecipeBuilder extends RecipeBuilder<ShapedRecipeBuilder
      * @return this
      */
     public ShapedRecipeBuilder result(ResourceLocation id, int count) {
-        root.add("result", new JsonObjectBuilder().add("item", id.toString()).add("count", count).getData());
+        root.add("result", new JsonObjectBuilder().add("item", id.toString()).add("count", count).build());
         return this;
     }
 }

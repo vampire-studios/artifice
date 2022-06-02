@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.Processor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -94,7 +93,7 @@ public final class AnimationBuilder extends TypedJsonObject {
          * @return this
          */
         public FrameOrder frame(int index, int frametime) {
-            frames.add(new JsonObjectBuilder().add("index", index).add("time", frametime).getData());
+            frames.add(new JsonObjectBuilder().add("index", index).add("time", frametime).build());
             return this;
         }
 

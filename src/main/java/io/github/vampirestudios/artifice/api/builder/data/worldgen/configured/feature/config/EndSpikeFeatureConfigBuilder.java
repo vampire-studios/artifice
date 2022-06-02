@@ -1,9 +1,7 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class EndSpikeFeatureConfigBuilder extends FeatureConfigBuilder {
 
@@ -26,7 +24,7 @@ public class EndSpikeFeatureConfigBuilder extends FeatureConfigBuilder {
     }
 
     public EndSpikeFeatureConfigBuilder addSpike(SpikeBuilder processor) {
-        this.root.getAsJsonArray("spikes").add(processor.getData());
+        this.root.getAsJsonArray("spikes").add(processor.build());
         return this;
     }
 

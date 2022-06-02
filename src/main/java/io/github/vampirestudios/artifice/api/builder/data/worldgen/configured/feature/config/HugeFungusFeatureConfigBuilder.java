@@ -1,8 +1,6 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config;
 
-import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class HugeFungusFeatureConfigBuilder extends FeatureConfigBuilder {
 
@@ -11,22 +9,22 @@ public class HugeFungusFeatureConfigBuilder extends FeatureConfigBuilder {
     }
 
     public HugeFungusFeatureConfigBuilder validBaseBlock(StateDataBuilder processor) {
-        join("valid_base_block", processor.getData());
+        join("valid_base_block", processor.build());
         return this;
     }
 
     public HugeFungusFeatureConfigBuilder stemState(StateDataBuilder processor) {
-        join("stem_state", processor.getData());
+        join("stem_state", processor.build());
         return this;
     }
 
     public HugeFungusFeatureConfigBuilder hatState(StateDataBuilder processor) {
-        join("hat_state", processor.getData());
+        join("hat_state", processor.build());
         return this;
     }
 
     public HugeFungusFeatureConfigBuilder decorState(StateDataBuilder processor) {
-        join("decor_state", processor.getData());
+        join("decor_state", processor.build());
         return this;
     }
 

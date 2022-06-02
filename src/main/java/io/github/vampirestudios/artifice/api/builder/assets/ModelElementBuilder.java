@@ -2,7 +2,6 @@ package io.github.vampirestudios.artifice.api.builder.assets;
 
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.util.Processor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.Direction;
@@ -55,7 +54,7 @@ public final class ModelElementBuilder extends TypedJsonObject {
      * @return this
      */
     public ModelElementBuilder rotation(Rotation settings) {
-        this.join("rotation", settings.getData());
+        this.join("rotation", settings.build());
         return this;
     }
 
@@ -77,7 +76,7 @@ public final class ModelElementBuilder extends TypedJsonObject {
      */
     public ModelElementBuilder face(Direction side, Face settings) {
         join("faces", new JsonObject());
-        join(getObj("faces"), side.getName(), settings.getData());
+        join(getObj("faces"), side.getName(), settings.build());
         return this;
     }
 

@@ -21,7 +21,7 @@ public class FloatProviderBuilders extends TypedJsonObject {
 			.add("min_inclusive", minInclusive)
 			.add("max_exclusive", maxExclusive);
 		builder.add("type", "minecraft:uniform")
-			.add("value", value.getData());
+			.add("value", value.build());
 
 		return builder;
 	}
@@ -35,7 +35,7 @@ public class FloatProviderBuilders extends TypedJsonObject {
 				.add("min", min)
 				.add("max", max);
 		builder.add("type", "minecraft:clamped_normal")
-				.add("value", value.getData());
+				.add("value", value.build());
 
 		return builder;
 	}
@@ -48,7 +48,7 @@ public class FloatProviderBuilders extends TypedJsonObject {
 				.add("max", max)
 				.add("plateau", plateau);
 		builder.add("type", "minecraft:trapezoid")
-				.add("value", value.getData());
+				.add("value", value.build());
 
 		return builder;
 	}

@@ -2,7 +2,6 @@ package io.github.vampirestudios.artifice.api.builder.data.dimension;
 
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class StructureManagerBuilder extends TypedJsonObject {
     public StructureManagerBuilder() {
@@ -16,7 +15,7 @@ public class StructureManagerBuilder extends TypedJsonObject {
      * @return
      */
     public StructureManagerBuilder strongholdSettings(StrongholdSettingsBuilder strongholdSettingsBuilder) {
-        join("stronghold", strongholdSettingsBuilder.getData());
+        join("stronghold", strongholdSettingsBuilder.build());
         return this;
     }
 
@@ -27,7 +26,7 @@ public class StructureManagerBuilder extends TypedJsonObject {
      * @return
      */
     public StructureManagerBuilder addStructure(String structureId, StructureConfigBuilder structureConfigBuilder) {
-        this.join(this.getObj("structures"), structureId, structureConfigBuilder.getData());
+        this.join(this.getObj("structures"), structureId, structureConfigBuilder.build());
         return this;
     }
 

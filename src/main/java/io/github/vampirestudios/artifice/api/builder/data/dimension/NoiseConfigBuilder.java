@@ -107,7 +107,7 @@ public class NoiseConfigBuilder extends TypedJsonObject {
     }
 
     //todo a better system for this
-    private NoiseConfigBuilder terrainShaper(Object offset, Object factor, Object jaggedness,int differentiator) {
+    private NoiseConfigBuilder terrainShaper(Object offset, Object factor, Object jaggedness, int differentiator) {
         JsonObject obj = new JsonObject();
         if(offset instanceof JsonObject) obj.add("offset", (JsonObject)offset);
         else if (offset instanceof Double) obj.addProperty("offset",(double)offset);
@@ -121,7 +121,7 @@ public class NoiseConfigBuilder extends TypedJsonObject {
         else if (jaggedness instanceof Double) obj.addProperty("jaggedness",(double)jaggedness);
         else throw new IllegalArgumentException("jaggedness must be spline or double");
 
-        this.root.add("terrain_shaper",obj);
+        this.root.add("terrain_shaper", obj);
         return this;
     }
     public NoiseConfigBuilder terrainShaper(JsonObject offset, JsonObject factor, JsonObject jaggedness) { return terrainShaper(offset,factor,jaggedness,0);}

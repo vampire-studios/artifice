@@ -3,7 +3,6 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.d
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.decorator.config.DecoratorConfigBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class ConfiguredDecoratorBuilder extends TypedJsonObject {
 
@@ -17,7 +16,7 @@ public class ConfiguredDecoratorBuilder extends TypedJsonObject {
     }
 
     public <C extends DecoratorConfigBuilder> ConfiguredDecoratorBuilder config(C processor) {
-        join("config", processor.getData());
+        join("config", processor.build());
         return this;
     }
 

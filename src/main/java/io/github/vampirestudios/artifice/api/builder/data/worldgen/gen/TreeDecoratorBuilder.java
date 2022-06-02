@@ -3,7 +3,6 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen.gen;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.BlockStateProviderBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class TreeDecoratorBuilder extends TypedJsonObject {
 
@@ -70,7 +69,7 @@ public class TreeDecoratorBuilder extends TypedJsonObject {
         }
 
         public <P extends BlockStateProviderBuilder> AlterGroundTreeDecoratorBuilder provider(P processor) {
-            join("provider", processor.getData());
+            join("provider", processor.build());
             return this;
         }
     }

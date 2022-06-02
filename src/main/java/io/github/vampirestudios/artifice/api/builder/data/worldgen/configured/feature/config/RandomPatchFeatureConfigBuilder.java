@@ -1,11 +1,9 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.BlockStateProviderBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.BlockPlacerBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class RandomPatchFeatureConfigBuilder extends FeatureConfigBuilder {
 
@@ -16,22 +14,22 @@ public class RandomPatchFeatureConfigBuilder extends FeatureConfigBuilder {
     }
 
     public <P extends BlockStateProviderBuilder> RandomPatchFeatureConfigBuilder stateProvider(P processor, P instance) {
-        join("state_provider", processor.getData());
+        join("state_provider", processor.build());
         return this;
     }
 
     public <P extends BlockPlacerBuilder> RandomPatchFeatureConfigBuilder blockPlacer(P processor, P instance) {
-        join("block_placer", processor.getData());
+        join("block_placer", processor.build());
         return this;
     }
 
     public RandomPatchFeatureConfigBuilder addBlockToWhitelist(StateDataBuilder processor) {
-        this.root.getAsJsonArray("whitelist").add(processor.getData());
+        this.root.getAsJsonArray("whitelist").add(processor.build());
         return this;
     }
 
     public RandomPatchFeatureConfigBuilder addBlockToBlacklist(StateDataBuilder processor) {
-        this.root.getAsJsonArray("blacklist").add(processor.getData());
+        this.root.getAsJsonArray("blacklist").add(processor.build());
         return this;
     }
 

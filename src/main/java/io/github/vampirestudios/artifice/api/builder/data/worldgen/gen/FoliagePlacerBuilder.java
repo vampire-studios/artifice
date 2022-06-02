@@ -3,7 +3,6 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen.gen;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.UniformIntDistributionBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class FoliagePlacerBuilder extends TypedJsonObject {
 
@@ -22,7 +21,7 @@ public class FoliagePlacerBuilder extends TypedJsonObject {
     }
 
     public <P extends FoliagePlacerBuilder> P radius(UniformIntDistributionBuilder processor) {
-        join("radius", processor.getData());
+        join("radius", processor.build());
         return (P) this;
     }
 
@@ -32,7 +31,7 @@ public class FoliagePlacerBuilder extends TypedJsonObject {
     }
 
     public <P extends FoliagePlacerBuilder> P offset(UniformIntDistributionBuilder processor) {
-        join("offset", processor.getData());
+        join("offset", processor.build());
         return (P) this;
     }
 
@@ -64,7 +63,7 @@ public class FoliagePlacerBuilder extends TypedJsonObject {
         }
 
         public SpruceFoliagePlacerBuilder trunkHeight(UniformIntDistributionBuilder processor) {
-            join("trunk_height", processor.getData());
+            join("trunk_height", processor.build());
             return this;
         }
     }
@@ -82,7 +81,7 @@ public class FoliagePlacerBuilder extends TypedJsonObject {
         }
 
         public PineFoliagePlacerBuilder trunkHeight(UniformIntDistributionBuilder processor) {
-            join("trunk_height", processor.getData());
+            join("trunk_height", processor.build());
             return this;
         }
     }
@@ -139,7 +138,7 @@ public class FoliagePlacerBuilder extends TypedJsonObject {
         }
 
         public MegaPineFoliagePlacerBuilder crownHeight(UniformIntDistributionBuilder processor) {
-            join("crown_height", processor.getData());
+            join("crown_height", processor.build());
             return this;
         }
     }

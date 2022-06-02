@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class BlockStateProviderBuilder extends TypedJsonObject {
 
@@ -27,7 +26,7 @@ public class BlockStateProviderBuilder extends TypedJsonObject {
         }
 
         public SimpleBlockStateProviderBuilder state(StateDataBuilder processor) {
-            join("state", processor.buildCopy());
+            join("state", processor.build());
             return this;
         }
     }
@@ -42,7 +41,7 @@ public class BlockStateProviderBuilder extends TypedJsonObject {
         public WeightedBlockStateProviderBuilder addEntry(int weight, StateDataBuilder processor) {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("weight", weight);
-            jsonObject.add("data", processor.getData());
+            jsonObject.add("data", processor.build());
             this.root.getAsJsonArray("entries").add(jsonObject);
             return this;
         }
@@ -69,7 +68,7 @@ public class BlockStateProviderBuilder extends TypedJsonObject {
         }
 
         public PillarBlockStateProviderBuilder state(StateDataBuilder processor) {
-            join("state", processor.buildCopy());
+            join("state", processor.build());
             return this;
         }
     }

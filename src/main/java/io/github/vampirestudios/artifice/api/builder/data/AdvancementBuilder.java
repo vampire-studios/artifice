@@ -1,6 +1,5 @@
 package io.github.vampirestudios.artifice.api.builder.data;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
@@ -20,7 +19,7 @@ public final class AdvancementBuilder extends TypedJsonObject {
      * @return this
      */
     public AdvancementBuilder display(Display settings) {
-        join("display", settings.getData());
+        join("display", settings.build());
         return this;
     }
 
@@ -41,7 +40,7 @@ public final class AdvancementBuilder extends TypedJsonObject {
      * @return this
      */
     public AdvancementBuilder criteria(String name, Criteria settings) {
-        join("criteria", new TypedJsonObject().add(name, settings).getData());
+        join("criteria", new TypedJsonObject().add(name, settings).build());
         return this;
     }
 
@@ -84,7 +83,7 @@ public final class AdvancementBuilder extends TypedJsonObject {
             TypedJsonObject icon = new TypedJsonObject();
             icon.add("item", item.toString());
             if(nbt != null) icon.add("nbt", nbt);
-            join("icon", icon.getData());
+            join("icon", icon.build());
             return this;
         }
 
@@ -220,7 +219,7 @@ public final class AdvancementBuilder extends TypedJsonObject {
          * @see <a href="https://minecraft.gamepedia.com/Advancements#List_of_triggers" target="_blank">Minecraft Wiki</a>
          */
         public Criteria conditions(JsonObjectBuilder settings) {
-            root.add("conditions", settings.getData());
+            root.add("conditions", settings.build());
             return this;
         }
     }

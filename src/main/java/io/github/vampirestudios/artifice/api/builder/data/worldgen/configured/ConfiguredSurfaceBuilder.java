@@ -3,8 +3,6 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
-import io.github.vampirestudios.artifice.api.resource.JsonResource;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class ConfiguredSurfaceBuilder extends TypedJsonObject {
     public ConfiguredSurfaceBuilder() {
@@ -19,7 +17,7 @@ public class ConfiguredSurfaceBuilder extends TypedJsonObject {
      * @return
      */
     private ConfiguredSurfaceBuilder setBlockState(String id, StateDataBuilder blockStateBuilderProcessor) {
-        join(this.root.getAsJsonObject("config"), id, blockStateBuilderProcessor.getData());
+        join(this.root.getAsJsonObject("config"), id, blockStateBuilderProcessor.build());
         return this;
     }
 

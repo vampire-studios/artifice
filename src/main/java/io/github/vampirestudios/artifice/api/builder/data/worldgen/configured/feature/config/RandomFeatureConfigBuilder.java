@@ -3,7 +3,6 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.f
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class RandomFeatureConfigBuilder extends FeatureConfigBuilder {
 
@@ -18,7 +17,7 @@ public class RandomFeatureConfigBuilder extends FeatureConfigBuilder {
     }
 
     public RandomFeatureConfigBuilder addConfiguredFeature(RandomFeatureEntryBuilder processor) {
-        this.root.getAsJsonArray("features").add(processor.getData());
+        this.root.getAsJsonArray("features").add(processor.build());
         return this;
     }
 

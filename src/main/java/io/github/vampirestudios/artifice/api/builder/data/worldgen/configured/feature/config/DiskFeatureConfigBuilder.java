@@ -1,10 +1,8 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.UniformIntDistributionBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class DiskFeatureConfigBuilder extends FeatureConfigBuilder {
 
@@ -14,7 +12,7 @@ public class DiskFeatureConfigBuilder extends FeatureConfigBuilder {
     }
 
     public DiskFeatureConfigBuilder state(StateDataBuilder processor) {
-        join("state", processor.getData());
+        join("state", processor.build());
         return this;
     }
 
@@ -24,7 +22,7 @@ public class DiskFeatureConfigBuilder extends FeatureConfigBuilder {
     }
 
     public DiskFeatureConfigBuilder radius(UniformIntDistributionBuilder processor) {
-        join("radius", processor.getData());
+        join("radius", processor.build());
         return this;
     }
 
@@ -36,7 +34,7 @@ public class DiskFeatureConfigBuilder extends FeatureConfigBuilder {
     }
 
     public DiskFeatureConfigBuilder addTarget(StateDataBuilder processor) {
-        this.root.getAsJsonArray("targets").add(processor.getData());
+        this.root.getAsJsonArray("targets").add(processor.build());
         return this;
     }
 }

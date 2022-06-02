@@ -1,9 +1,7 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config;
 
-import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.decorator.ConfiguredDecoratorBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.ConfiguredSubFeatureBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class DecoratedFeatureConfigBuilder extends FeatureConfigBuilder {
 
@@ -12,7 +10,7 @@ public class DecoratedFeatureConfigBuilder extends FeatureConfigBuilder {
     }
 
     public DecoratedFeatureConfigBuilder feature(ConfiguredSubFeatureBuilder processor) {
-        join("feature", processor.getData());
+        join("feature", processor.build());
         return this;
     }
 
@@ -22,7 +20,7 @@ public class DecoratedFeatureConfigBuilder extends FeatureConfigBuilder {
     }
 
     public DecoratedFeatureConfigBuilder decorator(ConfiguredDecoratorBuilder processor) {
-        join("decorator", processor.getData());
+        join("decorator", processor.build());
         return this;
     }
 

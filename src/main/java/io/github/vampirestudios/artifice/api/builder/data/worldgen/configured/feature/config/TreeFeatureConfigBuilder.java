@@ -1,13 +1,11 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.BlockStateProviderBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.FeatureSizeBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.FoliagePlacerBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.TreeDecoratorBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.TrunkPlacerBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 import net.minecraft.world.level.levelgen.Heightmap;
 
 public class TreeFeatureConfigBuilder extends FeatureConfigBuilder {
@@ -28,37 +26,37 @@ public class TreeFeatureConfigBuilder extends FeatureConfigBuilder {
     }
 
     public <P extends BlockStateProviderBuilder> TreeFeatureConfigBuilder dirtProvider(P providerProcessor) {
-        join("dirt_provider", providerProcessor.getData());
+        join("dirt_provider", providerProcessor.build());
         return this;
     }
 
     public <P extends BlockStateProviderBuilder> TreeFeatureConfigBuilder trunkProvider(P providerProcessor) {
-        join("trunk_provider", providerProcessor.getData());
+        join("trunk_provider", providerProcessor.build());
         return this;
     }
 
     public <P extends BlockStateProviderBuilder> TreeFeatureConfigBuilder foliageProvider(P providerProcessor) {
-        join("foliage_provider", providerProcessor.getData());
+        join("foliage_provider", providerProcessor.build());
         return this;
     }
 
     public <P extends FoliagePlacerBuilder> TreeFeatureConfigBuilder foliagePlacer(P providerProcessor) {
-        join("foliage_placer", providerProcessor.getData());
+        join("foliage_placer", providerProcessor.build());
         return this;
     }
 
     public <P extends TrunkPlacerBuilder> TreeFeatureConfigBuilder trunkPlacer(P providerProcessor) {
-        join("trunk_placer", providerProcessor.getData());
+        join("trunk_placer", providerProcessor.build());
         return this;
     }
 
     public <P extends FeatureSizeBuilder> TreeFeatureConfigBuilder minimumSize(P providerProcessor) {
-        join("minimum_size", providerProcessor.getData());
+        join("minimum_size", providerProcessor.build());
         return this;
     }
 
     public <D extends TreeDecoratorBuilder> TreeFeatureConfigBuilder addDecorator(D processor) {
-        this.root.getAsJsonArray("decorators").add(processor.getData());
+        this.root.getAsJsonArray("decorators").add(processor.build());
         return this;
     }
 

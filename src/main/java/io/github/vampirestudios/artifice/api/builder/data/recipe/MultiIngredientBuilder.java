@@ -21,7 +21,7 @@ public final class MultiIngredientBuilder {
      * @return this
      */
     public MultiIngredientBuilder item(ResourceLocation id) {
-        ingredients.add(new JsonObjectBuilder().add("item", id.toString()).getData());
+        ingredients.add(new JsonObjectBuilder().add("item", id.toString()).build());
         return this;
     }
 
@@ -31,7 +31,7 @@ public final class MultiIngredientBuilder {
      * @return this
      */
     public MultiIngredientBuilder tag(ResourceLocation id) {
-        ingredients.add(new JsonObjectBuilder().add("tag", id.toString()).getData());
+        ingredients.add(new JsonObjectBuilder().add("tag", id.toString()).build());
         return this;
     }
 

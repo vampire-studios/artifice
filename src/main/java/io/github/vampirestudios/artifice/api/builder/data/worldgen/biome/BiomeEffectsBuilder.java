@@ -2,7 +2,6 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen.biome;
 
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class BiomeEffectsBuilder extends TypedJsonObject {
 
@@ -79,22 +78,22 @@ public class BiomeEffectsBuilder extends TypedJsonObject {
     }
 
     public BiomeEffectsBuilder moodSound(BiomeMoodSoundBuilder biomeMoodSoundBuilder) {
-        join("mood_sound", biomeMoodSoundBuilder.getData());
+        join("mood_sound", biomeMoodSoundBuilder.build());
         return this;
     }
 
     public BiomeEffectsBuilder additionsSound(BiomeAdditionsSoundBuilder biomeAdditionsSoundBuilder) {
-        join("additions_sound", biomeAdditionsSoundBuilder.getData());
+        join("additions_sound", biomeAdditionsSoundBuilder.build());
         return this;
     }
 
     public BiomeEffectsBuilder music(BiomeMusicSoundBuilder biomeMusicSoundBuilder) {
-        join("music", biomeMusicSoundBuilder.getData());
+        join("music", biomeMusicSoundBuilder.build());
         return this;
     }
 
     public BiomeEffectsBuilder particle(BiomeParticleConfigBuilder biomeParticleConfigBuilder) {
-        join("particle", biomeParticleConfigBuilder.getData());
+        join("particle", biomeParticleConfigBuilder.build());
         return this;
     }
 

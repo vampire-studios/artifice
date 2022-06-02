@@ -1,9 +1,7 @@
 package io.github.vampirestudios.artifice.api.builder.data.recipe;
 
-import com.google.gson.JsonArray;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.util.Processor;
 import net.minecraft.resources.ResourceLocation;
 
 /**
@@ -50,7 +48,7 @@ public final class ShapelessRecipeBuilder extends RecipeBuilder<ShapelessRecipeB
      * @return this
      */
     public ShapelessRecipeBuilder result(ResourceLocation id, int count) {
-        root.add("result", new JsonObjectBuilder().add("item", id.toString()).add("count", count).getData());
+        root.add("result", new JsonObjectBuilder().add("item", id.toString()).add("count", count).build());
         return this;
     }
 }

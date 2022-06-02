@@ -2,8 +2,6 @@ package io.github.vampirestudios.artifice.api.builder.data.dimension;
 
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.resource.JsonResource;
-import io.github.vampirestudios.artifice.api.util.Processor;
 import net.minecraft.resources.ResourceLocation;
 
 public class DimensionBuilder extends TypedJsonObject {
@@ -28,7 +26,7 @@ public class DimensionBuilder extends TypedJsonObject {
      * @return
      */
     public <T extends ChunkGeneratorTypeBuilder> DimensionBuilder generator(T generatorBuilder) {
-        join("generator", generatorBuilder.getData() );
+        join("generator", generatorBuilder.build() );
         return this;
     }
 

@@ -42,7 +42,7 @@ public final class JsonArrayBuilder {
     }
 
     public JsonArrayBuilder addObject(Processor<JsonObjectBuilder> settings) {
-        root.add(settings.process(new JsonObjectBuilder()).getData());
+        root.add(settings.process(new JsonObjectBuilder()).build());
         return this;
     }
 

@@ -34,7 +34,7 @@ public class JsonObjectBuilder extends TypedJsonObject {
     }
 
     public JsonObjectBuilder addObject(String name, JsonObjectBuilder settings) {
-        root.add(name, settings.getData());
+        root.add(name, settings.build());
         return this;
     }
 

@@ -21,8 +21,8 @@ public class SurfaceRulesBuilder extends TypedJsonObject {
 
     public static SurfaceRulesBuilder condition(SurfaceRulesBuilder ifTrue, SurfaceRulesBuilder thenRun) {
         SurfaceRulesBuilder builder = new SurfaceRulesBuilder();
-        builder.add("if_true", ifTrue.getData())
-            .add("then_run", thenRun.getData())
+        builder.add("if_true", ifTrue.build())
+            .add("then_run", thenRun.build())
             .add("type","minecraft:condition");
         return builder;
     }
@@ -35,7 +35,7 @@ public class SurfaceRulesBuilder extends TypedJsonObject {
 
     public static SurfaceRulesBuilder block(StateDataBuilder blockStateBuilderProcessor) {
         SurfaceRulesBuilder builder = new SurfaceRulesBuilder();
-        builder.join("result_state", blockStateBuilderProcessor.getData());
+        builder.join("result_state", blockStateBuilderProcessor.build());
         builder.add("type","minecraft:block");
         return builder;
     }
@@ -44,15 +44,15 @@ public class SurfaceRulesBuilder extends TypedJsonObject {
 
         SurfaceRulesBuilder builder = new SurfaceRulesBuilder();
         builder.add("random_name",randomName)
-            .add("true_at_and_below", trueAtAndBelow.getData())
-            .add("false_at_and_above", falseAtAndAbove.getData())
+            .add("true_at_and_below", trueAtAndBelow.build())
+            .add("false_at_and_above", falseAtAndAbove.build())
             .add("type","minecraft:vertical_gradient");
         return builder;
     }
 
     public static SurfaceRulesBuilder not(SurfaceRulesBuilder rule) {
         SurfaceRulesBuilder builder = new SurfaceRulesBuilder();
-        builder.add("invert", rule.getData());
+        builder.add("invert", rule.build());
         builder.add("type","minecraft:not");
         return builder;
     }
@@ -66,7 +66,7 @@ public class SurfaceRulesBuilder extends TypedJsonObject {
 
     public static SurfaceRulesBuilder yAbove(YOffsetBuilder yPos, int surfaceDepthMultiplier, boolean addStoneDepth) {
         SurfaceRulesBuilder builder = new SurfaceRulesBuilder();
-        builder.add("anchor", yPos.getData())
+        builder.add("anchor", yPos.build())
             .add("surface_depth_multiplier",surfaceDepthMultiplier)
             .add("add_stone_depth",addStoneDepth)
             .add("type","minecraft:y_above");

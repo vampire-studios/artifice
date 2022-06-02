@@ -1,10 +1,7 @@
 package io.github.vampirestudios.artifice.api.builder.assets;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.resource.JsonResource;
-import io.github.vampirestudios.artifice.api.util.Processor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
@@ -34,7 +31,7 @@ public final class ModelBuilder extends TypedJsonObject {
      * @return this
      */
     public ModelBuilder texture(String name, ResourceLocation path) {
-        join("textures", new TypedJsonObject().add(name, path.toString()).getData());
+        join("textures", new TypedJsonObject().add(name, path.toString()).build());
         return this;
     }
 
@@ -45,7 +42,7 @@ public final class ModelBuilder extends TypedJsonObject {
      * @return this
      */
     public ModelBuilder display(String name, Display settings) {
-        join("display", new TypedJsonObject().add(name, settings).getData());
+        join("display", new TypedJsonObject().add(name, settings).build());
         return this;
     }
 
@@ -141,7 +138,7 @@ public final class ModelBuilder extends TypedJsonObject {
          * @see <a href="https://minecraft.gamepedia.com/Model#Item_tags">Minecraft Wiki</a>
          */
         public Override predicate(String name, int value) {
-            join("predicate", new TypedJsonObject().add(name, value).getData());
+            join("predicate", new TypedJsonObject().add(name, value).build());
             return this;
         }
 

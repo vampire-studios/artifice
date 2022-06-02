@@ -1,9 +1,7 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config;
 
-import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.RuleTestBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class OreFeatureConfigBuilder extends FeatureConfigBuilder {
 
@@ -12,12 +10,12 @@ public class OreFeatureConfigBuilder extends FeatureConfigBuilder {
     }
 
     public <R extends RuleTestBuilder> OreFeatureConfigBuilder targetRule(R processor) {
-        join("target", processor.getData());
+        join("target", processor.build());
         return this;
     }
 
     public OreFeatureConfigBuilder state(StateDataBuilder processor) {
-        join("state", processor.getData());
+        join("state", processor.build());
         return this;
     }
 

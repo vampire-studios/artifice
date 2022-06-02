@@ -1,11 +1,8 @@
 package io.github.vampirestudios.artifice.api.builder.data;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.resource.JsonResource;
-import io.github.vampirestudios.artifice.api.util.Processor;
 import net.minecraft.resources.ResourceLocation;
 
 /**
@@ -83,7 +80,7 @@ public final class LootTableBuilder extends TypedJsonObject {
          * @return this
          */
         public Pool rolls(int min, int max) {
-            root.add("rolls", new JsonObjectBuilder().add("min", min).add("max", max).getData());
+            root.add("rolls", new JsonObjectBuilder().add("min", min).add("max", max).build());
             return this;
         }
 
@@ -104,7 +101,7 @@ public final class LootTableBuilder extends TypedJsonObject {
          * @return this
          */
         public Pool bonusRolls(float min, float max) {
-            root.add("bonus_rolls", new JsonObjectBuilder().add("min", min).add("max", max).getData());
+            root.add("bonus_rolls", new JsonObjectBuilder().add("min", min).add("max", max).build());
             return this;
         }
 
@@ -141,7 +138,7 @@ public final class LootTableBuilder extends TypedJsonObject {
              * @return this
              */
             public Entry child(Entry settings) {
-                join("children", settings.getData());
+                join("children", settings.build());
                 return this;
             }
 

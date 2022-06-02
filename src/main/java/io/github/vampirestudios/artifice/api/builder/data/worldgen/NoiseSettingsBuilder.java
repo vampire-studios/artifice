@@ -4,8 +4,6 @@ import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.dimension.NoiseConfigBuilder;
-import io.github.vampirestudios.artifice.api.resource.JsonResource;
-import io.github.vampirestudios.artifice.api.util.Processor;
 import net.minecraft.world.level.levelgen.NoiseRouterData;
 import net.minecraft.world.level.levelgen.Noises;
 
@@ -28,7 +26,7 @@ public class NoiseSettingsBuilder extends TypedJsonObject {
      * Build noise config.
      */
     public NoiseSettingsBuilder noiseConfig(NoiseConfigBuilder noiseConfigBuilder) {
-        join("noise", noiseConfigBuilder.getData());
+        join("noise", noiseConfigBuilder.build());
         return this;
     }
 
@@ -56,7 +54,7 @@ public class NoiseSettingsBuilder extends TypedJsonObject {
      * Set a block state.
      */
     public NoiseSettingsBuilder setBlockState(String id, StateDataBuilder stateDataBuilder) {
-        this.root.add(id, stateDataBuilder.getData());
+        this.root.add(id, stateDataBuilder.build());
         return this;
     }
 
@@ -78,7 +76,7 @@ public class NoiseSettingsBuilder extends TypedJsonObject {
      * Build surface rules.
      */
     public NoiseSettingsBuilder surfaceRules(SurfaceRulesBuilder surfaceRulesBuilder) {
-        join("surface_rule", surfaceRulesBuilder.getData());
+        join("surface_rule", surfaceRulesBuilder.build());
         return this;
     }
 
@@ -86,29 +84,29 @@ public class NoiseSettingsBuilder extends TypedJsonObject {
          TypedJsonObject jsonObject = new TypedJsonObject();
             DensityFunctionBuilder barrierBuilder = new DensityFunctionBuilder().type(DensityType.NOISE)
                     .noise(Noises.AQUIFER_BARRIER).xzScale(1).yScale(0.5);
-            jsonObject.add("barrier", barrierBuilder.getData());
+            jsonObject.add("barrier", barrierBuilder.build());
 
             DensityFunctionBuilder fluidLevelFloodednessBuilder = new DensityFunctionBuilder().type(DensityType.NOISE)
                     .noise(Noises.AQUIFER_FLUID_LEVEL_FLOODEDNESS).xzScale(1).yScale(0.67);
-            jsonObject.add("fluid_level_floodedness", fluidLevelFloodednessBuilder.getData());
+            jsonObject.add("fluid_level_floodedness", fluidLevelFloodednessBuilder.build());
 
             DensityFunctionBuilder fluidLevelSpreadBuilder = new DensityFunctionBuilder().type(DensityType.NOISE)
                     .noise(Noises.AQUIFER_FLUID_LEVEL_SPREAD).xzScale(1).yScale(0.7142857142857143);
-            jsonObject.add("fluid_level_spread", fluidLevelSpreadBuilder.getData());
+            jsonObject.add("fluid_level_spread", fluidLevelSpreadBuilder.build());
 
             DensityFunctionBuilder lavaBuilder = new DensityFunctionBuilder().type(DensityType.NOISE)
                     .noise(Noises.AQUIFER_LAVA).xzScale(1).yScale(1);
-            jsonObject.add("lava", lavaBuilder.getData());
+            jsonObject.add("lava", lavaBuilder.build());
 
             DensityFunctionBuilder temperatureBuilder = new DensityFunctionBuilder().type(DensityType.SHIFTED_NOISE)
                     .noise(Noises.TEMPERATURE).xzScale(0.25).yScale(0).shiftX(NoiseRouterData.SHIFT_X).shiftY(0)
                     .shiftZ(NoiseRouterData.SHIFT_Z);
-            jsonObject.add("temperature", temperatureBuilder.getData());
+            jsonObject.add("temperature", temperatureBuilder.build());
 
             DensityFunctionBuilder vegetationBuilder = new DensityFunctionBuilder().type(DensityType.SHIFTED_NOISE)
                     .noise("minecraft:vegetation").xzScale(0.25).yScale(0).shiftX(NoiseRouterData.SHIFT_X).shiftY(0)
                     .shiftZ(NoiseRouterData.SHIFT_Z);
-            jsonObject.add("vegetation", vegetationBuilder.getData())
+            jsonObject.add("vegetation", vegetationBuilder.build())
 
                     .add("continents", "minecraft:overworld/continents")
                     .add("erosion", "minecraft:overworld/erosion")
@@ -122,8 +120,8 @@ public class NoiseSettingsBuilder extends TypedJsonObject {
 
             DensityFunctionBuilder veinGapBuilder = new DensityFunctionBuilder().type(DensityType.NOISE)
                     .noise(Noises.ORE_GAP).xzScale(1).yScale(1);
-            jsonObject.add("vein_gap", veinGapBuilder.getData());
-        join("noise_router", jsonObject.getData());
+            jsonObject.add("vein_gap", veinGapBuilder.build());
+        join("noise_router", jsonObject.build());
         return this;
     }
 

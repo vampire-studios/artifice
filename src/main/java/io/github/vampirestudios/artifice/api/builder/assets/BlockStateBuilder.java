@@ -1,12 +1,8 @@
 package io.github.vampirestudios.artifice.api.builder.assets;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.resource.JsonResource;
-import io.github.vampirestudios.artifice.api.util.Processor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
@@ -32,7 +28,7 @@ public final class BlockStateBuilder extends TypedJsonObject {
      */
     public BlockStateBuilder variant(String name, Variant settings) {
         root.remove("multipart");
-        join("variants", new TypedJsonObject().add(name,arrayOf(settings)).getData());
+        join("variants", new TypedJsonObject().add(name,arrayOf(settings)).build());
         return this;
     }
 
@@ -48,9 +44,9 @@ public final class BlockStateBuilder extends TypedJsonObject {
     public BlockStateBuilder weightedVariant(String name, Variant settings) {
         root.remove("multipart");
         if(getObj("variants") != null && getObj("variants").has(name)){
-            join(getObj("variants"), name, arrayOf(settings.getData()));
+            join(getObj("variants"), name, arrayOf(settings.build()));
         }
-        else join("variants", new TypedJsonObject().add(name,arrayOf(settings)).getData());
+        else join("variants", new TypedJsonObject().add(name,arrayOf(settings)).build());
         return this;
     }
 
@@ -150,7 +146,7 @@ public final class BlockStateBuilder extends TypedJsonObject {
          * @return this
          */
         public Case when(String name, String state) {
-            join("when", new TypedJsonObject().add(name, state).getData());
+            join("when", new TypedJsonObject().add(name, state).build());
             JsonObject condit = this.getObj("when");
             if(condit.has("OR")){
                 JsonObject or = condit.getAsJsonObject("OR");
@@ -178,9 +174,9 @@ public final class BlockStateBuilder extends TypedJsonObject {
                     or.add(a.getKey(),a.getValue());
                     condit.remove(a.getKey());
                 }
-                condit.add("OR", or.getData());
+                condit.add("OR", or.build());
             }
-            join("when", new TypedJsonObject().add(name, state).getData());
+            join("when", new TypedJsonObject().add(name, state).build());
             return this;
         }
 
@@ -191,7 +187,7 @@ public final class BlockStateBuilder extends TypedJsonObject {
          * @return this
          */
         public Case apply(Variant settings) {
-            root.add("apply", settings.getData());
+            root.add("apply", settings.build());
             return this;
         }
 
@@ -202,7 +198,7 @@ public final class BlockStateBuilder extends TypedJsonObject {
          * @return this
          */
         public Case weightedApply(Variant settings) {
-            join("apply", settings.getData());
+            join("apply", settings.build());
             return this;
         }
     }

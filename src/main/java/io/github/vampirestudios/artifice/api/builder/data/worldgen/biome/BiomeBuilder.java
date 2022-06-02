@@ -3,9 +3,6 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen.biome;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.resource.JsonResource;
-import io.github.vampirestudios.artifice.api.util.Processor;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.GenerationStep;
@@ -52,7 +49,7 @@ public class BiomeBuilder extends TypedJsonObject {
     }
 
     public BiomeBuilder effects(BiomeEffectsBuilder biomeEffectsBuilder) {
-        join("effects", biomeEffectsBuilder.getData());
+        join("effects", biomeEffectsBuilder.build());
         return this;
     }
 
@@ -60,14 +57,14 @@ public class BiomeBuilder extends TypedJsonObject {
         TypedJsonObject spawnDensityBuilder = new TypedJsonObject();
         spawnDensityBuilder.add("energy_budget", spawnDensityBuilderProcessor.energyBudget)
                 .add("charge", spawnDensityBuilderProcessor.charge);
-        join(entityID, spawnDensityBuilder.getData());
+        join(entityID, spawnDensityBuilder.build());
         return this;
     }
 
     public BiomeBuilder addSpawnEntry(MobCategory spawnGroup, BiomeSpawnEntryBuilder biomeSpawnEntryBuilderProcessor) {
         this.root.getAsJsonObject("spawners").get(spawnGroup.getName())
                 .getAsJsonArray()
-                .add(biomeSpawnEntryBuilderProcessor.getData());
+                .add(biomeSpawnEntryBuilderProcessor.build());
         return this;
     }
 

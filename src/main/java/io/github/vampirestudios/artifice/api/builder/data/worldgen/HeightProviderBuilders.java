@@ -10,7 +10,7 @@ public class HeightProviderBuilders extends TypedJsonObject {
 	}
 
 	public HeightProviderBuilders constant(String name, YOffsetBuilder obj) {
-		join(name, obj.getData());
+		join(name, obj.build());
 		return this;
 	}
 

@@ -1,7 +1,6 @@
 package io.github.vampirestudios.artifice.api.builder.data.recipe;
 
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 import net.minecraft.resources.ResourceLocation;
 
 /**
@@ -17,7 +16,7 @@ public final class StonecuttingRecipeBuilder extends RecipeBuilder<StonecuttingR
      * @return this
      */
     public StonecuttingRecipeBuilder ingredientItem(ResourceLocation id) {
-        root.add("ingredient", new JsonObjectBuilder().add("item", id.toString()).getData());
+        root.add("ingredient", new JsonObjectBuilder().add("item", id.toString()).build());
         return this;
     }
 
@@ -27,7 +26,7 @@ public final class StonecuttingRecipeBuilder extends RecipeBuilder<StonecuttingR
      * @return this
      */
     public StonecuttingRecipeBuilder ingredientTag(ResourceLocation id) {
-        root.add("ingredient", new JsonObjectBuilder().add("tag", id.toString()).getData());
+        root.add("ingredient", new JsonObjectBuilder().add("tag", id.toString()).build());
         return this;
     }
 

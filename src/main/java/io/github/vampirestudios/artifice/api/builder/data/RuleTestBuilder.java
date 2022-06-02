@@ -2,7 +2,6 @@ package io.github.vampirestudios.artifice.api.builder.data;
 
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class RuleTestBuilder extends TypedJsonObject {
 
@@ -44,7 +43,7 @@ public class RuleTestBuilder extends TypedJsonObject {
         }
 
         public BlockStateRuleTestBuilder blockState(StateDataBuilder processor) {
-            join("block_state", processor.getData());
+            join("block_state", processor.build());
             return this;
         }
     }
@@ -88,7 +87,7 @@ public class RuleTestBuilder extends TypedJsonObject {
         }
 
         public RandomBlockStateMatchRuleTestBuilder blockState(StateDataBuilder processor) {
-            join("block_state", processor.getData());
+            join("block_state", processor.build());
             return this;
         }
 

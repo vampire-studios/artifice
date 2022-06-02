@@ -3,8 +3,6 @@ package io.github.vampirestudios.artifice.api.builder.data.dimension;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.structure.SpawnsBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 
 public class ChunkGeneratorTypeBuilder extends TypedJsonObject {
 
@@ -30,10 +28,16 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonObject {
      * @return
      */
     public <T extends BiomeSourceBuilder> ChunkGeneratorTypeBuilder biomeSource(T biomeSourceBuilder) {
-        join("biome_source", biomeSourceBuilder.getData());
+        join("biome_source", biomeSourceBuilder.build());
         return this;
     }
 
+    public static NoiseChunkGeneratorTypeBuilder NoiseChunks() {
+        return new NoiseChunkGeneratorTypeBuilder();
+    }
+    public static FlatChunkGeneratorTypeBuilder FlatChunks() {
+        return new FlatChunkGeneratorTypeBuilder();
+    }
 
     public static class NoiseChunkGeneratorTypeBuilder extends ChunkGeneratorTypeBuilder {
         public NoiseChunkGeneratorTypeBuilder() {
@@ -155,7 +159,7 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonObject {
             for (LayersBuilder spawnsBuilder : layersBuilder) {
                 aaa.add(new TypedJsonObject()
                         .add("block", spawnsBuilder.block())
-                        .add("height", spawnsBuilder.height()).getData());
+                        .add("height", spawnsBuilder.height()).build());
             }
             this.join(getObj("settings"),"layers", aaa);
             return this;

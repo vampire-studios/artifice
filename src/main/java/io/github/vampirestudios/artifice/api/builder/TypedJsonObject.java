@@ -23,7 +23,7 @@ public class TypedJsonObject {
     public JsonObject getData(){
         return this.root;
     }
-    public JsonObject buildCopy(){
+    public JsonObject build(){
         return merge(new JsonObject());
     }
 
@@ -57,7 +57,7 @@ public class TypedJsonObject {
 
     public static JsonArray arrayOf(TypedJsonObject... values){
         JsonArray array = new JsonArray();
-        for(TypedJsonObject i : values) array.add(i.getData());
+        for(TypedJsonObject i : values) array.add(i.build());
         return array;
     }
 
@@ -121,7 +121,7 @@ public class TypedJsonObject {
     }
 
     public TypedJsonObject add(String key, TypedJsonObject value){
-        this.root.add(key,value.getData());
+        this.root.add(key,value.build());
         return this;
     }
 

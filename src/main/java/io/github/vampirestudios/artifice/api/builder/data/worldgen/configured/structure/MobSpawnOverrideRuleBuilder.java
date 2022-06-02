@@ -3,7 +3,6 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.s
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.resource.JsonResource;
 
 public class MobSpawnOverrideRuleBuilder extends TypedJsonObject {
 	protected MobSpawnOverrideRuleBuilder() {
@@ -18,7 +17,7 @@ public class MobSpawnOverrideRuleBuilder extends TypedJsonObject {
 			aaa.add(new TypedJsonObject().add("type", spawnsBuilder.type())
 					.add("weight", spawnsBuilder.weight())
 					.add("minCount", spawnsBuilder.minCount())
-					.add("maxCount", spawnsBuilder.maxCount()).getData());
+					.add("maxCount", spawnsBuilder.maxCount()).build());
 		}
 		result.join("spawns", aaa);
 		return result;

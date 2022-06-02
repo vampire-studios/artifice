@@ -26,6 +26,16 @@ public class BiomeSourceBuilder extends TypedJsonObject {
         return (T) this;
     }
 
+    public static MultiNoiseBiomeSourceBuilder multiNoise() {
+        return new MultiNoiseBiomeSourceBuilder();
+    }
+    public static MultiNoiseBiomeSourceBuilder.BiomeBuilder noiseBiome(String id, MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder biomeSettingsBuilder) {
+        return new MultiNoiseBiomeSourceBuilder.BiomeBuilder().biome(id).parameters(biomeSettingsBuilder);
+    }
+    public static MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder noiseBiomeParameters() {
+        return new MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder();
+    }
+
     public static class MultiNoiseBiomeSourceBuilder extends BiomeSourceBuilder {
         public MultiNoiseBiomeSourceBuilder() {
             super();
@@ -65,7 +75,7 @@ public class BiomeSourceBuilder extends TypedJsonObject {
              * Build biome parameters.
              */
             public BiomeBuilder parameters(BiomeParametersBuilder biomeSettingsBuilder) {
-                join("parameters", biomeSettingsBuilder.getData());
+                join("parameters", biomeSettingsBuilder.build());
                 return this;
             }
         }
@@ -168,6 +178,9 @@ public class BiomeSourceBuilder extends TypedJsonObject {
         }
     }
 
+    public static CheckerboardBiomeSourceBuilder checkerBoard(int scale, String... biomeID) {
+        return new CheckerboardBiomeSourceBuilder().scale(scale).addBiome(biomeID);
+    }
     public static class CheckerboardBiomeSourceBuilder extends BiomeSourceBuilder {
 
         public CheckerboardBiomeSourceBuilder() {
@@ -183,12 +196,15 @@ public class BiomeSourceBuilder extends TypedJsonObject {
             return this;
         }
 
-        public CheckerboardBiomeSourceBuilder addBiome(String biomeId) {
-            this.root.getAsJsonArray("biomes").add(biomeId);
+        public CheckerboardBiomeSourceBuilder addBiome(String... biomeId) {
+            this.join("biomes", arrayOf(biomeId));
             return this;
         }
     }
 
+    public static FixedBiomeSourceBuilder fixed(String biomeID) {
+        return new FixedBiomeSourceBuilder().biome(biomeID);
+    }
     public static class FixedBiomeSourceBuilder extends BiomeSourceBuilder {
         public FixedBiomeSourceBuilder() {
             super();

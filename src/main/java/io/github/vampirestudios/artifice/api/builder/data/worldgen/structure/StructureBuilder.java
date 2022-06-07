@@ -2,13 +2,13 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen.structure;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config.FeatureConfigBuilder;
-import io.github.vampirestudios.artifice.api.resource.JsonResource;
+import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.structure.SpawnOverridesBuilder;
 
-public class StructureBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
+public class StructureBuilder extends TypedJsonObject {
 	public StructureBuilder() {
-		super(new JsonObject(), JsonResource::new);
+		super(new JsonObject());
 	}
 
 	public StructureBuilder type(String type) {
@@ -44,12 +44,12 @@ public class StructureBuilder extends TypedJsonBuilder<JsonResource<JsonObject>>
 	}
 
 	public StructureBuilder spawnOverrides(SpawnOverridesBuilder processor) {
-		with("spawn_overrides", JsonObject::new, processor::buildTo);
+		this.join("spawn_overrides", processor.build());
 		return this;
 	}
 
 	public StructureBuilder featureConfig(FeatureConfigBuilder processor) {
-		with("config", JsonObject::new, processor::buildTo);
+		this.join("config", processor.build());
 		return this;
 	}
 }

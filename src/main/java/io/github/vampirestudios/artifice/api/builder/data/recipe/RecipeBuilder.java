@@ -2,7 +2,6 @@ package io.github.vampirestudios.artifice.api.builder.data.recipe;
 
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import net.minecraft.resources.ResourceLocation;
 
 /**
@@ -13,7 +12,9 @@ import net.minecraft.resources.ResourceLocation;
  */
 @SuppressWarnings("unchecked")
 public abstract class RecipeBuilder<T extends RecipeBuilder<T>> extends TypedJsonObject {
-    protected RecipeBuilder() { super(new JsonObject()); }
+	protected RecipeBuilder() {
+		super(new JsonObject());
+	}
 
 	/**
 	 * Set the type of this recipe.

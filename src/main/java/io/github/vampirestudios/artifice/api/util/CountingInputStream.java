@@ -9,7 +9,9 @@ public class CountingInputStream extends InputStream {
 	private final InputStream input;
 	private int read;
 
-	public CountingInputStream(InputStream input) {this.input = input;}
+	public CountingInputStream(InputStream input) {
+		this.input = input;
+	}
 
 	@Override
 	public int read() throws IOException {

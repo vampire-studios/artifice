@@ -6,9 +6,9 @@ import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 
 public class ChunkGeneratorTypeBuilder extends TypedJsonObject {
 
-    protected ChunkGeneratorTypeBuilder() {
-        super(new JsonObject());
-    }
+	protected ChunkGeneratorTypeBuilder() {
+		super(new JsonObject());
+	}
 
 	/**
 	 * Set the type (ID) of the Chunk Generator.
@@ -22,23 +22,25 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonObject {
 		return (T) this;
 	}
 
-    /**
-     * Set the biome Source.
-     * @param biomeSourceBuilder
-     * @param <T>
-     * @return
-     */
-    public <T extends BiomeSourceBuilder> ChunkGeneratorTypeBuilder biomeSource(T biomeSourceBuilder) {
-        join("biome_source", biomeSourceBuilder.build());
-        return this;
-    }
+	/**
+	 * Set the biome Source.
+	 *
+	 * @param biomeSourceBuilder
+	 * @param <T>
+	 * @return
+	 */
+	public <T extends BiomeSourceBuilder> ChunkGeneratorTypeBuilder biomeSource(T biomeSourceBuilder) {
+		join("biome_source", biomeSourceBuilder.build());
+		return this;
+	}
 
-    public static NoiseChunkGeneratorTypeBuilder NoiseChunks() {
-        return new NoiseChunkGeneratorTypeBuilder();
-    }
-    public static FlatChunkGeneratorTypeBuilder FlatChunks() {
-        return new FlatChunkGeneratorTypeBuilder();
-    }
+	public static NoiseChunkGeneratorTypeBuilder NoiseChunks() {
+		return new NoiseChunkGeneratorTypeBuilder();
+	}
+
+	public static FlatChunkGeneratorTypeBuilder FlatChunks() {
+		return new FlatChunkGeneratorTypeBuilder();
+	}
 
 	public static class NoiseChunkGeneratorTypeBuilder extends ChunkGeneratorTypeBuilder {
 		public NoiseChunkGeneratorTypeBuilder() {
@@ -154,14 +156,14 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonObject {
 		 * @return this
 		 */
 		public FlatChunkGeneratorTypeBuilder addLayer(LayersBuilder... layersBuilder) {
-            JsonArray aaa = new JsonArray();
-            for (LayersBuilder spawnsBuilder : layersBuilder) {
-                aaa.add(new TypedJsonObject()
-                        .add("block", spawnsBuilder.block())
-                        .add("height", spawnsBuilder.height()).build());
-            }
-            this.join(getObj("settings"),"layers", aaa);
-            return this;
+			JsonArray aaa = new JsonArray();
+			for (LayersBuilder spawnsBuilder : layersBuilder) {
+				aaa.add(new TypedJsonObject()
+						.add("block", spawnsBuilder.block())
+						.add("height", spawnsBuilder.height()).build());
+			}
+			this.join(getObj("settings"), "layers", aaa);
+			return this;
 		}
 
 		public record LayersBuilder(String block, int height) {

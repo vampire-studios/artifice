@@ -9,15 +9,15 @@ public class OreFeatureConfigBuilder extends FeatureConfigBuilder {
 		super();
 	}
 
-    public <R extends RuleTestBuilder> OreFeatureConfigBuilder targetRule(R processor) {
-        join("target", processor.build());
-        return this;
-    }
+	public <R extends RuleTestBuilder> OreFeatureConfigBuilder targetRule(R processor) {
+		join("target", processor.build());
+		return this;
+	}
 
-    public OreFeatureConfigBuilder state(StateDataBuilder processor) {
-        join("state", processor.build());
-        return this;
-    }
+	public OreFeatureConfigBuilder state(StateDataBuilder processor) {
+		join("state", processor.build());
+		return this;
+	}
 
 	public OreFeatureConfigBuilder size(int size) {
 		if (size > 64) throw new IllegalArgumentException("size can't be higher than 64! Found " + size);

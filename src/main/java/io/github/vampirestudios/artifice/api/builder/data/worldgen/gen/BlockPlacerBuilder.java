@@ -5,9 +5,9 @@ import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 
 public class BlockPlacerBuilder extends TypedJsonObject {
 
-    public BlockPlacerBuilder() {
-        super(new JsonObject());
-    }
+	public BlockPlacerBuilder() {
+		super(new JsonObject());
+	}
 
 	public <P extends BlockPlacerBuilder> P type(String type) {
 		this.root.addProperty("type", type);

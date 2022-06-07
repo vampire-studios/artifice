@@ -5,9 +5,9 @@ import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 
 public class BiomeEffectsBuilder extends TypedJsonObject {
 
-    public BiomeEffectsBuilder() {
-        super(new JsonObject());
-    }
+	public BiomeEffectsBuilder() {
+		super(new JsonObject());
+	}
 
 	/**
 	 * @param fog_color RGB value.
@@ -77,31 +77,31 @@ public class BiomeEffectsBuilder extends TypedJsonObject {
 		return this;
 	}
 
-    public BiomeEffectsBuilder moodSound(BiomeMoodSoundBuilder biomeMoodSoundBuilder) {
-        join("mood_sound", biomeMoodSoundBuilder.build());
-        return this;
-    }
+	public BiomeEffectsBuilder moodSound(BiomeMoodSoundBuilder biomeMoodSoundBuilder) {
+		join("mood_sound", biomeMoodSoundBuilder.build());
+		return this;
+	}
 
-    public BiomeEffectsBuilder additionsSound(BiomeAdditionsSoundBuilder biomeAdditionsSoundBuilder) {
-        join("additions_sound", biomeAdditionsSoundBuilder.build());
-        return this;
-    }
+	public BiomeEffectsBuilder additionsSound(BiomeAdditionsSoundBuilder biomeAdditionsSoundBuilder) {
+		join("additions_sound", biomeAdditionsSoundBuilder.build());
+		return this;
+	}
 
-    public BiomeEffectsBuilder music(BiomeMusicSoundBuilder biomeMusicSoundBuilder) {
-        join("music", biomeMusicSoundBuilder.build());
-        return this;
-    }
+	public BiomeEffectsBuilder music(BiomeMusicSoundBuilder biomeMusicSoundBuilder) {
+		join("music", biomeMusicSoundBuilder.build());
+		return this;
+	}
 
-    public BiomeEffectsBuilder particle(BiomeParticleConfigBuilder biomeParticleConfigBuilder) {
-        join("particle", biomeParticleConfigBuilder.build());
-        return this;
-    }
+	public BiomeEffectsBuilder particle(BiomeParticleConfigBuilder biomeParticleConfigBuilder) {
+		join("particle", biomeParticleConfigBuilder.build());
+		return this;
+	}
 
-    public static class BiomeMoodSoundBuilder extends TypedJsonObject {
+	public static class BiomeMoodSoundBuilder extends TypedJsonObject {
 
-        public BiomeMoodSoundBuilder() {
-            super(new JsonObject());
-        }
+		public BiomeMoodSoundBuilder() {
+			super(new JsonObject());
+		}
 
 		public BiomeMoodSoundBuilder tickDelay(int tick_delay) {
 			this.root.addProperty("tick_delay", tick_delay);
@@ -124,11 +124,11 @@ public class BiomeEffectsBuilder extends TypedJsonObject {
 		}
 	}
 
-    public static class BiomeMusicSoundBuilder extends TypedJsonObject {
+	public static class BiomeMusicSoundBuilder extends TypedJsonObject {
 
-        public BiomeMusicSoundBuilder() {
-            super(new JsonObject());
-        }
+		public BiomeMusicSoundBuilder() {
+			super(new JsonObject());
+		}
 
 		public BiomeMusicSoundBuilder minDelay(int min_delay) {
 			this.root.addProperty("min_delay", min_delay);
@@ -151,11 +151,11 @@ public class BiomeEffectsBuilder extends TypedJsonObject {
 		}
 	}
 
-    public static class BiomeAdditionsSoundBuilder extends TypedJsonObject {
+	public static class BiomeAdditionsSoundBuilder extends TypedJsonObject {
 
-        public BiomeAdditionsSoundBuilder() {
-            super(new JsonObject());
-        }
+		public BiomeAdditionsSoundBuilder() {
+			super(new JsonObject());
+		}
 
 		public BiomeAdditionsSoundBuilder tickChance(double tick_chance) {
 			this.root.addProperty("tick_chance", tick_chance);
@@ -168,11 +168,11 @@ public class BiomeEffectsBuilder extends TypedJsonObject {
 		}
 	}
 
-    public static class BiomeParticleConfigBuilder extends TypedJsonObject {
+	public static class BiomeParticleConfigBuilder extends TypedJsonObject {
 
-        public BiomeParticleConfigBuilder() {
-            super(new JsonObject());
-        }
+		public BiomeParticleConfigBuilder() {
+			super(new JsonObject());
+		}
 
 		public BiomeParticleConfigBuilder probability(float probability) {
 			this.root.addProperty("probability", probability);

@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.io.IOException;
 
 public class ArtificeTestClientMod implements ArtificeAssetPackEntrypoint {
-	private static ResourceLocation makeResourceLocation(String name) {
+	public static ResourceLocation makeResourceLocation(String name) {
 		return new ResourceLocation("artifice", name);
 	}
 

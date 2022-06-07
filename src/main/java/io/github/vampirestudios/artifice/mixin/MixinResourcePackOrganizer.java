@@ -28,7 +28,7 @@ public class MixinResourcePackOrganizer {
 
 	private boolean isVisible(Pack profile) {
 		return !(profile instanceof ArtificeResourcePackContainer)
-										|| ((ArtificeResourcePackContainer) profile).isVisible();
+				|| ((ArtificeResourcePackContainer) profile).isVisible();
 	}
 }
 

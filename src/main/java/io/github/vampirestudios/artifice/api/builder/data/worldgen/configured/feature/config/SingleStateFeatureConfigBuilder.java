@@ -8,8 +8,8 @@ public class SingleStateFeatureConfigBuilder extends FeatureConfigBuilder {
 		super();
 	}
 
-    public SingleStateFeatureConfigBuilder state(StateDataBuilder processor) {
-        join("state", processor.build());
-        return this;
-    }
+	public SingleStateFeatureConfigBuilder state(StateDataBuilder processor) {
+		join("state", processor.build());
+		return this;
+	}
 }

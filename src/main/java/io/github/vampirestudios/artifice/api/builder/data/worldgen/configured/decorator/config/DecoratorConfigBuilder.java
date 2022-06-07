@@ -5,7 +5,7 @@ import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 
 public class DecoratorConfigBuilder extends TypedJsonObject {
 
-    public DecoratorConfigBuilder() {
-        super(new JsonObject());
-    }
+	public DecoratorConfigBuilder() {
+		super(new JsonObject());
+	}
 }

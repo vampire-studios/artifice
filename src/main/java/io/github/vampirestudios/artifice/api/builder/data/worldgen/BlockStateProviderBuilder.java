@@ -7,17 +7,18 @@ import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
 
 public class BlockStateProviderBuilder extends TypedJsonObject {
 
-    public BlockStateProviderBuilder() {
-        super(new JsonObject());
-    }
+	public BlockStateProviderBuilder() {
+		super(new JsonObject());
+	}
 
-    public <P extends BlockStateProviderBuilder> P type(String type) {
-        this.root.addProperty("type", type);
-        return (P)this;
-    }
-    public static SimpleBlockStateProviderBuilder simpleProvider(StateDataBuilder processor){
-        return new SimpleBlockStateProviderBuilder().state(processor);
-    }
+	public <P extends BlockStateProviderBuilder> P type(String type) {
+		this.root.addProperty("type", type);
+		return (P) this;
+	}
+
+	public static SimpleBlockStateProviderBuilder simpleProvider(StateDataBuilder processor) {
+		return new SimpleBlockStateProviderBuilder().state(processor);
+	}
 
 	public static class SimpleBlockStateProviderBuilder extends BlockStateProviderBuilder {
 		public SimpleBlockStateProviderBuilder() {
@@ -25,11 +26,11 @@ public class BlockStateProviderBuilder extends TypedJsonObject {
 			this.type("minecraft:simple_state_provider");
 		}
 
-        public SimpleBlockStateProviderBuilder state(StateDataBuilder processor) {
-            join("state", processor.build());
-            return this;
-        }
-    }
+		public SimpleBlockStateProviderBuilder state(StateDataBuilder processor) {
+			join("state", processor.build());
+			return this;
+		}
+	}
 
 	public static class WeightedBlockStateProviderBuilder extends BlockStateProviderBuilder {
 		public WeightedBlockStateProviderBuilder() {
@@ -38,14 +39,14 @@ public class BlockStateProviderBuilder extends TypedJsonObject {
 			this.root.add("entries", new JsonArray());
 		}
 
-        public WeightedBlockStateProviderBuilder addEntry(int weight, StateDataBuilder processor) {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("weight", weight);
-            jsonObject.add("data", processor.build());
-            this.root.getAsJsonArray("entries").add(jsonObject);
-            return this;
-        }
-    }
+		public WeightedBlockStateProviderBuilder addEntry(int weight, StateDataBuilder processor) {
+			JsonObject jsonObject = new JsonObject();
+			jsonObject.addProperty("weight", weight);
+			jsonObject.add("data", processor.build());
+			this.root.getAsJsonArray("entries").add(jsonObject);
+			return this;
+		}
+	}
 
 	public static class PlainFlowerBlockStateProviderBuilder extends BlockStateProviderBuilder {
 		public PlainFlowerBlockStateProviderBuilder() {
@@ -67,9 +68,9 @@ public class BlockStateProviderBuilder extends TypedJsonObject {
 			this.type("minecraft:pillar_state_provider");
 		}
 
-        public PillarBlockStateProviderBuilder state(StateDataBuilder processor) {
-            join("state", processor.build());
-            return this;
-        }
-    }
+		public PillarBlockStateProviderBuilder state(StateDataBuilder processor) {
+			join("state", processor.build());
+			return this;
+		}
+	}
 }

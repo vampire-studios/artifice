@@ -16,16 +16,16 @@ public class RandomFeatureConfigBuilder extends FeatureConfigBuilder {
 		return this;
 	}
 
-    public RandomFeatureConfigBuilder addConfiguredFeature(RandomFeatureEntryBuilder processor) {
-        this.root.getAsJsonArray("features").add(processor.build());
-        return this;
-    }
+	public RandomFeatureConfigBuilder addConfiguredFeature(RandomFeatureEntryBuilder processor) {
+		this.root.getAsJsonArray("features").add(processor.build());
+		return this;
+	}
 
-    public static class RandomFeatureEntryBuilder extends TypedJsonObject {
+	public static class RandomFeatureEntryBuilder extends TypedJsonObject {
 
-        public RandomFeatureEntryBuilder() {
-            super(new JsonObject());
-        }
+		public RandomFeatureEntryBuilder() {
+			super(new JsonObject());
+		}
 
 		public RandomFeatureEntryBuilder chance(float chance) {
 			if (chance > 1.0F) throw new IllegalArgumentException("chance can't be higher than 1.0F! Found " + chance);

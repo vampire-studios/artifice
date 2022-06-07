@@ -7,9 +7,9 @@ import io.github.vampirestudios.artifice.api.builder.data.worldgen.HeightProvide
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.YOffsetBuilder;
 
 public class ConfiguredCarverBuilder extends TypedJsonObject {
-    public ConfiguredCarverBuilder() {
-        super(new JsonObject());
-    }
+	public ConfiguredCarverBuilder() {
+		super(new JsonObject());
+	}
 
 	/**
 	 * @param id ID of an existing carver.
@@ -20,35 +20,35 @@ public class ConfiguredCarverBuilder extends TypedJsonObject {
 		return this;
 	}
 
-    public ConfiguredCarverBuilder y(HeightProviderBuilders processor) {
-        join(this.root.getAsJsonObject("config"), "y", processor.build());
-        return this;
-    }
+	public ConfiguredCarverBuilder y(HeightProviderBuilders processor) {
+		join(this.root.getAsJsonObject("config"), "y", processor.build());
+		return this;
+	}
 
-    public ConfiguredCarverBuilder yScale(FloatProviderBuilders processor) {
-        join(this.root.getAsJsonObject("config"), "yScale", processor.build());
-        return this;
-    }
+	public ConfiguredCarverBuilder yScale(FloatProviderBuilders processor) {
+		join(this.root.getAsJsonObject("config"), "yScale", processor.build());
+		return this;
+	}
 
-    public ConfiguredCarverBuilder lavaLevel(YOffsetBuilder obj) {
-        join(this.root.getAsJsonObject("config"), "lava_level", obj.build());
-        return this;
-    }
+	public ConfiguredCarverBuilder lavaLevel(YOffsetBuilder obj) {
+		join(this.root.getAsJsonObject("config"), "lava_level", obj.build());
+		return this;
+	}
 
-    public ConfiguredCarverBuilder horizontalRadiusModifier(FloatProviderBuilders processor) {
-        join(this.root.getAsJsonObject("config"), "horizontal_radius_multiplier", processor.build());
-        return this;
-    }
+	public ConfiguredCarverBuilder horizontalRadiusModifier(FloatProviderBuilders processor) {
+		join(this.root.getAsJsonObject("config"), "horizontal_radius_multiplier", processor.build());
+		return this;
+	}
 
-    public ConfiguredCarverBuilder verticalRadiusModifier(FloatProviderBuilders processor) {
-        join(this.root.getAsJsonObject("config"), "vertical_radius_multiplier", processor.build());
-        return this;
-    }
+	public ConfiguredCarverBuilder verticalRadiusModifier(FloatProviderBuilders processor) {
+		join(this.root.getAsJsonObject("config"), "vertical_radius_multiplier", processor.build());
+		return this;
+	}
 
-    public ConfiguredCarverBuilder floorLevel(FloatProviderBuilders processor) {
-        join(this.root.getAsJsonObject("config"), "floor_level", processor.build());
-        return this;
-    }
+	public ConfiguredCarverBuilder floorLevel(FloatProviderBuilders processor) {
+		join(this.root.getAsJsonObject("config"), "floor_level", processor.build());
+		return this;
+	}
 
 	public ConfiguredCarverBuilder probability(float probability) {
 		try {

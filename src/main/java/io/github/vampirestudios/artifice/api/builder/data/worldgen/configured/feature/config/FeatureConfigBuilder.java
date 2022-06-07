@@ -1,25 +1,10 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.config;
 
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
-import net.minecraft.resources.ResourceLocation;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 
 public class FeatureConfigBuilder extends TypedJsonObject {
 	public FeatureConfigBuilder() {
-        super(new JsonObject());
-	}
-
-	public FeatureConfigBuilder startPool(ResourceLocation startPool) {
-		return startPool(startPool.toString());
-	}
-
-	public FeatureConfigBuilder startPool(String startPool) {
-		jsonString("start_pool", startPool);
-		return this;
-	}
-
-	public FeatureConfigBuilder size(Number size) {
-		jsonNumber("size", size);
-		return this;
+		super(new JsonObject());
 	}
 }

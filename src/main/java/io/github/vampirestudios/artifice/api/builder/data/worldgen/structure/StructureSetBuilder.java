@@ -1,27 +1,27 @@
 package io.github.vampirestudios.artifice.api.builder.data.worldgen.structure;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
-import io.github.vampirestudios.artifice.api.resource.JsonResource;
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType;
 
-public class StructureSetBuilder extends TypedJsonBuilder<JsonResource<JsonObject>> {
+public class StructureSetBuilder extends TypedJsonObject {
 	public StructureSetBuilder() {
-		super(new JsonObject(), JsonResource::new);
+		super(new JsonObject());
 	}
 
 	public StructureSetBuilder structures(StructureEntry[] structures) {
-		this.jsonArray("structures", jsonArrayBuilder -> {
-			for (StructureEntry structure : structures) {
-				JsonObject structureEntry = new JsonObject();
-				structureEntry.addProperty("structure", structure.structure.toString());
-				structureEntry.addProperty("weight", structure.weight);
-				jsonArrayBuilder.add(structureEntry);
-			}
-		});
+		JsonArray array = new JsonArray();
+		for (StructureEntry structure : structures) {
+			JsonObject structureEntry = new JsonObject();
+			structureEntry.addProperty("structure", structure.structure.toString());
+			structureEntry.addProperty("weight", structure.weight);
+			array.add(structureEntry);
+		}
+		this.add("structures", arrayOf(array));
 		return this;
 	}
 

@@ -10,8 +10,10 @@ import net.minecraft.resources.ResourceLocation;
  *
  * @see <a href="https://minecraft.gamepedia.com/Tag" target="_blank">Minecraft Wiki</a>
  */
-public final class TagBuilder extends TypedJsonObject {
-    public TagBuilder() { super(new JsonObject()); }
+public final class TagBuilder<T> extends TypedJsonObject {
+	public TagBuilder() {
+		super(new JsonObject());
+	}
 
 	/**
 	 * Set whether this tag should override or append to versions of the same tag in lower priority data packs.
@@ -19,42 +21,56 @@ public final class TagBuilder extends TypedJsonObject {
 	 * @param replace Whether to replace.
 	 * @return this
 	 */
-	public TagBuilder replace(boolean replace) {
+	public TagBuilder<T> replace(boolean replace) {
 		root.addProperty("replace", replace);
 		return this;
 	}
 
-    /**
-     * Add a value to this tag.
-     * @param id The value ID.
-     * @return this
-     */
-    public TagBuilder value(ResourceLocation id) {
-            join("values", arrayOf(id.toString()) );
-        return this;
-    }
+	/**
+	 * Add a value to this tag.
+	 *
+	 * @param id The value ID.
+	 * @return this
+	 */
+	public TagBuilder<T> value(ResourceLocation id) {
+		join("values", arrayOf(id.toString()));
+		return this;
+	}
 
-    /**
-     * Add multiple values to this tag.
-     * @param ids The value IDs.
-     * @return this
-     */
-    public TagBuilder values(ResourceLocation... ids) {
-        JsonArray array = new JsonArray();
-        for(ResourceLocation id : ids){
-            array.add(id.toString());
-        }
-        join("values", array);
-        return this;
-    }
+	/**
+	 * Add a value to this tag.
+	 *
+	 * @param id The value ID.
+	 * @return this
+	 */
+	public TagBuilder<T> value(T id) {
+		join("values", arrayOf(id.toString()));
+		return this;
+	}
 
-    /**
-     * Include another tag into this tag's values.
-     * @param tagId The tag ID.
-     * @return this
-     */
-    public TagBuilder include(ResourceLocation tagId) {
-        join("values", arrayOf("#"+tagId.toString()));
-        return this;
-    }
+	/**
+	 * Add multiple values to this tag.
+	 *
+	 * @param ids The value IDs.
+	 * @return this
+	 */
+	public TagBuilder<T> values(ResourceLocation... ids) {
+		JsonArray array = new JsonArray();
+		for (ResourceLocation id : ids) {
+			array.add(id.toString());
+		}
+		join("values", array);
+		return this;
+	}
+
+	/**
+	 * Include another tag into this tag's values.
+	 *
+	 * @param tagId The tag ID.
+	 * @return this
+	 */
+	public TagBuilder<T> include(ResourceLocation tagId) {
+		join("values", arrayOf("#" + tagId.toString()));
+		return this;
+	}
 }

@@ -11,20 +11,20 @@ public class DiskFeatureConfigBuilder extends FeatureConfigBuilder {
 		this.root.add("targets", new JsonArray());
 	}
 
-    public DiskFeatureConfigBuilder state(StateDataBuilder processor) {
-        join("state", processor.build());
-        return this;
-    }
+	public DiskFeatureConfigBuilder state(StateDataBuilder processor) {
+		join("state", processor.build());
+		return this;
+	}
 
 	public DiskFeatureConfigBuilder radius(int radius) {
 		this.root.addProperty("radius", radius);
 		return this;
 	}
 
-    public DiskFeatureConfigBuilder radius(UniformIntDistributionBuilder processor) {
-        join("radius", processor.build());
-        return this;
-    }
+	public DiskFeatureConfigBuilder radius(UniformIntDistributionBuilder processor) {
+		join("radius", processor.build());
+		return this;
+	}
 
 	public DiskFeatureConfigBuilder halfHeight(int halfHeight) {
 		if (halfHeight > 4)
@@ -35,8 +35,8 @@ public class DiskFeatureConfigBuilder extends FeatureConfigBuilder {
 		return this;
 	}
 
-    public DiskFeatureConfigBuilder addTarget(StateDataBuilder processor) {
-        this.root.getAsJsonArray("targets").add(processor.build());
-        return this;
-    }
+	public DiskFeatureConfigBuilder addTarget(StateDataBuilder processor) {
+		this.root.getAsJsonArray("targets").add(processor.build());
+		return this;
+	}
 }

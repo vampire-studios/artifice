@@ -9,18 +9,18 @@ public class NetherrackReplaceBlobsFeatureConfigBuilder extends FeatureConfigBui
 		super();
 	}
 
-    public NetherrackReplaceBlobsFeatureConfigBuilder radius(UniformIntDistributionBuilder processor) {
-        join("radius", processor.build());
-        return this;
-    }
+	public NetherrackReplaceBlobsFeatureConfigBuilder radius(UniformIntDistributionBuilder processor) {
+		join("radius", processor.build());
+		return this;
+	}
 
-    public NetherrackReplaceBlobsFeatureConfigBuilder target(StateDataBuilder processor) {
-        join("target", processor.build());
-        return this;
-    }
+	public NetherrackReplaceBlobsFeatureConfigBuilder target(StateDataBuilder processor) {
+		join("target", processor.build());
+		return this;
+	}
 
-    public NetherrackReplaceBlobsFeatureConfigBuilder state(StateDataBuilder processor) {
-        join("state", processor.build());
-        return this;
-    }
+	public NetherrackReplaceBlobsFeatureConfigBuilder state(StateDataBuilder processor) {
+		join("state", processor.build());
+		return this;
+	}
 }

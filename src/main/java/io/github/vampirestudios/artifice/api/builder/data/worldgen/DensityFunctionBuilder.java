@@ -2,7 +2,6 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen;
 
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.DensityFunction;
 import net.minecraft.world.level.levelgen.synth.NormalNoise.NoiseParameters;
@@ -12,40 +11,40 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 		super(new JsonObject());
 	}
 
-	@Deprecated
-	public DensityFunctionBuilder shiftX(ResourceKey<DensityFunction> noise) {
-		root.addProperty("shift_x", noise.location().toString());
-		return this;
+	public static DensityFunctionBuilder shiftX(ResourceKey<DensityFunction> noise) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("shift_x", noise.location().toString());
+		return builder;
 	}
 
-	@Deprecated
-	public DensityFunctionBuilder shiftX(Number number) {
-		root.addProperty("shift_x", number);
-		return this;
+	public static DensityFunctionBuilder shiftX(Number number) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("shift_x", number);
+		return builder;
 	}
 
-	@Deprecated
-	public DensityFunctionBuilder shiftY(ResourceKey<DensityFunction> noise) {
-		root.addProperty("shift_y", noise.location().toString());
-		return this;
+	public static DensityFunctionBuilder shiftY(ResourceKey<DensityFunction> noise) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("shift_y", noise.location().toString());
+		return builder;
 	}
 
-	@Deprecated
-	public DensityFunctionBuilder shiftY(Number number) {
-		root.addProperty("shift_y", number);
-		return this;
+	public static DensityFunctionBuilder shiftY(Number number) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("shift_y", number);
+		return builder;
 	}
 
-	@Deprecated
-	public DensityFunctionBuilder shiftZ(ResourceKey<DensityFunction> noise) {
-		root.addProperty("shift_z", noise.location().toString());
-		return this;
+	public static DensityFunctionBuilder shiftZ(ResourceKey<DensityFunction> noise) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("shift_z", noise.location().toString());
+		return builder;
 	}
 
-	@Deprecated
-	public DensityFunctionBuilder shiftZ(Number number) {
-		root.addProperty("shift_z", number);
-		return this;
+	public static DensityFunctionBuilder shiftZ(Number number) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("shift_z", number);
+		return builder;
 	}
 
 	/**
@@ -53,12 +52,12 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 *
 	 * @param argument The input density function
 	 * @return {@link DensityFunctionBuilder}
-	 *
-	 * **/
-	public DensityFunctionBuilder abs(DensityFunctionBuilder argument) {
-		this.root.addProperty("type", "minecraft:abs");
-		this.with("argument", JsonObject::new, argument::buildTo);
-		return this;
+	 **/
+	public static DensityFunctionBuilder abs(DensityFunctionBuilder argument) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:abs");
+		builder.add("argument", argument.build());
+		return builder;
 	}
 
 	/**
@@ -67,13 +66,13 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 * @param argument1 The first density function
 	 * @param argument2 The second density function
 	 * @return {@link DensityFunctionBuilder}
-	 *
-	 * **/
-	public DensityFunctionBuilder add(DensityFunctionBuilder argument1, DensityFunctionBuilder argument2) {
-		this.root.addProperty("type", "minecraft:add");
-		this.with("argument1", JsonObject::new, argument1::buildTo);
-		this.with("argument2", JsonObject::new, argument2::buildTo);
-		return this;
+	 **/
+	public static DensityFunctionBuilder add(DensityFunctionBuilder argument1, DensityFunctionBuilder argument2) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:add");
+		builder.add("argument1", argument1.build());
+		builder.add("argument2", argument2.build());
+		return builder;
 	}
 
 	/**
@@ -82,13 +81,13 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 * @param argument1 The first density function
 	 * @param argument2 The second density function
 	 * @return {@link DensityFunctionBuilder}
-	 *
-	 * **/
-	public DensityFunctionBuilder add(Number argument1, DensityFunctionBuilder argument2) {
-		this.root.addProperty("type", "minecraft:add");
-		this.jsonNumber("argument1", argument1);
-		this.with("argument2", JsonObject::new, argument2::buildTo);
-		return this;
+	 **/
+	public static DensityFunctionBuilder add(Number argument1, DensityFunctionBuilder argument2) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:add");
+		builder.add("argument1", argument1);
+		builder.add("argument2", argument2.build());
+		return builder;
 	}
 
 	/**
@@ -97,39 +96,42 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 * @param argument1 The first density function
 	 * @param argument2 The second density function
 	 * @return {@link DensityFunctionBuilder}
-	 *
-	 * **/
-	public DensityFunctionBuilder add(DensityFunctionBuilder argument1, Number argument2) {
-		this.root.addProperty("type", "minecraft:add");
-		this.with("argument1", JsonObject::new, argument1::buildTo);
-		this.jsonNumber("argument2", argument2);
-		return this;
+	 **/
+	public static DensityFunctionBuilder add(DensityFunctionBuilder argument1, Number argument2) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:add");
+		builder.add("argument1", argument1.build());
+		builder.add("argument2", argument2);
+		return builder;
 	}
 
 	/**
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder blendAlpha() {
-		this.jsonString("type", "minecraft:blend_alpha");
-		return this;
+	 **/
+	public static DensityFunctionBuilder blendAlpha() {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:blend_alpha");
+		return builder;
 	}
 
 	/**
 	 * @param argument The input density function
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder blendDensity(DensityFunctionBuilder argument) {
-		this.jsonString("type", "minecraft:blend_density");
-		this.with("argument", JsonObject::new, argument::buildTo);
-		return this;
+	 **/
+	public static DensityFunctionBuilder blendDensity(DensityFunctionBuilder argument) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:blend_density");
+		builder.add("argument", argument.build());
+		return builder;
 	}
 
 	/**
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder blendOffset() {
-		this.jsonString("type", "minecraft:blend_offset");
-		return this;
+	 **/
+	public static DensityFunctionBuilder blendOffset() {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:blend_offset");
+		return builder;
 	}
 
 	/**
@@ -137,11 +139,12 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 *
 	 * @param argument The input density function
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder cache2d(DensityFunctionBuilder argument) {
-		this.jsonString("type", "minecraft:cache_2d");
-		this.with("argument", JsonObject::new, argument::buildTo);
-		return this;
+	 **/
+	public static DensityFunctionBuilder cache2d(DensityFunctionBuilder argument) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:cache_2d");
+		builder.add("argument", argument.build());
+		return builder;
 	}
 
 	/**
@@ -149,11 +152,12 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 *
 	 * @param argument The input density function
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder cache2d(ResourceKey<DensityFunction> argument) {
-		this.jsonString("type", "minecraft:cache_2d");
-		this.jsonString("argument", argument.location().toString());
-		return this;
+	 **/
+	public static DensityFunctionBuilder cache2d(ResourceKey<DensityFunction> argument) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:cache_2d");
+		builder.add("argument", argument.location().toString());
+		return builder;
 	}
 
 	/**
@@ -161,11 +165,12 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 *
 	 * @param argument The input density function
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder cacheAllInCell(DensityFunctionBuilder argument) {
-		this.jsonString("type", "minecraft:cache_all_in_cell");
-		this.with("argument", JsonObject::new, argument::buildTo);
-		return this;
+	 **/
+	public static DensityFunctionBuilder cacheAllInCell(DensityFunctionBuilder argument) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:cache_all_in_cell");
+		builder.add("argument", argument.build());
+		return builder;
 	}
 
 	/**
@@ -173,27 +178,29 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 *
 	 * @param argument The input density function
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder cacheOnce(DensityFunctionBuilder argument) {
-		this.jsonString("type", "minecraft:cache_once");
-		this.with("argument", JsonObject::new, argument::buildTo);
-		return this;
+	 **/
+	public static DensityFunctionBuilder cacheOnce(DensityFunctionBuilder argument) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:cache_once");
+		builder.add("argument", argument.build());
+		return builder;
 	}
 
 	/**
 	 * Clamps the input between two values
 	 *
 	 * @param input The input density function
-	 * @param min The lower bound
-	 * @param max The upper bound
+	 * @param min   The lower bound
+	 * @param max   The upper bound
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder clamp(DensityFunctionBuilder input, double min, double max) {
-		this.jsonString("type", "minecraft:clamp");
-		this.with("input", JsonObject::new, input::buildTo);
-		this.jsonNumber("min", min);
-		this.jsonNumber("max", max);
-		return this;
+	 **/
+	public static DensityFunctionBuilder clamp(DensityFunctionBuilder input, double min, double max) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:clamp");
+		builder.add("input", input.build());
+		builder.add("min", min);
+		builder.add("max", max);
+		return builder;
 	}
 
 	/**
@@ -201,11 +208,12 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 *
 	 * @param argument The input density function
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder constant(Number argument) {
-		this.jsonString("type", "minecraft:constant");
-		this.jsonNumber("argument", argument);
-		return this;
+	 **/
+	public static DensityFunctionBuilder constant(Number argument) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:constant");
+		builder.add("argument", argument);
+		return builder;
 	}
 
 	/**
@@ -213,19 +221,21 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 *
 	 * @param argument The input density function
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder cube(DensityFunctionBuilder argument) {
-		this.jsonString("type", "minecraft:cube");
-		this.with("argument", JsonObject::new, argument::buildTo);
-		return this;
+	 **/
+	public static DensityFunctionBuilder cube(DensityFunctionBuilder argument) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:cube");
+		builder.add("argument", argument.build());
+		return builder;
 	}
 
 	/**
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder endIsland() {
-		this.jsonString("type", "minecraft:end_island");
-		return this;
+	 **/
+	public static DensityFunctionBuilder endIsland() {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:end_island");
+		return builder;
 	}
 
 	/**
@@ -234,11 +244,12 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 *
 	 * @param argument The input density function
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder flatCache(DensityFunctionBuilder argument) {
-		this.jsonString("type", "minecraft:flat_cache");
-		this.with("argument", JsonObject::new, argument::buildTo);
-		return this;
+	 **/
+	public static DensityFunctionBuilder flatCache(DensityFunctionBuilder argument) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:flat_cache");
+		builder.add("argument", argument.build());
+		return builder;
 	}
 
 	/**
@@ -246,11 +257,12 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 *
 	 * @param argument The input density function
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder halfNegative(DensityFunctionBuilder argument) {
-		this.jsonString("type", "minecraft:half_negative");
-		this.with("argument", JsonObject::new, argument::buildTo);
-		return this;
+	 **/
+	public static DensityFunctionBuilder halfNegative(DensityFunctionBuilder argument) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:half_negative");
+		builder.add("argument", argument.build());
+		return builder;
 	}
 
 	/**
@@ -259,11 +271,12 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 *
 	 * @param argument The input density function
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder interpolated(DensityFunctionBuilder argument) {
-		this.jsonString("type", "minecraft:interpolated");
-		this.with("argument", JsonObject::new, argument::buildTo);
-		return this;
+	 **/
+	public static DensityFunctionBuilder interpolated(DensityFunctionBuilder argument) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:interpolated");
+		builder.add("argument", argument.build());
+		return builder;
 	}
 
 	/**
@@ -272,12 +285,13 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 * @param argument1 The first density function
 	 * @param argument2 The second density function
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder max(DensityFunctionBuilder argument1, DensityFunctionBuilder argument2) {
-		this.root.addProperty("type", "minecraft:max");
-		this.with("argument1", JsonObject::new, argument1::buildTo);
-		this.with("argument2", JsonObject::new, argument2::buildTo);
-		return this;
+	 **/
+	public static DensityFunctionBuilder max(DensityFunctionBuilder argument1, DensityFunctionBuilder argument2) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:max");
+		builder.add("argument1", argument1.build());
+		builder.add("argument2", argument2.build());
+		return builder;
 	}
 
 	/**
@@ -286,12 +300,13 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 * @param argument1 The first density function
 	 * @param argument2 The second density function
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder min(DensityFunctionBuilder argument1, DensityFunctionBuilder argument2) {
-		this.root.addProperty("type", "minecraft:min");
-		this.with("argument1", JsonObject::new, argument1::buildTo);
-		this.with("argument2", JsonObject::new, argument2::buildTo);
-		return this;
+	 **/
+	public static DensityFunctionBuilder min(DensityFunctionBuilder argument1, DensityFunctionBuilder argument2) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:min");
+		builder.add("argument1", argument1.build());
+		builder.add("argument2", argument2.build());
+		return builder;
 	}
 
 	/**
@@ -300,12 +315,13 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 * @param argument1 The first density function
 	 * @param argument2 The second density function
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder mul(DensityFunctionBuilder argument1, DensityFunctionBuilder argument2) {
-		this.root.addProperty("type", "minecraft:mul");
-		this.with("argument1", JsonObject::new, argument1::buildTo);
-		this.with("argument2", JsonObject::new, argument2::buildTo);
-		return this;
+	 **/
+	public static DensityFunctionBuilder mul(DensityFunctionBuilder argument1, DensityFunctionBuilder argument2) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:mul");
+		builder.add("argument1", argument1.build());
+		builder.add("argument2", argument2.build());
+		return builder;
 	}
 
 	/**
@@ -314,12 +330,13 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 * @param argument1 The first density function
 	 * @param argument2 The second density function
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder mul(Number argument1, DensityFunctionBuilder argument2) {
-		this.root.addProperty("type", "minecraft:mul");
-		this.jsonNumber("argument1", argument1);
-		this.with("argument2", JsonObject::new, argument2::buildTo);
-		return this;
+	 **/
+	public static DensityFunctionBuilder mul(Number argument1, DensityFunctionBuilder argument2) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:mul");
+		builder.add("argument1", argument1);
+		builder.add("argument2", argument2.build());
+		return builder;
 	}
 
 	/**
@@ -328,12 +345,13 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 * @param argument1 The first density function
 	 * @param argument2 The second density function
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder mul(DensityFunctionBuilder argument1, Number argument2) {
-		this.root.addProperty("type", "minecraft:mul");
-		this.with("argument1", JsonObject::new, argument1::buildTo);
-		this.jsonNumber("argument2", argument2);
-		return this;
+	 **/
+	public static DensityFunctionBuilder mul(DensityFunctionBuilder argument1, Number argument2) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:mul");
+		builder.add("argument1", argument1.build());
+		builder.add("argument2", argument2);
+		return builder;
 	}
 
 	/**
@@ -342,12 +360,13 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 * @param argument1 The first density function
 	 * @param argument2 The second density function
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder mul(ResourceKey<DensityFunction> argument1, DensityFunctionBuilder argument2) {
-		this.root.addProperty("type", "minecraft:mul");
-		this.jsonString("argument1", argument1.location().toString());
-		this.with("argument2", JsonObject::new, argument2::buildTo);
-		return this;
+	 **/
+	public static DensityFunctionBuilder mul(ResourceKey<DensityFunction> argument1, DensityFunctionBuilder argument2) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:mul");
+		builder.add("argument1", argument1.location().toString());
+		builder.add("argument2", argument2.build());
+		return builder;
 	}
 
 	/**
@@ -356,43 +375,46 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 * @param argument1 The first density function
 	 * @param argument2 The second density function
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder mul(DensityFunctionBuilder argument1, ResourceKey<DensityFunction> argument2) {
-		this.root.addProperty("type", "minecraft:mul");
-		this.with("argument1", JsonObject::new, argument1::buildTo);
-		this.jsonString("argument2", argument2.location().toString());
-		return this;
+	 **/
+	public static DensityFunctionBuilder mul(DensityFunctionBuilder argument1, ResourceKey<DensityFunction> argument2) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:mul");
+		builder.add("argument1", argument1.build());
+		builder.add("argument2", argument2.location().toString());
+		return builder;
 	}
 
 	/**
 	 * The noise density function samples a {@link NoiseParameters}
 	 *
-	 * @param noise A reference to a <code>worldgen/noise</code> file
+	 * @param noise    A reference to a <code>worldgen/noise</code> file
 	 * @param xz_scale Scales the X and Z inputs before sampling
-	 * @param y_scale Scales the Y input before sampling
+	 * @param y_scale  Scales the Y input before sampling
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder noise(ResourceKey<NoiseParameters> noise, double xz_scale, double y_scale) {
-		this.jsonString("type", "minecraft:noise");
-		this.jsonString("noise", noise.location().toString());
-		this.jsonNumber("xz_scale", xz_scale);
-		this.jsonNumber("y_scale", y_scale);
-		return this;
+	 **/
+	public static DensityFunctionBuilder noise(ResourceKey<NoiseParameters> noise, double xz_scale, double y_scale) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:noise");
+		builder.add("noise", noise.location().toString());
+		builder.add("xz_scale", xz_scale);
+		builder.add("y_scale", y_scale);
+		return builder;
 	}
 
 	/**
 	 * Uses a different kind of noise than {@link DensityFunctionBuilder#noise(ResourceKey, double, double)}
 	 *
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder oldBlendedNoise(double xz_scale, double y_scale, double xz_factor, double y_factor, double smear_scale_multiplier) {
-		this.jsonString("type", "minecraft:old_blended_noise");
-		this.jsonNumber("xz_scale", xz_scale);
-		this.jsonNumber("y_scale", y_scale);
-		this.jsonNumber("xz_factor", xz_factor);
-		this.jsonNumber("y_factor", y_factor);
-		this.jsonNumber("smear_scale_multiplier", smear_scale_multiplier);
-		return this;
+	 **/
+	public static DensityFunctionBuilder oldBlendedNoise(double xz_scale, double y_scale, double xz_factor, double y_factor, double smear_scale_multiplier) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:old_blended_noise");
+		builder.add("xz_scale", xz_scale);
+		builder.add("y_scale", y_scale);
+		builder.add("xz_factor", xz_factor);
+		builder.add("y_factor", y_factor);
+		builder.add("smear_scale_multiplier", smear_scale_multiplier);
+		return builder;
 	}
 
 	/**
@@ -400,32 +422,34 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 *
 	 * @param argument The input density function
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder quarterNegative(DensityFunctionBuilder argument) {
-		this.root.addProperty("type", "minecraft:quarter_negative");
-		this.with("argument", JsonObject::new, argument::buildTo);
-		return this;
+	 **/
+	public static DensityFunctionBuilder quarterNegative(DensityFunctionBuilder argument) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:quarter_negative");
+		builder.add("argument", argument.build());
+		return builder;
 	}
 
 	/**
 	 * Computes the input value, and depending on that result returns one of two other density functions. Basically an if-then-else statement.
 	 *
-	 * @param input The input density function
-	 * @param minInclusive The lower bound of the range
-	 * @param maxExclusive The upper bound of the range
-	 * @param whenInRange Density function that will be returned when the input is inside the range
+	 * @param input          The input density function
+	 * @param minInclusive   The lower bound of the range
+	 * @param maxExclusive   The upper bound of the range
+	 * @param whenInRange    Density function that will be returned when the input is inside the range
 	 * @param whenOutOfRange Density function that will be returned When the input is outside the range
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder rangeChoice(DensityFunctionBuilder input, UniformHeightProviderBuilder minInclusive, UniformHeightProviderBuilder maxExclusive,
-											  DensityFunctionBuilder whenInRange, DensityFunctionBuilder whenOutOfRange) {
-		this.jsonString("type", "minecraft:range_choice");
-		this.with("noise", JsonObject::new, input::buildTo);
-		this.with("min_inclusive", JsonObject::new, minInclusive::buildTo);
-		this.with("max_exclusive", JsonObject::new, maxExclusive::buildTo);
-		this.with("when_in_range", JsonObject::new, whenInRange::buildTo);
-		this.with("when_out_of_range", JsonObject::new, whenOutOfRange::buildTo);
-		return this;
+	 **/
+	public static DensityFunctionBuilder rangeChoice(DensityFunctionBuilder input, HeightProviderBuilders minInclusive, HeightProviderBuilders maxExclusive,
+													 DensityFunctionBuilder whenInRange, DensityFunctionBuilder whenOutOfRange) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:range_choice");
+		builder.add("noise", input.build());
+		builder.add("min_inclusive", minInclusive.build());
+		builder.add("max_exclusive", maxExclusive.build());
+		builder.add("when_in_range", whenInRange.build());
+		builder.add("when_out_of_range", whenOutOfRange.build());
+		return builder;
 	}
 
 	/**
@@ -433,10 +457,11 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 *
 	 * @param argument A reference to a <code>worldgen/noise</code> file
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder shift(ResourceKey<NoiseParameters> argument) {
-		root.addProperty("shift", argument.location().toString());
-		return this;
+	 **/
+	public static DensityFunctionBuilder shift(ResourceKey<NoiseParameters> argument) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("shift", argument.location().toString());
+		return builder;
 	}
 
 	/**
@@ -444,10 +469,11 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 *
 	 * @param argument A reference to a <code>worldgen/noise</code> file
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder shiftA(ResourceKey<NoiseParameters> argument) {
-		root.addProperty("shift_a", argument.location().toString());
-		return this;
+	 **/
+	public static DensityFunctionBuilder shiftA(ResourceKey<NoiseParameters> argument) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("shift_a", argument.location().toString());
+		return builder;
 	}
 
 	/**
@@ -455,34 +481,36 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 *
 	 * @param argument A reference to a <code>worldgen/noise</code> file
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder shiftB(ResourceKey<NoiseParameters> argument) {
-		root.addProperty("shift_b", argument.location().toString());
-		return this;
+	 **/
+	public static DensityFunctionBuilder shiftB(ResourceKey<NoiseParameters> argument) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("shift_b", argument.location().toString());
+		return builder;
 	}
 
 	/**
 	 * Samples a noise at (<code>x/4, y/4, z/4</code>)
 	 *
-	 * @param noise A reference to a <code>worldgen/noise</code> file
+	 * @param noise    A reference to a <code>worldgen/noise</code> file
 	 * @param xz_scale Scales the X and Z inputs before sampling
-	 * @param y_scale Scales the Y input before sampling
-	 * @param shift_x Density function used to offset the X input
-	 * @param shift_y Density function used to offset the X input
-	 * @param shift_z Density function used to offset the X input
+	 * @param y_scale  Scales the Y input before sampling
+	 * @param shift_x  Density function used to offset the X input
+	 * @param shift_y  Density function used to offset the X input
+	 * @param shift_z  Density function used to offset the X input
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder shiftedNoise(ResourceKey<NoiseParameters> noise, double xz_scale, double y_scale,
-											   DensityFunctionBuilder shift_x, DensityFunctionBuilder shift_y,
-											   DensityFunctionBuilder shift_z) {
-		this.jsonString("type", "minecraft:range_choice");
-		this.jsonString("noise", noise.location().toString());
-		this.jsonNumber("xz_scale", xz_scale);
-		this.jsonNumber("y_scale", y_scale);
-		this.with("shift_x", JsonObject::new, shift_x::buildTo);
-		this.with("shift_y", JsonObject::new, shift_y::buildTo);
-		this.with("shift_z", JsonObject::new, shift_z::buildTo);
-		return this;
+	 **/
+	public static DensityFunctionBuilder shiftedNoise(ResourceKey<NoiseParameters> noise, double xz_scale, double y_scale,
+													  DensityFunctionBuilder shift_x, DensityFunctionBuilder shift_y,
+													  DensityFunctionBuilder shift_z) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:range_choice");
+		builder.add("noise", noise.location().toString());
+		builder.add("xz_scale", xz_scale);
+		builder.add("y_scale", y_scale);
+		builder.add("shift_x", shift_x.build());
+		builder.add("shift_y", shift_y.build());
+		builder.add("shift_z", shift_z.build());
+		return builder;
 	}
 
 	/**
@@ -490,11 +518,12 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 *
 	 * @param argument The input density function
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder square(DensityFunctionBuilder argument) {
-		this.jsonString("type", "minecraft:square");
-		this.with("argument", JsonObject::new, argument::buildTo);
-		return this;
+	 **/
+	public static DensityFunctionBuilder square(DensityFunctionBuilder argument) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:square");
+		builder.add("argument", argument.build());
+		return builder;
 	}
 
 	/**
@@ -502,42 +531,45 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 *
 	 * @param argument The input density function
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder squeeze(DensityFunctionBuilder argument) {
-		this.jsonString("type", "minecraft:squeeze");
-		this.with("argument", JsonObject::new, argument::buildTo);
-		return this;
+	 **/
+	public static DensityFunctionBuilder squeeze(DensityFunctionBuilder argument) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:squeeze");
+		builder.add("argument", argument.build());
+		return builder;
 	}
 
 	/**
 	 * @param rarityValueMapper One of <code>type_1</code> or <code>type_2</code>
-	 * @param noise A reference to a <code>worldgen/noise</code> file
-	 * @param input The input density function
+	 * @param noise             A reference to a <code>worldgen/noise</code> file
+	 * @param input             The input density function
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder weirdScaledSampler(RarityValueMapperTypes rarityValueMapper, ResourceKey<NoiseParameters> noise,
-													 DensityFunctionBuilder input) {
-		this.jsonString("type", "minecraft:blend_density");
-		this.jsonString("rarity_value_mapper", rarityValueMapper.toString());
-		this.jsonString("noise", noise.location().toString());
-		this.with("input", JsonObject::new, input::buildTo);
-		return this;
+	 **/
+	public static DensityFunctionBuilder weirdScaledSampler(RarityValueMapperTypes rarityValueMapper, ResourceKey<NoiseParameters> noise,
+															DensityFunctionBuilder input) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:blend_density");
+		builder.add("rarity_value_mapper", rarityValueMapper.toString());
+		builder.add("noise", noise.location().toString());
+		builder.add("input", input.build());
+		return builder;
 	}
 
 	/**
 	 * Returns the Y position after mapping it to a range.
 	 *
 	 * @param fromValue The value to map a <code>from_y</code> to
-	 * @param toValue The value to map a <code>to_y</code> to
+	 * @param toValue   The value to map a <code>to_y</code> to
 	 * @return {@link DensityFunctionBuilder}
-	 * **/
-	public DensityFunctionBuilder yClampedGradient(double fromY, double toY, double fromValue, double toValue) {
-		this.jsonString("type", "minecraft:y_clamped_gradient");
-		this.jsonNumber("from_y", fromY);
-		this.jsonNumber("to_y", toY);
-		this.jsonNumber("from_value", fromValue);
-		this.jsonNumber("to_value", toValue);
-		return this;
+	 **/
+	public static DensityFunctionBuilder yClampedGradient(double fromY, double toY, double fromValue, double toValue) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:y_clamped_gradient");
+		builder.add("from_y", fromY);
+		builder.add("to_y", toY);
+		builder.add("from_value", fromValue);
+		builder.add("to_value", toValue);
+		return builder;
 	}
 
 	public enum RarityValueMapperTypes {

@@ -257,9 +257,9 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
 		 * <b>if your resource pack is registered at a higher priority than where you expect the texture to be in, mc will
 		 * be unable to find the asset you are looking for</b>
 		 *
-		 * @param id the place to put the new texture
+		 * @param id     the place to put the new texture
 		 * @param target the input stream of the original texture
-		 * @param pixel the pixel recolorer
+		 * @param pixel  the pixel recolorer
 		 */
 		void addRecoloredImage(ResourceLocation id, InputStream target, IntUnaryOperator pixel);
 
@@ -362,45 +362,6 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
 		 * @param f  A callback which will be passed an {@link PlacedFeatureBuilder} to create the feature.
 		 */
 		void addPlacedFeature(ResourceLocation id, PlacedFeatureBuilder f);
-        /**
-         * Add an item tag with the given ID.
-         *
-         * @param id The ID of the tag, which will be converted into the correct path.
-         * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
-         */
-        void addItemTag(ResourceLocation id, TagBuilder f);
-
-        /**
-         * Add a block tag with the given ID.
-         *
-         * @param id The ID of the tag, which will be converted into the correct path.
-         * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
-         */
-        void addBlockTag(ResourceLocation id, TagBuilder f);
-
-        /**
-         * Add an entity type tag with the given ID.
-         *
-         * @param id The ID of the tag, which will be converted into the correct path.
-         * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
-         */
-        void addEntityTypeTag(ResourceLocation id, TagBuilder f);
-
-        /**
-         * Add a fluid tag with the given ID.
-         *
-         * @param id The ID of the tag, which will be converted into the correct path.
-         * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
-         */
-        void addFluidTag(ResourceLocation id, TagBuilder f);
-
-        /**
-         * Add a function tag with the given ID.
-         *
-         * @param id The ID of the tag, which will be converted into the correct path.
-         * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
-         */
-        void addFunctionTag(ResourceLocation id, TagBuilder f);
 
 		/**
 		 * Add a NoiseSettingsBuilder with the given ID.
@@ -425,8 +386,9 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
 		 * @param id The ID of the tag, which will be converted into the correct path.
 		 * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
 		 */
+		@Deprecated
 		default void addItemTag(ResourceLocation id, TagBuilder f) {
-			addTag("function", id, f);
+			addTag("item", id, f);
 		}
 
 		/**
@@ -435,8 +397,9 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
 		 * @param id The ID of the tag, which will be converted into the correct path.
 		 * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
 		 */
+		@Deprecated
 		default void addBlockTag(ResourceLocation id, TagBuilder f) {
-			addTag("function", id, f);
+			addTag("block", id, f);
 		}
 
 		/**
@@ -445,8 +408,9 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
 		 * @param id The ID of the tag, which will be converted into the correct path.
 		 * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
 		 */
+		@Deprecated
 		default void addEntityTypeTag(ResourceLocation id, TagBuilder f) {
-			addTag("function", id, f);
+			addTag("entity_type", id, f);
 		}
 
 		/**
@@ -455,8 +419,9 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
 		 * @param id The ID of the tag, which will be converted into the correct path.
 		 * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
 		 */
+		@Deprecated
 		default void addFluidTag(ResourceLocation id, TagBuilder f) {
-			addTag("function", id, f);
+			addTag("fluid", id, f);
 		}
 
 		/**
@@ -465,6 +430,7 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
 		 * @param id The ID of the tag, which will be converted into the correct path.
 		 * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
 		 */
+		@Deprecated
 		default void addFunctionTag(ResourceLocation id, TagBuilder f) {
 			addTag("function", id, f);
 		}
@@ -473,8 +439,8 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
 		 * Add a tag with the given ID.
 		 *
 		 * @param tagType The type of tag you want
-		 * @param id The ID of the tag, which will be converted into the correct path.
-		 * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
+		 * @param id      The ID of the tag, which will be converted into the correct path.
+		 * @param f       A callback which will be passed a {@link TagBuilder} to create the tag.
 		 */
 		void addTag(String tagType, ResourceLocation id, TagBuilder f);
 

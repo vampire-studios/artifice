@@ -8,13 +8,13 @@ public class DecoratedDecoratorConfigBuilder extends DecoratorConfigBuilder {
 		super();
 	}
 
-    public DecoratedDecoratorConfigBuilder outerDecorator(ConfiguredDecoratorBuilder processor) {
-        join("outer", processor.build());
-        return this;
-    }
+	public DecoratedDecoratorConfigBuilder outerDecorator(ConfiguredDecoratorBuilder processor) {
+		join("outer", processor.build());
+		return this;
+	}
 
-    public DecoratedDecoratorConfigBuilder innerDecorator(ConfiguredDecoratorBuilder processor) {
-        join("inner", processor.build());
-        return this;
-    }
+	public DecoratedDecoratorConfigBuilder innerDecorator(ConfiguredDecoratorBuilder processor) {
+		join("inner", processor.build());
+		return this;
+	}
 }

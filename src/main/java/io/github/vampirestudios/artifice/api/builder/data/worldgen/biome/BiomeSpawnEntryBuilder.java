@@ -5,9 +5,9 @@ import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 
 public class BiomeSpawnEntryBuilder extends TypedJsonObject {
 
-    public BiomeSpawnEntryBuilder() {
-        super(new JsonObject());
-    }
+	public BiomeSpawnEntryBuilder() {
+		super(new JsonObject());
+	}
 
 	public BiomeSpawnEntryBuilder entityID(String entityID) {
 		this.root.addProperty("type", entityID);

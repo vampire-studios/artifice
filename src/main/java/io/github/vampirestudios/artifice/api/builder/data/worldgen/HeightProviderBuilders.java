@@ -30,7 +30,7 @@ public class HeightProviderBuilders extends TypedJsonObject {
 		builder.add("type", "minecraft:biased_to_bottom")
 				.add("min_inclusive", minInclusive)
 				.add("max_inclusive", maxInclusive)
-				.add("inner",inner);
+				.add("inner", inner);
 
 		return builder;
 	}
@@ -41,7 +41,7 @@ public class HeightProviderBuilders extends TypedJsonObject {
 		builder.add("type", "minecraft:very_biased_to_bottom")
 				.add("min_inclusive", minInclusive)
 				.add("max_inclusive", maxInclusive)
-				.add("inner",inner);
+				.add("inner", inner);
 
 		return builder;
 	}
@@ -52,23 +52,7 @@ public class HeightProviderBuilders extends TypedJsonObject {
 		builder.add("type", "minecraft:trapezoid")
 				.add("min_inclusive", minInclusive)
 				.add("max_inclusive", maxInclusive)
-				.add("plateau",plateau);
-
-		return builder;
-	}
-
-	public HeightProviderBuilders weightedList(String name, TrapezoidHeightProviderBuilder processor) {
-		HeightProviderBuilders builder = new HeightProviderBuilders();
-
-		TypedJsonObject value = new TypedJsonObject()
-				.add("min_inclusive", minInclusive)
-				.add("max_inclusive", maxInclusive)
-				.add("inner",inner);
-		TypedJsonObject uniform = new TypedJsonObject()
-				.add("type", "minecraft:uniform")
-				.add("value", value);
-
-		builder.add(name, uniform.getData());
+				.add("plateau", plateau);
 
 		return builder;
 	}

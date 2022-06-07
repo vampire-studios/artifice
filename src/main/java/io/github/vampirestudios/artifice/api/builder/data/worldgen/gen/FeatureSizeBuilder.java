@@ -5,9 +5,9 @@ import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 
 public class FeatureSizeBuilder extends TypedJsonObject {
 
-    public FeatureSizeBuilder() {
-        super(new JsonObject());
-    }
+	public FeatureSizeBuilder() {
+		super(new JsonObject());
+	}
 
 	public FeatureSizeBuilder type(String type) {
 		this.root.addProperty("type", type);
@@ -28,6 +28,10 @@ public class FeatureSizeBuilder extends TypedJsonObject {
 		public TwoLayersFeatureSizeBuilder() {
 			super();
 			this.type("minecraft:two_layers_feature_size");
+		}
+
+		public static TwoLayersFeatureSizeBuilder create(int limit, int lowerSize, int upperSize) {
+			return new TwoLayersFeatureSizeBuilder().limit(limit).lowerSize(lowerSize).upperSize(upperSize);
 		}
 
 		public TwoLayersFeatureSizeBuilder limit(int limit) {

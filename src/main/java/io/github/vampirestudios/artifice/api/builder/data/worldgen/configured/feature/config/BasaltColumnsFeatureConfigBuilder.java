@@ -8,13 +8,13 @@ public class BasaltColumnsFeatureConfigBuilder extends FeatureConfigBuilder {
 		super();
 	}
 
-    public BasaltColumnsFeatureConfigBuilder reach(UniformIntDistributionBuilder processor) {
-        join("reach", processor.build());
-        return this;
-    }
+	public BasaltColumnsFeatureConfigBuilder reach(UniformIntDistributionBuilder processor) {
+		join("reach", processor.build());
+		return this;
+	}
 
-    public BasaltColumnsFeatureConfigBuilder height(UniformIntDistributionBuilder processor) {
-        join("height", processor.build());
-        return this;
-    }
+	public BasaltColumnsFeatureConfigBuilder height(UniformIntDistributionBuilder processor) {
+		join("height", processor.build());
+		return this;
+	}
 }

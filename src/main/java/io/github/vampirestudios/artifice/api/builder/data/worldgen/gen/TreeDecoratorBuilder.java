@@ -6,9 +6,9 @@ import io.github.vampirestudios.artifice.api.builder.data.worldgen.BlockStatePro
 
 public class TreeDecoratorBuilder extends TypedJsonObject {
 
-    public TreeDecoratorBuilder() {
-        super(new JsonObject());
-    }
+	public TreeDecoratorBuilder() {
+		super(new JsonObject());
+	}
 
 	public <D extends TreeDecoratorBuilder> D type(String type) {
 		this.root.addProperty("type", type);
@@ -72,9 +72,9 @@ public class TreeDecoratorBuilder extends TypedJsonObject {
 			this.type("minecraft:alter_ground");
 		}
 
-        public <P extends BlockStateProviderBuilder> AlterGroundTreeDecoratorBuilder provider(P processor) {
-            join("provider", processor.build());
-            return this;
-        }
-    }
+		public <P extends BlockStateProviderBuilder> AlterGroundTreeDecoratorBuilder provider(P processor) {
+			join("provider", processor.build());
+			return this;
+		}
+	}
 }

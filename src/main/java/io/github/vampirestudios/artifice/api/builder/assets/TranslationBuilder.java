@@ -2,7 +2,6 @@ package io.github.vampirestudios.artifice.api.builder.assets;
 
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -13,7 +12,9 @@ import net.fabricmc.api.Environment;
  */
 @Environment(EnvType.CLIENT)
 public final class TranslationBuilder extends TypedJsonObject {
-    public TranslationBuilder() { super(new JsonObject()); }
+	public TranslationBuilder() {
+		super(new JsonObject());
+	}
 
 	/**
 	 * Add a translation entry.

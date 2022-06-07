@@ -6,9 +6,9 @@ import io.github.vampirestudios.artifice.api.builder.data.worldgen.UniformIntDis
 
 public class FoliagePlacerBuilder extends TypedJsonObject {
 
-    public FoliagePlacerBuilder() {
-        super(new JsonObject());
-    }
+	public FoliagePlacerBuilder() {
+		super(new JsonObject());
+	}
 
 	public <P extends FoliagePlacerBuilder> P type(String type) {
 		this.root.addProperty("type", type);
@@ -20,26 +20,30 @@ public class FoliagePlacerBuilder extends TypedJsonObject {
 		return (P) this;
 	}
 
-    public <P extends FoliagePlacerBuilder> P radius(UniformIntDistributionBuilder processor) {
-        join("radius", processor.build());
-        return (P) this;
-    }
+	public <P extends FoliagePlacerBuilder> P radius(UniformIntDistributionBuilder processor) {
+		join("radius", processor.build());
+		return (P) this;
+	}
 
 	public <P extends FoliagePlacerBuilder> P offset(int offset) {
 		this.root.addProperty("offset", offset);
 		return (P) this;
 	}
 
-    public <P extends FoliagePlacerBuilder> P offset(UniformIntDistributionBuilder processor) {
-        join("offset", processor.build());
-        return (P) this;
-    }
+	public <P extends FoliagePlacerBuilder> P offset(UniformIntDistributionBuilder processor) {
+		join("offset", processor.build());
+		return (P) this;
+	}
 
 	public static class BlobFoliagePlacerBuilder extends FoliagePlacerBuilder {
 
 		public BlobFoliagePlacerBuilder() {
 			super();
 			this.type("minecraft:blob_foliage_placer");
+		}
+
+		public static BlobFoliagePlacerBuilder create(int height, int offset, int radius) {
+			return new BlobFoliagePlacerBuilder().height(height).offset(offset).radius(radius);
 		}
 
 		public <P extends BlobFoliagePlacerBuilder> P height(int height) {
@@ -62,11 +66,11 @@ public class FoliagePlacerBuilder extends TypedJsonObject {
 			return this;
 		}
 
-        public SpruceFoliagePlacerBuilder trunkHeight(UniformIntDistributionBuilder processor) {
-            join("trunk_height", processor.build());
-            return this;
-        }
-    }
+		public SpruceFoliagePlacerBuilder trunkHeight(UniformIntDistributionBuilder processor) {
+			join("trunk_height", processor.build());
+			return this;
+		}
+	}
 
 	public static class PineFoliagePlacerBuilder extends FoliagePlacerBuilder {
 
@@ -80,11 +84,11 @@ public class FoliagePlacerBuilder extends TypedJsonObject {
 			return this;
 		}
 
-        public PineFoliagePlacerBuilder trunkHeight(UniformIntDistributionBuilder processor) {
-            join("trunk_height", processor.build());
-            return this;
-        }
-    }
+		public PineFoliagePlacerBuilder trunkHeight(UniformIntDistributionBuilder processor) {
+			join("trunk_height", processor.build());
+			return this;
+		}
+	}
 
 	public static class AcaciaFoliagePlacerBuilder extends FoliagePlacerBuilder {
 
@@ -137,11 +141,11 @@ public class FoliagePlacerBuilder extends TypedJsonObject {
 			return this;
 		}
 
-        public MegaPineFoliagePlacerBuilder crownHeight(UniformIntDistributionBuilder processor) {
-            join("crown_height", processor.build());
-            return this;
-        }
-    }
+		public MegaPineFoliagePlacerBuilder crownHeight(UniformIntDistributionBuilder processor) {
+			join("crown_height", processor.build());
+			return this;
+		}
+	}
 
 	public static class DarkOakFoliagePlacerBuilder extends FoliagePlacerBuilder {
 

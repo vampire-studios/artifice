@@ -5,9 +5,9 @@ import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 
 public class RuleTestBuilder extends TypedJsonObject {
 
-    public RuleTestBuilder() {
-        super(new JsonObject());
-    }
+	public RuleTestBuilder() {
+		super(new JsonObject());
+	}
 
 	public <R extends RuleTestBuilder> R predicateType(String type) {
 		this.root.addProperty("predicate_type", type);
@@ -42,11 +42,11 @@ public class RuleTestBuilder extends TypedJsonObject {
 			this.predicateType("minecraft:blockstate_match");
 		}
 
-        public BlockStateRuleTestBuilder blockState(StateDataBuilder processor) {
-            join("block_state", processor.build());
-            return this;
-        }
-    }
+		public BlockStateRuleTestBuilder blockState(StateDataBuilder processor) {
+			join("block_state", processor.build());
+			return this;
+		}
+	}
 
 	public static class TagMatchRuleTestBuilder extends RuleTestBuilder {
 
@@ -86,10 +86,10 @@ public class RuleTestBuilder extends TypedJsonObject {
 			this.predicateType("minecraft:random_block_match");
 		}
 
-        public RandomBlockStateMatchRuleTestBuilder blockState(StateDataBuilder processor) {
-            join("block_state", processor.build());
-            return this;
-        }
+		public RandomBlockStateMatchRuleTestBuilder blockState(StateDataBuilder processor) {
+			join("block_state", processor.build());
+			return this;
+		}
 
 		public RandomBlockStateMatchRuleTestBuilder probability(float probability) {
 			this.root.addProperty("probability", probability);

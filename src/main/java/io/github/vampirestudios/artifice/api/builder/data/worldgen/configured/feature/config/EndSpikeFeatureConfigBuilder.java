@@ -23,15 +23,15 @@ public class EndSpikeFeatureConfigBuilder extends FeatureConfigBuilder {
 		return this;
 	}
 
-    public EndSpikeFeatureConfigBuilder addSpike(SpikeBuilder processor) {
-        this.root.getAsJsonArray("spikes").add(processor.build());
-        return this;
-    }
+	public EndSpikeFeatureConfigBuilder addSpike(SpikeBuilder processor) {
+		this.root.getAsJsonArray("spikes").add(processor.build());
+		return this;
+	}
 
-    public static class SpikeBuilder extends TypedJsonObject {
-        public SpikeBuilder() {
-            super();
-        }
+	public static class SpikeBuilder extends TypedJsonObject {
+		public SpikeBuilder() {
+			super();
+		}
 
 		public SpikeBuilder centerX(int centerX) {
 			this.root.addProperty("centerX", centerX);

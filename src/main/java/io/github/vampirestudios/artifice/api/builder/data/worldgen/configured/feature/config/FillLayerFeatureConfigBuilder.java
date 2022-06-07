@@ -7,10 +7,10 @@ public class FillLayerFeatureConfigBuilder extends FeatureConfigBuilder {
 		super();
 	}
 
-    public FillLayerFeatureConfigBuilder state(StateDataBuilder processor) {
-        join("state", processor.build());
-        return this;
-    }
+	public FillLayerFeatureConfigBuilder state(StateDataBuilder processor) {
+		join("state", processor.build());
+		return this;
+	}
 
 	public FillLayerFeatureConfigBuilder height(int height) {
 		if (height > 255) throw new IllegalArgumentException("height can't be higher than 255! Found " + height);

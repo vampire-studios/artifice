@@ -8,25 +8,25 @@ public class HugeFungusFeatureConfigBuilder extends FeatureConfigBuilder {
 		super();
 	}
 
-    public HugeFungusFeatureConfigBuilder validBaseBlock(StateDataBuilder processor) {
-        join("valid_base_block", processor.build());
-        return this;
-    }
+	public HugeFungusFeatureConfigBuilder validBaseBlock(StateDataBuilder processor) {
+		join("valid_base_block", processor.build());
+		return this;
+	}
 
-    public HugeFungusFeatureConfigBuilder stemState(StateDataBuilder processor) {
-        join("stem_state", processor.build());
-        return this;
-    }
+	public HugeFungusFeatureConfigBuilder stemState(StateDataBuilder processor) {
+		join("stem_state", processor.build());
+		return this;
+	}
 
-    public HugeFungusFeatureConfigBuilder hatState(StateDataBuilder processor) {
-        join("hat_state", processor.build());
-        return this;
-    }
+	public HugeFungusFeatureConfigBuilder hatState(StateDataBuilder processor) {
+		join("hat_state", processor.build());
+		return this;
+	}
 
-    public HugeFungusFeatureConfigBuilder decorState(StateDataBuilder processor) {
-        join("decor_state", processor.build());
-        return this;
-    }
+	public HugeFungusFeatureConfigBuilder decorState(StateDataBuilder processor) {
+		join("decor_state", processor.build());
+		return this;
+	}
 
 	public HugeFungusFeatureConfigBuilder planted(boolean planted) {
 		this.root.addProperty("planted", planted);

@@ -35,8 +35,8 @@ public class ConfiguredStructureFeatureBuilder extends TypedJsonObject {
 	}
 
 	/*
-	* Weather or not it should add extra terrain below the structure.
-	* */
+	 * Weather or not it should add extra terrain below the structure.
+	 * */
 	public ConfiguredStructureFeatureBuilder adoptNoise(boolean adoptNoise) {
 		this.root.addProperty("adoptNoise", adoptNoise);
 		return this;

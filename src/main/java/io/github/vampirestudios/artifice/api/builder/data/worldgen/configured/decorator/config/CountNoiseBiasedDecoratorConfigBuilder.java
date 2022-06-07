@@ -6,10 +6,10 @@ public class CountNoiseBiasedDecoratorConfigBuilder extends DecoratorConfigBuild
 		super();
 	}
 
-    public CountNoiseBiasedDecoratorConfigBuilder noiseToCountRatio(int noiseToCountRatio) {
-        add("noise_to_count_ratio", noiseToCountRatio);
-        return this;
-    }
+	public CountNoiseBiasedDecoratorConfigBuilder noiseToCountRatio(int noiseToCountRatio) {
+		add("noise_to_count_ratio", noiseToCountRatio);
+		return this;
+	}
 
 	public CountNoiseBiasedDecoratorConfigBuilder noiseFactor(double noiseFactor) {
 		this.root.addProperty("noise_factor", noiseFactor);

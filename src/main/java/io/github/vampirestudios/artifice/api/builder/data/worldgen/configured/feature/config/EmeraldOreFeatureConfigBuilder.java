@@ -8,13 +8,13 @@ public class EmeraldOreFeatureConfigBuilder extends FeatureConfigBuilder {
 		super();
 	}
 
-    public EmeraldOreFeatureConfigBuilder state(StateDataBuilder processor) {
-        join("state", processor.build());
-        return this;
-    }
+	public EmeraldOreFeatureConfigBuilder state(StateDataBuilder processor) {
+		join("state", processor.build());
+		return this;
+	}
 
-    public EmeraldOreFeatureConfigBuilder target(StateDataBuilder processor) {
-        join("target", processor.build());
-        return this;
-    }
+	public EmeraldOreFeatureConfigBuilder target(StateDataBuilder processor) {
+		join("target", processor.build());
+		return this;
+	}
 }

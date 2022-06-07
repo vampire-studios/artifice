@@ -10,10 +10,10 @@ public class SpringFeatureConfigBuilder extends FeatureConfigBuilder {
 		this.root.add("valid_blocks", new JsonArray());
 	}
 
-    public SpringFeatureConfigBuilder fluidState(StateDataBuilder processor) {
-        join("state", processor.build());
-        return this;
-    }
+	public SpringFeatureConfigBuilder fluidState(StateDataBuilder processor) {
+		join("state", processor.build());
+		return this;
+	}
 
 	public SpringFeatureConfigBuilder addValidBlock(String blockID) {
 		this.root.getAsJsonArray("valid_blocks").add(blockID);

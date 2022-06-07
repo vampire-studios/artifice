@@ -5,9 +5,9 @@ import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 
 public class TrunkPlacerBuilder extends TypedJsonObject {
 
-    public TrunkPlacerBuilder() {
-        super(new JsonObject());
-    }
+	public TrunkPlacerBuilder() {
+		super(new JsonObject());
+	}
 
 	public <P extends TrunkPlacerBuilder> P type(String type) {
 		this.root.addProperty("type", type);
@@ -86,6 +86,10 @@ public class TrunkPlacerBuilder extends TypedJsonObject {
 		public FancyTrunkPlacerBuilder() {
 			super();
 			this.type("minecraft:fancy_trunk_placer");
+		}
+
+		public static FancyTrunkPlacerBuilder create(int baseHeight, int heightRandomA, int heightRandomB) {
+			return new FancyTrunkPlacerBuilder().baseHeight(baseHeight).heightRandA(heightRandomA).heightRandB(heightRandomB);
 		}
 	}
 }

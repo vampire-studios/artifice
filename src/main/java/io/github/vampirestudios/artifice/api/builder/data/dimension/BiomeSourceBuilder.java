@@ -6,9 +6,9 @@ import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 
 public class BiomeSourceBuilder extends TypedJsonObject {
 
-    public BiomeSourceBuilder() {
-        super(new JsonObject());
-    }
+	public BiomeSourceBuilder() {
+		super(new JsonObject());
+	}
 
 	/**
 	 * Set the type of the biome source.
@@ -19,14 +19,16 @@ public class BiomeSourceBuilder extends TypedJsonObject {
 	}
 
 	public static MultiNoiseBiomeSourceBuilder multiNoise() {
-        return new MultiNoiseBiomeSourceBuilder();
-    }
-    public static MultiNoiseBiomeSourceBuilder.BiomeBuilder noiseBiome(String id, MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder biomeSettingsBuilder) {
-        return new MultiNoiseBiomeSourceBuilder.BiomeBuilder().biome(id).parameters(biomeSettingsBuilder);
-    }
-    public static MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder noiseBiomeParameters() {
-        return new MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder();
-    }
+		return new MultiNoiseBiomeSourceBuilder();
+	}
+
+	public static MultiNoiseBiomeSourceBuilder.BiomeBuilder noiseBiome(String id, MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder biomeSettingsBuilder) {
+		return new MultiNoiseBiomeSourceBuilder.BiomeBuilder().biome(id).parameters(biomeSettingsBuilder);
+	}
+
+	public static MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder noiseBiomeParameters() {
+		return new MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder();
+	}
 
 	public static class MultiNoiseBiomeSourceBuilder extends BiomeSourceBuilder {
 		public MultiNoiseBiomeSourceBuilder() {
@@ -46,39 +48,32 @@ public class BiomeSourceBuilder extends TypedJsonObject {
 		 * Add biome.
 		 */
 		public MultiNoiseBiomeSourceBuilder biomes(BiomeBuilder... biomeBuilder) {
-			jsonArray("biomes", jsonArrayBuilder -> {
-				for (BiomeBuilder builder : biomeBuilder) {
-					jsonArrayBuilder.add(builder.build());
-				}
-			});
+			join("biomes", arrayOf(biomeBuilder));
 			return this;
 		}
 
-        /**
-         * Add biome.
-         */
-        public MultiNoiseBiomeSourceBuilder biomes(BiomeBuilder... biomeBuilder) {
-            join("biomes", arrayOf(biomeBuilder));
-            return this;
-        }
+		public static class BiomeBuilder extends TypedJsonObject {
+			public BiomeBuilder() {
+				super(new JsonObject());
+			}
 
-        public static class BiomeBuilder extends TypedJsonObject {
-            public BiomeBuilder() {
-                super(new JsonObject());
-            }
+			public BiomeBuilder biome(String id) {
+				this.add("biome", id);
+				return this;
+			}
 
 			/**
 			 * Build biome parameters.
 			 */
 			public BiomeBuilder parameters(BiomeParametersBuilder biomeSettingsBuilder) {
-                join("parameters", biomeSettingsBuilder.build());
+				join("parameters", biomeSettingsBuilder.build());
 				return this;
 			}
 		}
 
 		public static class BiomeParametersBuilder extends TypedJsonObject {
 			public BiomeParametersBuilder() {
-                super(new JsonObject());
+				super(new JsonObject());
 			}
 
 			public BiomeParametersBuilder temperature(float temperature) {
@@ -95,7 +90,7 @@ public class BiomeSourceBuilder extends TypedJsonObject {
 					throw new IllegalArgumentException("temperature can't be higher than 2.0F! Found " + max);
 				if (min < -2.0F)
 					throw new IllegalArgumentException("temperature can't be smaller than 2.0F! Found " + min);
-				jsonArray("temperature", jsonArrayBuilder -> jsonArrayBuilder.add(min).add(max));
+				this.add("temperature", arrayOf(min, max));
 				return this;
 			}
 
@@ -112,7 +107,7 @@ public class BiomeSourceBuilder extends TypedJsonObject {
 				if (max > 2.0F) throw new IllegalArgumentException("humidity can't be higher than 2.0F! Found " + max);
 				if (min < -2.0F)
 					throw new IllegalArgumentException("humidity can't be smaller than 2.0F! Found " + min);
-				jsonArray("humidity", jsonArrayBuilder -> jsonArrayBuilder.add(min).add(max));
+				this.add("humidity", arrayOf(min, max));
 				return this;
 			}
 
@@ -130,7 +125,7 @@ public class BiomeSourceBuilder extends TypedJsonObject {
 					throw new IllegalArgumentException("continentalness can't be higher than 2.0F! Found " + max);
 				if (min < -2.0F)
 					throw new IllegalArgumentException("continentalness can't be smaller than 2.0F! Found " + min);
-				jsonArray("continentalness", jsonArrayBuilder -> jsonArrayBuilder.add(min).add(max));
+				this.add("continentalness", arrayOf(min, max));
 				return this;
 			}
 
@@ -146,7 +141,7 @@ public class BiomeSourceBuilder extends TypedJsonObject {
 			public BiomeParametersBuilder erosion(float min, float max) {
 				if (max > 2.0F) throw new IllegalArgumentException("erosion can't be higher than 2.0F! Found " + max);
 				if (min < -2.0F) throw new IllegalArgumentException("erosion can't be smaller than 2.0F! Found " + min);
-				jsonArray("erosion", jsonArrayBuilder -> jsonArrayBuilder.add(min).add(max));
+				this.add("erosion", arrayOf(min, max));
 				return this;
 			}
 
@@ -163,7 +158,7 @@ public class BiomeSourceBuilder extends TypedJsonObject {
 				if (max > 2.0F) throw new IllegalArgumentException("weirdness can't be higher than 2.0F! Found " + max);
 				if (min < -2.0F)
 					throw new IllegalArgumentException("weirdness can't be smaller than 2.0F! Found " + min);
-				jsonArray("weirdness", jsonArrayBuilder -> jsonArrayBuilder.add(min).add(max));
+				this.add("weirdness", arrayOf(min, max));
 				return this;
 			}
 
@@ -178,7 +173,7 @@ public class BiomeSourceBuilder extends TypedJsonObject {
 			public BiomeParametersBuilder depth(float min, float max) {
 				if (max > 2.0F) throw new IllegalArgumentException("depth can't be higher than 2.0F! Found " + max);
 				if (min < -2.0F) throw new IllegalArgumentException("depth can't be smaller than 2.0F! Found " + min);
-				jsonArray("depth", jsonArrayBuilder -> jsonArrayBuilder.add(min).add(max));
+				this.add("depth", arrayOf(min, max));
 				return this;
 			}
 
@@ -194,8 +189,8 @@ public class BiomeSourceBuilder extends TypedJsonObject {
 	}
 
 	public static CheckerboardBiomeSourceBuilder checkerBoard(int scale, String... biomeID) {
-        return new CheckerboardBiomeSourceBuilder().scale(scale).addBiome(biomeID);
-    }
+		return new CheckerboardBiomeSourceBuilder().scale(scale).addBiome(biomeID);
+	}
 
 	public static class CheckerboardBiomeSourceBuilder extends BiomeSourceBuilder {
 
@@ -212,15 +207,15 @@ public class BiomeSourceBuilder extends TypedJsonObject {
 			return this;
 		}
 
-		public CheckerboardBiomeSourceBuilder addBiome(String biomeId) {
-			this.root.getAsJsonArray("biomes").add(biomeId);
+		public CheckerboardBiomeSourceBuilder addBiome(String... biomeId) {
+			this.join("biomes", arrayOf(biomeId));
 			return this;
 		}
 	}
 
 	public static FixedBiomeSourceBuilder fixed(String biomeID) {
-        return new FixedBiomeSourceBuilder().biome(biomeID);
-    }
+		return new FixedBiomeSourceBuilder().biome(biomeID);
+	}
 
 	public static class FixedBiomeSourceBuilder extends BiomeSourceBuilder {
 		public FixedBiomeSourceBuilder() {

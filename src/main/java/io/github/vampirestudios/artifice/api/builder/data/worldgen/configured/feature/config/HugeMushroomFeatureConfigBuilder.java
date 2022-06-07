@@ -8,15 +8,15 @@ public class HugeMushroomFeatureConfigBuilder extends FeatureConfigBuilder {
 		super();
 	}
 
-    public <P extends BlockStateProviderBuilder> HugeMushroomFeatureConfigBuilder capProvider(P processor) {
-        join("cap_provider", processor.build());
-        return this;
-    }
+	public <P extends BlockStateProviderBuilder> HugeMushroomFeatureConfigBuilder capProvider(P processor) {
+		join("cap_provider", processor.build());
+		return this;
+	}
 
-    public <P extends BlockStateProviderBuilder> HugeMushroomFeatureConfigBuilder stemProvider(P processor) {
-        join("stem_provider", processor.build());
-        return this;
-    }
+	public <P extends BlockStateProviderBuilder> HugeMushroomFeatureConfigBuilder stemProvider(P processor) {
+		join("stem_provider", processor.build());
+		return this;
+	}
 
 	public HugeMushroomFeatureConfigBuilder foliageRadius(int foliageRadius) {
 		this.root.addProperty("foliage_radius", foliageRadius);

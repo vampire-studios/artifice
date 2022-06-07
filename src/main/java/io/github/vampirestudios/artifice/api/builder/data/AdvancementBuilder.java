@@ -12,17 +12,20 @@ import net.minecraft.resources.ResourceLocation;
  * @see <a href="https://minecraft.gamepedia.com/Advancements#JSON_Format" target="_blank">Minecraft Wiki</a>
  */
 public final class AdvancementBuilder extends TypedJsonObject {
-    public AdvancementBuilder() { super(new JsonObject()); }
+	public AdvancementBuilder() {
+		super(new JsonObject());
+	}
 
-    /**
-     * Set the display options for this advancement.
-     * @param settings A callback which will be passed a {@link Display}.
-     * @return this
-     */
-    public AdvancementBuilder display(Display settings) {
-        join("display", settings.build());
-        return this;
-    }
+	/**
+	 * Set the display options for this advancement.
+	 *
+	 * @param settings A callback which will be passed a {@link Display}.
+	 * @return this
+	 */
+	public AdvancementBuilder display(Display settings) {
+		join("display", settings.build());
+		return this;
+	}
 
 	/**
 	 * Set the parent advancement for this to inherit from.
@@ -35,38 +38,42 @@ public final class AdvancementBuilder extends TypedJsonObject {
 		return this;
 	}
 
-    /**
-     * Add a critera for this advancement to be received.
-     * @param name The name of this criteria.
-     * @param settings A {@link Criteria}.
-     * @return this
-     */
-    public AdvancementBuilder criteria(String name, Criteria settings) {
-        join("criteria", new TypedJsonObject().add(name, settings).build());
-        return this;
-    }
+	/**
+	 * Add a critera for this advancement to be received.
+	 *
+	 * @param name     The name of this criteria.
+	 * @param settings A {@link Criteria}.
+	 * @return this
+	 */
+	public AdvancementBuilder criteria(String name, Criteria settings) {
+		join("criteria", new TypedJsonObject().add(name, settings).build());
+		return this;
+	}
 
-    /**
-     * Set which criteria are required to receive this advancement.
-     * Passing multiple critera names will allow the advancement to be received if any of the given critera are completed.
-     * Calling this multiple times will add a new set of requirements. Each set must have at least one contained criteria completed
-     *  to receive the advancement.
-     * If this is not called, all criteria will be required by default.
-     *
-     * @param anyOf A list of criteria names, any of which can be completed to fulfill this requirement.
-     * @return this
-     */
-    public AdvancementBuilder requirement(String... anyOf) {
-        join("requirements", arrayOf(anyOf));
-        return this;
-    }
+	/**
+	 * Set which criteria are required to receive this advancement.
+	 * Passing multiple critera names will allow the advancement to be received if any of the given critera are completed.
+	 * Calling this multiple times will add a new set of requirements. Each set must have at least one contained criteria completed
+	 * to receive the advancement.
+	 * If this is not called, all criteria will be required by default.
+	 *
+	 * @param anyOf A list of criteria names, any of which can be completed to fulfill this requirement.
+	 * @return this
+	 */
+	public AdvancementBuilder requirement(String... anyOf) {
+		join("requirements", arrayOf(anyOf));
+		return this;
+	}
 
-    /**
-     * Builder for advancement display properties.
-     * @see AdvancementBuilder
-     */
-    public static final class Display extends TypedJsonObject {
-        public Display() { super(); }
+	/**
+	 * Builder for advancement display properties.
+	 *
+	 * @see AdvancementBuilder
+	 */
+	public static final class Display extends TypedJsonObject {
+		public Display() {
+			super();
+		}
 
 		/**
 		 * Set the icon item of this advancement.
@@ -78,19 +85,20 @@ public final class AdvancementBuilder extends TypedJsonObject {
 			return icon(item, null);
 		}
 
-        /**
-         * Set the icon item of this advancement.
-         * @param item The item ID.
-         * @param nbt A string containing the JSON-serialized NBT of the item.
-         * @return this
-         */
-        public Display icon(ResourceLocation item, String nbt) {
-            TypedJsonObject icon = new TypedJsonObject();
-            icon.add("item", item.toString());
-            if(nbt != null) icon.add("nbt", nbt);
-            join("icon", icon.build());
-            return this;
-        }
+		/**
+		 * Set the icon item of this advancement.
+		 *
+		 * @param item The item ID.
+		 * @param nbt  A string containing the JSON-serialized NBT of the item.
+		 * @return this
+		 */
+		public Display icon(ResourceLocation item, String nbt) {
+			TypedJsonObject icon = new TypedJsonObject();
+			icon.add("item", item.toString());
+			if (nbt != null) icon.add("nbt", nbt);
+			join("icon", icon.build());
+			return this;
+		}
 
 		/**
 		 * Set the title of this advancement.
@@ -211,35 +219,39 @@ public final class AdvancementBuilder extends TypedJsonObject {
 	}
 
 	/**
-     * Builder for advancement criteria.
-     * @see AdvancementBuilder
-     * @see <a href="https://minecraft.gamepedia.com/Advancements#List_of_triggers" target="_blank">Minecraft Wiki</a>
-     */
-    public static final class Criteria extends TypedJsonObject {
-        public Criteria() { super(); }
+	 * Builder for advancement criteria.
+	 *
+	 * @see AdvancementBuilder
+	 * @see <a href="https://minecraft.gamepedia.com/Advancements#List_of_triggers" target="_blank">Minecraft Wiki</a>
+	 */
+	public static final class Criteria extends TypedJsonObject {
+		public Criteria() {
+			super();
+		}
 
-        /**
-         * Set the trigger condition of this criteria.
-         * @param id The trigger ID ({@code namespace:triggerid}).
-         * @return this
-         * @see <a href="https://minecraft.fandom.com/wiki/Advancement/JSON_format#List_of_triggers" target="_blank">Minecraft Wiki</a>
-         */
-        public Criteria trigger(ResourceLocation id) {
-            root.addProperty("trigger", id.toString());
-            return this;
-        }
+		/**
+		 * Set the trigger condition of this criteria.
+		 *
+		 * @param id The trigger ID ({@code namespace:triggerid}).
+		 * @return this
+		 * @see <a href="https://minecraft.fandom.com/wiki/Advancement/JSON_format#List_of_triggers" target="_blank">Minecraft Wiki</a>
+		 */
+		public Criteria trigger(ResourceLocation id) {
+			root.addProperty("trigger", id.toString());
+			return this;
+		}
 
-        /**
-         * Set the condition values for the given trigger.
-         * These vary from trigger to trigger, so this falls through to direct JSON building.
-         *
-         * @param settings A callback which will be passed a {@link JsonObjectBuilder}.
-         * @return this
-         * @see <a href="https://minecraft.gamepedia.com/Advancements#List_of_triggers" target="_blank">Minecraft Wiki</a>
-         */
-        public Criteria conditions(JsonObjectBuilder settings) {
-            root.add("conditions", settings.build());
-            return this;
-        }
-    }
+		/**
+		 * Set the condition values for the given trigger.
+		 * These vary from trigger to trigger, so this falls through to direct JSON building.
+		 *
+		 * @param settings A callback which will be passed a {@link JsonObjectBuilder}.
+		 * @return this
+		 * @see <a href="https://minecraft.gamepedia.com/Advancements#List_of_triggers" target="_blank">Minecraft Wiki</a>
+		 */
+		public Criteria conditions(JsonObjectBuilder settings) {
+			root.add("conditions", settings.build());
+			return this;
+		}
+	}
 }

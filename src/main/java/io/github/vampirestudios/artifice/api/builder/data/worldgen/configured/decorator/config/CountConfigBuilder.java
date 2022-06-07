@@ -12,8 +12,8 @@ public class CountConfigBuilder extends DecoratorConfigBuilder {
 		return this;
 	}
 
-    public CountConfigBuilder count(UniformIntDistributionBuilder processor) {
-        join("count", processor.build());
-        return this;
-    }
+	public CountConfigBuilder count(UniformIntDistributionBuilder processor) {
+		join("count", processor.build());
+		return this;
+	}
 }

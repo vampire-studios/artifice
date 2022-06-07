@@ -11,7 +11,7 @@ Installation:
 
 ```gradle
 dependencies {
-  modImplementation "io.github.vampirestudios:artifice:0.19.0+build.1-22w15a"
-  include "io.github.vampirestudios:artifice:0.19.0+build.1-22w15a"
+  modImplementation "io.github.vampirestudios:artifice:0.30.1+build.1-1.19"
+  include "io.github.vampirestudios:artifice:0.30.1+build.1-1.19"
 }
 ```

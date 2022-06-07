@@ -3,147 +3,136 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class SurfaceRulesBuilder extends TypedJsonObject {
 
 	public SurfaceRulesBuilder() {
-		super(new JsonObject(), j -> j);
+		super(new JsonObject());
 	}
 
-	public static Map.Entry<String, String> hole() {
-		return Map.entry("type", "minecraft:hole");
+	public static SurfaceRulesBuilder hole() {
+		SurfaceRulesBuilder builder = new SurfaceRulesBuilder();
+		builder.add("type", "minecraft:hole");
+		return builder;
 	}
 
-	public static Map.Entry<String, String> steep() {
-		return Map.entry("type", "minecraft:steep");
+	public static SurfaceRulesBuilder steep() {
+		SurfaceRulesBuilder builder = new SurfaceRulesBuilder();
+		builder.add("type", "minecraft:steep");
+		return builder;
 	}
 
-	public static Map.Entry<String, String> temperature() {
-		return Map.entry("type", "minecraft:temperature");
+	public static SurfaceRulesBuilder temperature() {
+		SurfaceRulesBuilder builder = new SurfaceRulesBuilder();
+		builder.add("type", "minecraft:temperature");
+		return builder;
 	}
 
-	public static Map.Entry<String, String> aboveMainSurface() {
-		return Map.entry("type", "minecraft:above_preliminary_surface");
+	public static SurfaceRulesBuilder aboveMainSurface() {
+		SurfaceRulesBuilder builder = new SurfaceRulesBuilder();
+		builder.add("type", "minecraft:above_preliminary_surface");
+		return builder;
 	}
 
 	//maybe this should be less verbose considering surface rules are literally just a ton of unique entries nested in sequences and conditionals
-	public SurfaceRulesBuilder sequence(SurfaceRulesBuilder... ruleBuilders) {
-		jsonArray("sequence", jsonArrayBuilder -> {
-			for (SurfaceRulesBuilder rule : ruleBuilders) {
-				jsonArrayBuilder.add(rule.build());
-			}
-		});
-		root.addProperty("type", "minecraft:sequence");
-		return this;
+	public static SurfaceRulesBuilder sequence(SurfaceRulesBuilder... ruleBuilders) {
+		SurfaceRulesBuilder builder = new SurfaceRulesBuilder();
+		builder.add("sequence", arrayOf(ruleBuilders))
+				.add("type", "minecraft:sequence");
+		return builder;
 	}
 
-	public SurfaceRulesBuilder condition(SurfaceRulesBuilder ifTrue, SurfaceRulesBuilder theRun) {
-		this.with("if_true", JsonObject::new, ifTrue::buildTo);
-		this.with("then_run", JsonObject::new, theRun::buildTo);
-		root.addProperty("type", "minecraft:condition");
-		return this;
+	public static SurfaceRulesBuilder condition(SurfaceRulesBuilder ifTrue, SurfaceRulesBuilder thenRun) {
+		SurfaceRulesBuilder builder = new SurfaceRulesBuilder();
+		builder.add("if_true", ifTrue.build())
+				.add("then_run", thenRun.build())
+				.add("type", "minecraft:condition");
+		return builder;
 	}
 
-	public SurfaceRulesBuilder condition(Map.Entry<String, String> ifTrue, SurfaceRulesBuilder theRun) {
-		this.with("if_true", JsonObject::new, jsonObject -> jsonObject.addProperty(ifTrue.getKey(), ifTrue.getValue()));
-		this.with("then_run", JsonObject::new, theRun::buildTo);
-		root.addProperty("type", "minecraft:condition");
-		return this;
+	public static SurfaceRulesBuilder bandlands() {
+		SurfaceRulesBuilder builder = new SurfaceRulesBuilder();
+		builder.add("type", "minecraft:bandlands");
+		return builder;
 	}
 
-	public SurfaceRulesBuilder bandlands() {
-		root.addProperty("type", "minecraft:bandlands");
-		return this;
+	public static SurfaceRulesBuilder block(StateDataBuilder blockStateBuilderProcessor) {
+		SurfaceRulesBuilder builder = new SurfaceRulesBuilder();
+		builder.join("result_state", blockStateBuilderProcessor.build());
+		builder.add("type", "minecraft:block");
+		return builder;
 	}
 
-	public SurfaceRulesBuilder block(StateDataBuilder builder) {
-		with("result_type", JsonObject::new, builder::buildTo);
-		return this;
+	public static SurfaceRulesBuilder verticalGradient(String randomName, YOffsetBuilder trueAtAndBelow, YOffsetBuilder falseAtAndAbove) {
+		SurfaceRulesBuilder builder = new SurfaceRulesBuilder();
+		builder.add("random_name", randomName)
+				.add("true_at_and_below", trueAtAndBelow.build())
+				.add("false_at_and_above", falseAtAndAbove.build())
+				.add("type", "minecraft:vertical_gradient");
+		return builder;
 	}
 
-	public SurfaceRulesBuilder block(String name, Map.Entry<String, String> blockState) {
-		JsonObject resultState = new JsonObject();
-		resultState.addProperty("Name", name);
-
-		JsonObject blockStateObject = new JsonObject();
-		blockStateObject.addProperty(blockState.getKey(), blockState.getValue());
-		resultState.add("Properties", blockStateObject);
-
-		this.root.add("result_state", resultState);
-		this.root.addProperty("type", "minecraft:block");
-		return this;
+	public static SurfaceRulesBuilder not(SurfaceRulesBuilder rule) {
+		SurfaceRulesBuilder builder = new SurfaceRulesBuilder();
+		builder.add("invert", rule.build());
+		builder.add("type", "minecraft:not");
+		return builder;
 	}
 
-	public SurfaceRulesBuilder verticalGradient(String randomName, Map.Entry<String, Integer> trueAtAndBelow, Map.Entry<String, Integer> falseAtAndAbove) {
-		root.addProperty("random_name", randomName);
-		this.with("true_at_and_below", JsonObject::new, jsonObject -> jsonObject.addProperty(trueAtAndBelow.getKey(), trueAtAndBelow.getValue()));
-		this.with("false_at_and_above", JsonObject::new, jsonObject -> jsonObject.addProperty(falseAtAndAbove.getKey(), falseAtAndAbove.getValue()));
-		root.addProperty("type", "minecraft:vertical_gradient");
-		return this;
-	}
-
-	public SurfaceRulesBuilder not(Processor<SurfaceRulesBuilder> rule) {
-		this.with("invert", JsonObject::new, jsonObject -> rule.process(new SurfaceRulesBuilder()).buildTo(jsonObject));
-		root.addProperty("type", "minecraft:not");
-		return this;
-	}
-
-	public SurfaceRulesBuilder biome(ResourceKey<Biome>... biomes) {
+	public static SurfaceRulesBuilder biome(ResourceKey<Biome>... biomes) {
 		List<ResourceLocation> values = new ArrayList<>();
 		for (ResourceKey<Biome> biome : biomes) {
 			values.add(biome.location());
 		}
-		return this.biome(values.toArray(new ResourceLocation[0]));
+		return biome(values.toArray(new ResourceLocation[0]));
 	}
 
-	public SurfaceRulesBuilder biome(ResourceLocation... biomes) {
+	public static SurfaceRulesBuilder biome(ResourceLocation... biomes) {
 		List<String> values = new ArrayList<>();
 		for (ResourceLocation biome : biomes) {
 			values.add(biome.toString());
 		}
-		return this.biome(values.toArray(new String[0]));
+		return biome(values.toArray(new String[0]));
 	}
 
-	public SurfaceRulesBuilder biome(String... biomes) {
-		jsonArray("biome_is", jsonArrayBuilder -> {
-			for (String biome : biomes) {
-				jsonArrayBuilder.add(biome);
-			}
-		});
-		root.addProperty("type", "minecraft:biome");
-		return this;
+	public static SurfaceRulesBuilder biome(String... biomes) {
+		SurfaceRulesBuilder builder = new SurfaceRulesBuilder();
+		builder.add("biome_is", arrayOf(biomes));
+		builder.add("type", "minecraft:biome");
+		return builder;
 	}
 
-	public SurfaceRulesBuilder yAbove(Map.Entry<String, Integer> yPos, int surfaceDepthMultiplier, boolean addStoneDepth) {
-		this.with("anchor", JsonObject::new, jsonObject -> jsonObject.addProperty(yPos.getKey(), yPos.getValue()));
-		root.addProperty("surface_depth_multiplier", surfaceDepthMultiplier);
-		root.addProperty("add_stone_depth", addStoneDepth);
-		root.addProperty("type", "minecraft:y_above");
-		return this;
+	public static SurfaceRulesBuilder yAbove(YOffsetBuilder yPos, int surfaceDepthMultiplier, boolean addStoneDepth) {
+		SurfaceRulesBuilder builder = new SurfaceRulesBuilder();
+		builder.add("anchor", yPos.build())
+				.add("surface_depth_multiplier", surfaceDepthMultiplier)
+				.add("add_stone_depth", addStoneDepth)
+				.add("type", "minecraft:y_above");
+		return builder;
 	}
 
-	public SurfaceRulesBuilder water(int offset, int surfaceDepthMultiplier, boolean addStoneDepth) {
-		root.addProperty("offset", offset);
-		root.addProperty("surface_depth_multiplier", surfaceDepthMultiplier);
-		root.addProperty("add_stone_depth", addStoneDepth);
-		root.addProperty("type", "minecraft:water");
-		return this;
+	public static SurfaceRulesBuilder water(int offset, int surfaceDepthMultiplier, boolean addStoneDepth) {
+		SurfaceRulesBuilder builder = new SurfaceRulesBuilder();
+		builder.add("offset", offset)
+				.add("surface_depth_multiplier", surfaceDepthMultiplier)
+				.add("add_stone_depth", addStoneDepth)
+				.add("type", "minecraft:water");
+		return builder;
 	}
 
-	public SurfaceRulesBuilder noiseThreshold(String noiseId, double min, double max) {
-		root.addProperty("noise", noiseId);
-		root.addProperty("min_threshold", min);
-		root.addProperty("max_threshold", max);
-		root.addProperty("type", "minecraft:noise_threshold");
-		return this;
+	public static SurfaceRulesBuilder noiseThreshold(String noiseId, double min, double max) {
+		SurfaceRulesBuilder builder = new SurfaceRulesBuilder();
+		builder.add("noise", noiseId)
+				.add("min_threshold", min)
+				.add("max_threshold", max)
+				.add("type", "minecraft:noise_threshold");
+		return builder;
 	}
 
 	/*

@@ -196,37 +196,36 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 			JsonResource<JsonObject> mcmeta = new JsonResource<>(builder.build());
 			new Thread(() -> {
 				writeResourceFile(new File(filePath + "/pack.mcmeta"), mcmeta);
+				try {
+					File DEFAULT_OUTPUT = new File(filePath);
+					Path folder = Paths.get(DEFAULT_OUTPUT.toURI());
+
+					for (Map.Entry<String, Supplier<byte[]>> e : this.root.entrySet()) {
+						Path root = folder.resolve(e.getKey());
+						Files.createDirectories(root.getParent());
+						Files.write(root, e.getValue().get());
+					}
+
+					Path assets = folder.resolve("assets");
+					Files.createDirectories(assets);
+					for (Map.Entry<ResourceLocation, Supplier<byte[]>> entry : this.assets.entrySet()) {
+						this.write(assets, entry.getKey(), entry.getValue().get());
+					}
+
+					Path data = folder.resolve("data");
+					Files.createDirectories(data);
+					for (Map.Entry<ResourceLocation, Supplier<byte[]>> entry : this.data.entrySet()) {
+						this.write(data, entry.getKey(), entry.getValue().get());
+					}
+				} catch (IOException exception) {
+					throw new RuntimeException(exception);
+				}
 				resources.forEach((id, resource) -> {
 					String path = String.format("./%s/%s/%s/%s", filePath, type, id.getNamespace(), id.getPath());
 					writeResourceFile(new File(path), resource);
 				});
 				LogManager.getLogger().info("[Artifice] Finished dumping " + getName() + " " + type + ".");
 			}).start();
-
-			try {
-				File DEFAULT_OUTPUT = new File(filePath);
-				Path folder = Paths.get(DEFAULT_OUTPUT.toURI());
-
-				for (Map.Entry<String, Supplier<byte[]>> e : this.root.entrySet()) {
-					Path root = folder.resolve(e.getKey());
-					Files.createDirectories(root.getParent());
-					Files.write(root, e.getValue().get());
-				}
-
-				Path assets = folder.resolve("assets");
-				Files.createDirectories(assets);
-				for (Map.Entry<ResourceLocation, Supplier<byte[]>> entry : this.assets.entrySet()) {
-					this.write(assets, entry.getKey(), entry.getValue().get());
-				}
-
-				Path data = folder.resolve("data");
-				Files.createDirectories(data);
-				for (Map.Entry<ResourceLocation, Supplier<byte[]>> entry : this.data.entrySet()) {
-					this.write(data, entry.getKey(), entry.getValue().get());
-				}
-			} catch (IOException exception) {
-				throw new RuntimeException(exception);
-			}
 		}
 
 		private void write(Path dir, ResourceLocation identifier, byte[] data) {
@@ -271,7 +270,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 			this.getSys(type).put(identifier, () -> {
 				try {
 					return future.get();
-				} catch(InterruptedException | ExecutionException e) {
+				} catch (InterruptedException | ExecutionException e) {
 					throw new RuntimeException(e);
 				}
 			});
@@ -426,73 +425,48 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 		}
 
 		@Override
-		public void addDimensionType(ResourceLocation id , DimensionTypeBuilder f) {
+		public void addDimensionType(ResourceLocation id, DimensionTypeBuilder f) {
 			this.add("dimension_type/", id, ".json", f);
 		}
 
 		@Override
-		public void addDimension(ResourceLocation id , DimensionBuilder f) {
+		public void addDimension(ResourceLocation id, DimensionBuilder f) {
 			this.add("dimension/", id, ".json", f);
 		}
 
 		@Override
-		public void addBiome(ResourceLocation id , BiomeBuilder f) {
+		public void addBiome(ResourceLocation id, BiomeBuilder f) {
 			this.add("worldgen/biome/", id, ".json", f);
 		}
 
 		@Override
-		public void addConfiguredCarver(ResourceLocation id , ConfiguredCarverBuilder f) {
+		public void addConfiguredCarver(ResourceLocation id, ConfiguredCarverBuilder f) {
 			this.add("worldgen/configured_carver/", id, ".json", f);
 		}
 
 		@Override
-		public void addStructure(ResourceLocation id , StructureBuilder f) {
+		public void addStructure(ResourceLocation id, StructureBuilder f) {
 			this.add("worldgen/structure/", id, ".json", f);
 		}
 
 		@Override
-		public void addConfiguredFeature(ResourceLocation id , ConfiguredFeatureBuilder f) {
+		public void addConfiguredFeature(ResourceLocation id, ConfiguredFeatureBuilder f) {
 			this.add("worldgen/configured_feature/", id, ".json", f);
 		}
 
 		@Override
-		public void addPlacedFeature(ResourceLocation id , PlacedFeatureBuilder f) {
+		public void addPlacedFeature(ResourceLocation id, PlacedFeatureBuilder f) {
 			this.add("worldgen/placed_feature/", id, ".json", f);
 		}
 
 		@Override
-		public void addNoiseSettingsBuilder(ResourceLocation id , NoiseSettingsBuilder f) {
+		public void addNoiseSettingsBuilder(ResourceLocation id, NoiseSettingsBuilder f) {
 			this.add("worldgen/noise_settings/", id, ".json", f);
 		}
 
 		@Override
-		public void addLootTable(ResourceLocation id , LootTableBuilder f) {
+		public void addLootTable(ResourceLocation id, LootTableBuilder f) {
 			this.add("loot_tables/", id, ".json", f);
-		}
-
-		@Override
-		public void addItemTag(ResourceLocation id , TagBuilder f) {
-			this.add("tags/items/", id, ".json", f);
-		}
-
-		@Override
-		public void addBlockTag(ResourceLocation id , TagBuilder f) {
-			this.add("tags/blocks/", id, ".json", f);
-		}
-
-		@Override
-		public void addEntityTypeTag(ResourceLocation id , TagBuilder f) {
-			this.add("tags/entity_types/", id, ".json", f);
-		}
-
-		@Override
-		public void addFluidTag(ResourceLocation id , TagBuilder f) {
-			this.add("tags/fluids/", id, ".json", f);
-		}
-
-		@Override
-		public void addFunctionTag(ResourceLocation id , TagBuilder f) {
-			this.add("tags/functions/", id, ".json", f);
 		}
 
 		@Override
@@ -501,56 +475,56 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 		}
 
 		@Override
-		public void addGenericRecipe(ResourceLocation id , GenericRecipeBuilder f) {
+		public void addGenericRecipe(ResourceLocation id, GenericRecipeBuilder f) {
 			this.add("recipes/", id, ".json", f);
 		}
 
 		@Override
-		public void addShapedRecipe(ResourceLocation id , ShapedRecipeBuilder f) {
+		public void addShapedRecipe(ResourceLocation id, ShapedRecipeBuilder f) {
 			this.add("recipes/", id, ".json", f);
 		}
 
 		@Override
-		public void addShapelessRecipe(ResourceLocation id , ShapelessRecipeBuilder f) {
+		public void addShapelessRecipe(ResourceLocation id, ShapelessRecipeBuilder f) {
 			this.add("recipes/", id, ".json", f);
 		}
 
 		@Override
-		public void addStonecuttingRecipe(ResourceLocation id , StonecuttingRecipeBuilder f) {
+		public void addStonecuttingRecipe(ResourceLocation id, StonecuttingRecipeBuilder f) {
 			this.add("recipes/", id, ".json", f);
 		}
 
 		@Override
-		public void addSmeltingRecipe(ResourceLocation id , CookingRecipeBuilder f) {
+		public void addSmeltingRecipe(ResourceLocation id, CookingRecipeBuilder f) {
 			this.add("recipes/", id, ".json", r -> r.type(new ResourceLocation("smelting")), CookingRecipeBuilder::new);
 		}
 
 		@Override
-		public void addBlastingRecipe(ResourceLocation id , CookingRecipeBuilder f) {
+		public void addBlastingRecipe(ResourceLocation id, CookingRecipeBuilder f) {
 			this.add("recipes/", id, ".json", r -> r.type(new ResourceLocation("blasting")), CookingRecipeBuilder::new);
 		}
 
 		@Override
-		public void addSmokingRecipe(ResourceLocation id , CookingRecipeBuilder f) {
+		public void addSmokingRecipe(ResourceLocation id, CookingRecipeBuilder f) {
 			this.add("recipes/", id, ".json", r -> r.type(new ResourceLocation("smoking")), CookingRecipeBuilder::new);
 		}
 
 		@Override
-		public void addCampfireRecipe(ResourceLocation id , CookingRecipeBuilder f) {
+		public void addCampfireRecipe(ResourceLocation id, CookingRecipeBuilder f) {
 			this.add("recipes/", id, ".json", r -> r.type(new ResourceLocation("campfire_cooking")), CookingRecipeBuilder::new);
 		}
 
 		@Override
-		public void addSmithingRecipe(ResourceLocation id , SmithingRecipeBuilder f) {
+		public void addSmithingRecipe(ResourceLocation id, SmithingRecipeBuilder f) {
 			this.add("recipes/", id, ".json", r -> r.type(new ResourceLocation("blasting")), SmithingRecipeBuilder::new);
 		}
 
-		private <T extends TypedJsonBuilder<? extends JsonResource<?>>> void add(String path, ResourceLocation id, String ext, Processor<T> f, Supplier<T> ctor) {
-			this.add(IdUtils.wrapPath(path, id, ext), f.process(ctor.get()).build());
+		private <T extends TypedJsonObject> void add(String path, ResourceLocation id, String ext, Processor<T> f, Supplier<T> ctor) {
+			this.add(IdUtils.wrapPath(path, id, ext), new JsonResource<>(f.process(ctor.get()).build()));
 		}
 
-		private <T extends TypedJsonBuilder<? extends JsonResource<?>>> void add(String path, ResourceLocation id, String ext, T ctor) {
-			this.add(IdUtils.wrapPath(path, id, ext), ctor.build());
+		private <T extends TypedJsonObject> void add(String path, ResourceLocation id, String ext, T ctor) {
+			this.add(IdUtils.wrapPath(path, id, ext), new JsonResource<>(ctor.build()));
 		}
 
 		private static ResourceLocation fix(ResourceLocation identifier, String prefix, String append) {
@@ -729,7 +703,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 	}
 
 	private void lock() {
-		if(!this.waiting.tryLock()) {
+		if (!this.waiting.tryLock()) {
 			this.waiting.lock();
 		}
 	}

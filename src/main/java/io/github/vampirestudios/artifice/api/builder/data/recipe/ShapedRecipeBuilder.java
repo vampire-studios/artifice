@@ -27,38 +27,41 @@ public final class ShapedRecipeBuilder extends RecipeBuilder<ShapedRecipeBuilder
 		return this;
 	}
 
-    /**
-     * Add an ingredient item.
-     * @param key The key in the recipe pattern corresponding to this ingredient.
-     * @param id The item ID.
-     * @return this
-     */
-    public ShapedRecipeBuilder ingredientItem(Character key, ResourceLocation id) {
-        join("key", new TypedJsonObject().add(key.toString(), new TypedJsonObject().add("item", id.toString()).build()).build());
-        return this;
-    }
+	/**
+	 * Add an ingredient item.
+	 *
+	 * @param key The key in the recipe pattern corresponding to this ingredient.
+	 * @param id  The item ID.
+	 * @return this
+	 */
+	public ShapedRecipeBuilder ingredientItem(Character key, ResourceLocation id) {
+		join("key", new TypedJsonObject().add(key.toString(), new TypedJsonObject().add("item", id.toString()).build()).build());
+		return this;
+	}
 
-    /**
-     * Add an ingredient item as any of the given tag.
-     * @param key The key in the recipe pattern corresponding to this ingredient.
-     * @param id The tag ID.
-     * @return this
-     */
-    public ShapedRecipeBuilder ingredientTag(Character key, ResourceLocation id) {
-        join("key", new TypedJsonObject().add(key.toString(), new TypedJsonObject().add("tag", id.toString()).build()).build());
-        return this;
-    }
+	/**
+	 * Add an ingredient item as any of the given tag.
+	 *
+	 * @param key The key in the recipe pattern corresponding to this ingredient.
+	 * @param id  The tag ID.
+	 * @return this
+	 */
+	public ShapedRecipeBuilder ingredientTag(Character key, ResourceLocation id) {
+		join("key", new TypedJsonObject().add(key.toString(), new TypedJsonObject().add("tag", id.toString()).build()).build());
+		return this;
+	}
 
-    /**
-     * Add an ingredient item as one of a list of options.
-     * @param key The key in the recipe pattern corresponding to this ingredient.
-     * @param settings A callback which will be passed a {@link MultiIngredientBuilder}.
-     * @return this
-     */
-    public ShapedRecipeBuilder multiIngredient(Character key, MultiIngredientBuilder settings) {
-        join("key", new TypedJsonObject().add(key.toString(), settings.build()).build());
-        return this;
-    }
+	/**
+	 * Add an ingredient item as one of a list of options.
+	 *
+	 * @param key      The key in the recipe pattern corresponding to this ingredient.
+	 * @param settings A callback which will be passed a {@link MultiIngredientBuilder}.
+	 * @return this
+	 */
+	public ShapedRecipeBuilder multiIngredient(Character key, MultiIngredientBuilder settings) {
+		join("key", new TypedJsonObject().add(key.toString(), settings.build()).build());
+		return this;
+	}
 
 	/**
 	 * Set the item produced by this recipe.

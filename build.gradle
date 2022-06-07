@@ -5,11 +5,9 @@ plugins {
     id 'org.quiltmc.quilt-mappings-on-loom' version '4.+'
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
 archivesBaseName = project.archives_base_name
-version = project.mod_version + "+" + "build." + project.build_number + "-" + project.minecraft_version
-group = project.maven_group
+version = "$mod_version+build.$build_number-$minecraft_version"
+group = maven_group
 
 repositories {
     mavenCentral()
@@ -71,16 +69,23 @@ processResources {
 java {
     withSourcesJar()
     withJavadocJar()
+    toolchain.languageVersion = JavaLanguageVersion.of(17)
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.encoding = "UTF-8"
     it.options.release = 17
+    it.options.encoding = 'UTF-8'
+}
+
+compileJava {
+    options.compilerArgs += '--enable-preview'
 }
 
 jar {
-    from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}"}
+    from('LICENSE') {
+        rename {
+            "${it}_$archivesBaseName"
+        }
     }
 }
 

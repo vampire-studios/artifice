@@ -18,10 +18,10 @@ public class FloatProviderBuilders extends TypedJsonObject {
 		FloatProviderBuilders builder = new FloatProviderBuilders();
 
 		TypedJsonObject value = new TypedJsonObject()
-			.add("min_inclusive", minInclusive)
-			.add("max_exclusive", maxExclusive);
+				.add("min_inclusive", minInclusive)
+				.add("max_exclusive", maxExclusive);
 		builder.add("type", "minecraft:uniform")
-			.add("value", value.build());
+				.add("value", value.build());
 
 		return builder;
 	}

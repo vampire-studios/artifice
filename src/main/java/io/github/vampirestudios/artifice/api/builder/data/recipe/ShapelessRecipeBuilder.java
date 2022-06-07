@@ -15,35 +15,38 @@ public final class ShapelessRecipeBuilder extends RecipeBuilder<ShapelessRecipeB
 		type(new ResourceLocation("crafting_shapeless"));
 	}
 
-    /**
-     * Add an ingredient item.
-     * @param id The item ID.
-     * @return this
-     */
-    public ShapelessRecipeBuilder ingredientItem(ResourceLocation id) {
-        join("ingredients", arrayOf(new TypedJsonObject().add("item", id.toString())));
-        return this;
-    }
+	/**
+	 * Add an ingredient item.
+	 *
+	 * @param id The item ID.
+	 * @return this
+	 */
+	public ShapelessRecipeBuilder ingredientItem(ResourceLocation id) {
+		join("ingredients", arrayOf(new TypedJsonObject().add("item", id.toString())));
+		return this;
+	}
 
-    /**
-     * Add an ingredient item as any of the given tag.
-     * @param id The tag ID.
-     * @return this
-     */
-    public ShapelessRecipeBuilder ingredientTag(ResourceLocation id) {
-        join("ingredients", arrayOf(new TypedJsonObject().add("tag", id.toString())));
-        return this;
-    }
+	/**
+	 * Add an ingredient item as any of the given tag.
+	 *
+	 * @param id The tag ID.
+	 * @return this
+	 */
+	public ShapelessRecipeBuilder ingredientTag(ResourceLocation id) {
+		join("ingredients", arrayOf(new TypedJsonObject().add("tag", id.toString())));
+		return this;
+	}
 
-    /**
-     * Add an ingredient item as one of a list of options.
-     * @param settings A callback which will be passed a {@link MultiIngredientBuilder}.
-     * @return this
-     */
-    public ShapelessRecipeBuilder multiIngredient(MultiIngredientBuilder settings) {
-        join("ingredients", arrayOf(settings.build()));
-        return this;
-    }
+	/**
+	 * Add an ingredient item as one of a list of options.
+	 *
+	 * @param settings A callback which will be passed a {@link MultiIngredientBuilder}.
+	 * @return this
+	 */
+	public ShapelessRecipeBuilder multiIngredient(MultiIngredientBuilder settings) {
+		join("ingredients", arrayOf(settings.build()));
+		return this;
+	}
 
 	/**
 	 * Set the item produced by this recipe.

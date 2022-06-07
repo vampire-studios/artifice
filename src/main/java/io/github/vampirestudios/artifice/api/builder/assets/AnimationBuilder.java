@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.util.Processor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -15,7 +14,9 @@ import net.fabricmc.api.Environment;
  */
 @Environment(EnvType.CLIENT)
 public final class AnimationBuilder extends TypedJsonObject {
-    public AnimationBuilder() { super(new JsonObject());}
+	public AnimationBuilder() {
+		super(new JsonObject());
+	}
 
 	/**
 	 * Set whether this animation should interpolate between frames with a frametime &gt; 1 between them.

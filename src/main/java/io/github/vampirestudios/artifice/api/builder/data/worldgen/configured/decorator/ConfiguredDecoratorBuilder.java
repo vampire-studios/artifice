@@ -6,21 +6,21 @@ import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.de
 
 public class ConfiguredDecoratorBuilder extends TypedJsonObject {
 
-    public ConfiguredDecoratorBuilder() {
-        super(new JsonObject());
-    }
+	public ConfiguredDecoratorBuilder() {
+		super(new JsonObject());
+	}
 
 	public ConfiguredDecoratorBuilder name(String decoratorID) {
 		this.root.addProperty("type", decoratorID);
 		return this;
 	}
 
-    public <C extends DecoratorConfigBuilder> ConfiguredDecoratorBuilder config(C processor) {
-        join("config", processor.build());
-        return this;
-    }
+	public <C extends DecoratorConfigBuilder> ConfiguredDecoratorBuilder config(C processor) {
+		join("config", processor.build());
+		return this;
+	}
 
-    public ConfiguredDecoratorBuilder defaultConfig() {
-        return this.config(new DecoratorConfigBuilder());
-    }
+	public ConfiguredDecoratorBuilder defaultConfig() {
+		return this.config(new DecoratorConfigBuilder());
+	}
 }

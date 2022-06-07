@@ -13,7 +13,9 @@ import net.minecraft.resources.ResourceLocation;
  */
 @Environment(EnvType.CLIENT)
 public final class ModelBuilder extends TypedJsonObject {
-    public ModelBuilder() { super(new JsonObject()); }
+	public ModelBuilder() {
+		super(new JsonObject());
+	}
 
 	/**
 	 * Set the parent model for this model to inherit from.
@@ -26,37 +28,40 @@ public final class ModelBuilder extends TypedJsonObject {
 		return this;
 	}
 
-    /**
-     * Associate a texture with the given variable name.
-     * @param name The texture variable name.
-     * @param path The texture ID ({@code namespace:type/textureid}).
-     * @return this
-     */
-    public ModelBuilder texture(String name, ResourceLocation path) {
-        join("textures", new TypedJsonObject().add(name, path.toString()).build());
-        return this;
-    }
+	/**
+	 * Associate a texture with the given variable name.
+	 *
+	 * @param name The texture variable name.
+	 * @param path The texture ID ({@code namespace:type/textureid}).
+	 * @return this
+	 */
+	public ModelBuilder texture(String name, ResourceLocation path) {
+		join("textures", new TypedJsonObject().add(name, path.toString()).build());
+		return this;
+	}
 
-    /**
-     * Modify the display transformation properties of this model for the given display position.
-     * @param name The position name (e.g. {@code thirdperson_righthand}).
-     * @param settings A callback which will be passed a {@link Display}.
-     * @return this
-     */
-    public ModelBuilder display(String name, Display settings) {
-        join("display", new TypedJsonObject().add(name, settings).build());
-        return this;
-    }
+	/**
+	 * Modify the display transformation properties of this model for the given display position.
+	 *
+	 * @param name     The position name (e.g. {@code thirdperson_righthand}).
+	 * @param settings A callback which will be passed a {@link Display}.
+	 * @return this
+	 */
+	public ModelBuilder display(String name, Display settings) {
+		join("display", new TypedJsonObject().add(name, settings).build());
+		return this;
+	}
 
-    /**
-     * Add an element to this model.
-     * @param settings A callback which will be passed a {@link ModelElementBuilder}.
-     * @return this
-     */
-    public ModelBuilder element(ModelElementBuilder settings) {
-        join("elements", arrayOf(settings));
-        return this;
-    }
+	/**
+	 * Add an element to this model.
+	 *
+	 * @param settings A callback which will be passed a {@link ModelElementBuilder}.
+	 * @return this
+	 */
+	public ModelBuilder element(ModelElementBuilder settings) {
+		join("elements", arrayOf(settings));
+		return this;
+	}
 
 	/**
 	 * Set whether this model should use ambient occlusion for lighting. Only applicable for block models.
@@ -69,23 +74,27 @@ public final class ModelBuilder extends TypedJsonObject {
 		return this;
 	}
 
-    /**
-     * Add a property override to this model. Only applicable for item models.
-     * @param settings A callback which will be passed a {@link Override}.
-     * @return this
-     */
-    public ModelBuilder override(Override settings) {
-        join("predicate", arrayOf(settings));
-        return this;
-    }
+	/**
+	 * Add a property override to this model. Only applicable for item models.
+	 *
+	 * @param settings A callback which will be passed a {@link Override}.
+	 * @return this
+	 */
+	public ModelBuilder override(Override settings) {
+		join("predicate", arrayOf(settings));
+		return this;
+	}
 
-    /**
-     * Builder for model display settings.
-     * @see ModelBuilder
-     */
-    @Environment(EnvType.CLIENT)
-    public static final class Display extends TypedJsonObject {
-        public Display() { super(); }
+	/**
+	 * Builder for model display settings.
+	 *
+	 * @see ModelBuilder
+	 */
+	@Environment(EnvType.CLIENT)
+	public static final class Display extends TypedJsonObject {
+		public Display() {
+			super();
+		}
 
 		/**
 		 * Set the rotation of this model around each axis.
@@ -127,26 +136,30 @@ public final class ModelBuilder extends TypedJsonObject {
 		}
 	}
 
-    /**
-     * Builder for an item model property override.
-     * @see ModelBuilder
-     */
-    @Environment(EnvType.CLIENT)
-    public static final class Override extends TypedJsonObject {
-        public Override() { super(); }
+	/**
+	 * Builder for an item model property override.
+	 *
+	 * @see ModelBuilder
+	 */
+	@Environment(EnvType.CLIENT)
+	public static final class Override extends TypedJsonObject {
+		public Override() {
+			super();
+		}
 
-        /**
-         * Set the required value of the given property.
-         * Calling this multiple times will require all properties to match.
-         * @param name The item property tag.
-         * @param value The required integer value.
-         * @return this
-         * @see <a href="https://minecraft.gamepedia.com/Model#Item_tags">Minecraft Wiki</a>
-         */
-        public Override predicate(String name, int value) {
-            join("predicate", new TypedJsonObject().add(name, value).build());
-            return this;
-        }
+		/**
+		 * Set the required value of the given property.
+		 * Calling this multiple times will require all properties to match.
+		 *
+		 * @param name  The item property tag.
+		 * @param value The required integer value.
+		 * @return this
+		 * @see <a href="https://minecraft.gamepedia.com/Model#Item_tags">Minecraft Wiki</a>
+		 */
+		public Override predicate(String name, int value) {
+			join("predicate", new TypedJsonObject().add(name, value).build());
+			return this;
+		}
 
 		/**
 		 * Set the model to be used instead of this one if the predicate matches.

@@ -12,23 +12,23 @@ public class SimpleBlockFeatureConfigBuilder extends FeatureConfigBuilder {
 		this.root.add("place_under", new JsonArray());
 	}
 
-    public SimpleBlockFeatureConfigBuilder toPlace(StateDataBuilder processor) {
-        join("to_place", processor.build());
-        return this;
-    }
+	public SimpleBlockFeatureConfigBuilder toPlace(StateDataBuilder processor) {
+		join("to_place", processor.build());
+		return this;
+	}
 
-    public SimpleBlockFeatureConfigBuilder addPlaceOn(StateDataBuilder processor) {
-        this.root.getAsJsonArray("place_on").add(processor.build());
-        return this;
-    }
+	public SimpleBlockFeatureConfigBuilder addPlaceOn(StateDataBuilder processor) {
+		this.root.getAsJsonArray("place_on").add(processor.build());
+		return this;
+	}
 
-    public SimpleBlockFeatureConfigBuilder addPlaceIn(StateDataBuilder processor) {
-        this.root.getAsJsonArray("place_in").add(processor.build());
-        return this;
-    }
+	public SimpleBlockFeatureConfigBuilder addPlaceIn(StateDataBuilder processor) {
+		this.root.getAsJsonArray("place_in").add(processor.build());
+		return this;
+	}
 
-    public SimpleBlockFeatureConfigBuilder addPlaceUnder(StateDataBuilder processor) {
-        this.root.getAsJsonArray("place_under").add(processor.build());
-        return this;
-    }
+	public SimpleBlockFeatureConfigBuilder addPlaceUnder(StateDataBuilder processor) {
+		this.root.getAsJsonArray("place_under").add(processor.build());
+		return this;
+	}
 }

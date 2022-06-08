@@ -12,7 +12,7 @@ Installation:
 
 ```gradle
 dependencies {
-  modImplementation "io.github.vampirestudios:artifice:0.19.0-rewrite+build.1-1.18.2"
-  include "io.github.vampirestudios:artifice:0.19.0-rewrite+build.1-1.18.2"
+  modImplementation "io.github.vampirestudios:artifice:0.19.0-rewrite+build.2-1.18.2"
+  include "io.github.vampirestudios:artifice:0.19.0-rewrite+build.2-1.18.2"
 }
 ```

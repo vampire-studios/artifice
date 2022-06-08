@@ -9,6 +9,10 @@ public class PlacedFeatureBuilder extends TypedJsonObject {
         super(new JsonObject());
     }
 
+    public static PlacedFeatureBuilder create(String id, PlacementModifier... placementModifiers) {
+        return new PlacedFeatureBuilder().feature(id).placementModifiers(placementModifiers);
+    }
+
     public PlacedFeatureBuilder feature(String id) {
         this.root.addProperty("feature", id);
         return this;

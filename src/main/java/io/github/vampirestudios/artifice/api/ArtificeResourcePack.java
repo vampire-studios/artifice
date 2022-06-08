@@ -1,5 +1,6 @@
 package io.github.vampirestudios.artifice.api;
 
+import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.assets.*;
 import io.github.vampirestudios.artifice.api.builder.data.AdvancementBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.LootTableBuilder;
@@ -10,7 +11,6 @@ import io.github.vampirestudios.artifice.api.builder.data.recipe.*;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.NoiseSettingsBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.biome.BiomeBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.ConfiguredCarverBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.ConfiguredSurfaceBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.ConfiguredFeatureBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.PlacedFeatureBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.structure.ConfiguredStructureFeatureBuilder;
@@ -29,6 +29,7 @@ import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.ServerPacksSource;
+
 import java.io.IOException;
 import java.util.function.Consumer;
 
@@ -173,6 +174,9 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
         void setOptional();
         
         void shouldOverwrite();
+
+        <T extends TypedJsonObject> void add(String path, ResourceLocation id, T f);
+        <T extends TypedJsonObject> void add(String path, ResourceLocation id, String ext, T f);
     }
 
     /**
@@ -186,7 +190,10 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          * @param id An item ID, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link ModelBuilder} to create the item model.
          */
-        void addItemModel(ResourceLocation id, Processor<ModelBuilder> f);
+        @Deprecated
+        default void addItemModel(ResourceLocation id, ModelBuilder f) {
+            this.addModel("item", id, f);
+        }
 
         /**
          * Add a block model for the given block ID.
@@ -194,7 +201,14 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          * @param id A block ID, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link ModelBuilder} to create the block model.
          */
-        void addBlockModel(ResourceLocation id, Processor<ModelBuilder> f);
+        @Deprecated
+        default void addBlockModel(ResourceLocation id, ModelBuilder f) {
+            this.addModel("block", id, f);
+        }
+
+        default void addModel(String modelType, ResourceLocation id, ModelBuilder f) {
+            this.add("models/" + modelType + "/", id, f);
+        }
 
         /**
          * Add a blockstate definition for the given block ID.
@@ -202,7 +216,9 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          * @param id A block ID, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link BlockStateBuilder} to create the blockstate definition.
          */
-        void addBlockState(ResourceLocation id, Processor<BlockStateBuilder> f);
+        default void addBlockState(ResourceLocation id, BlockStateBuilder f) {
+            this.add("blockstates/", id, f);
+        }
 
         /**
          * Add a translation file for the given language.
@@ -210,7 +226,9 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          * @param id The namespace and language code of the desired language.
          * @param f  A callback which will be passed a {@link TranslationBuilder} to create the language file.
          */
-        void addTranslations(ResourceLocation id, Processor<TranslationBuilder> f);
+        default void addTranslations(ResourceLocation id, TranslationBuilder f) {
+            this.add("lang/", id, f);
+        }
 
         /**
          * Add a particle definition for the given particle ID.
@@ -218,7 +236,9 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          * @param id A particle ID, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link ParticleBuilder} to create the particle definition.
          */
-        void addParticle(ResourceLocation id, Processor<ParticleBuilder> f);
+        default void addParticle(ResourceLocation id, ParticleBuilder f) {
+            this.add("particles/", id, f);
+        }
 
         /**
          * Add a texture animation for the given item ID.
@@ -226,7 +246,9 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          * @param id An item ID, which will be converted into the correct path.
          * @param f  A callback which will be passed an {@link AnimationBuilder} to create the texture animation.
          */
-        void addItemAnimation(ResourceLocation id, Processor<AnimationBuilder> f);
+        default void addItemAnimation(ResourceLocation id, AnimationBuilder f) {
+            this.addAnimation("item", id, f);
+        }
 
         /**
          * Add a texture animation for the given block ID.
@@ -234,7 +256,13 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          * @param id A block ID, which will be converted into the correct path.
          * @param f  A callback which will be passed an {@link AnimationBuilder} to create the texture animation.
          */
-        void addBlockAnimation(ResourceLocation id, Processor<AnimationBuilder> f);
+        default void addBlockAnimation(ResourceLocation id, AnimationBuilder f) {
+            this.addAnimation("block", id, f);
+        }
+
+        default void addAnimation(String type, ResourceLocation id, AnimationBuilder f) {
+            this.add(type + "/", id, f);
+        }
 
         /**
          * Add a custom language. Translations must be added separately with {@link ClientResourcePackBuilder#addTranslations}.
@@ -253,8 +281,6 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          */
         void addLanguage(String code, String region, String name, boolean rtl);
 
-
-
         /**
          * Mark this pack as visible (will be shown in the resource packs menu).
          */
@@ -271,81 +297,90 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          * @param id The ID of the advancement, which will be converted into the correct path.
          * @param f  A callback which will be passed an {@link AdvancementBuilder} to create the advancement.
          */
-        void addAdvancement(ResourceLocation id, Processor<AdvancementBuilder> f);
+        default void addAdvancement(ResourceLocation id, AdvancementBuilder f) {
+            this.add("advancements/", id, f);
+        }
 
         /**
          * Add a Dimension Type with the given ID.
          *
          * @param id The ID of the dimension type, which will be converted into the correct path.
-         * @param f A callback which will be passed an {@link DimensionTypeBuilder} to create the dimension type.
+         * @param f  A callback which will be passed an {@link DimensionTypeBuilder} to create the dimension type.
          */
-        void addDimensionType(ResourceLocation id, Processor<DimensionTypeBuilder> f);
+        default void addDimensionType(ResourceLocation id, DimensionTypeBuilder f) {
+            this.add("dimension_type/", id, f);
+        }
 
         /**
          * Add a Dimension with the given ID.
          *
          * @param id The ID of the dimension, which will be converted into the correct path.
-         * @param f A callback which will be passed an {@link DimensionBuilder} to create the dimension.
+         * @param f  A callback which will be passed an {@link DimensionBuilder} to create the dimension.
          */
-        void addDimension(ResourceLocation id, Processor<DimensionBuilder> f);
+        default void addDimension(ResourceLocation id, DimensionBuilder f) {
+            this.add("dimension/", id, f);
+        }
 
         /**
          * Add a Biome with the given ID.
          *
          * @param id The ID of the biome, which will be converted into the correct path.
-         * @param f A callback which will be passed an {@link BiomeBuilder} to create the biome.
+         * @param f  A callback which will be passed an {@link BiomeBuilder} to create the biome.
          */
-        void addBiome(ResourceLocation id, Processor<BiomeBuilder> f);
+        default void addBiome(ResourceLocation id, BiomeBuilder f) {
+            this.add("worldgen/biome/", id, f);
+        }
 
         /**
          * Add a Carver with the given ID.
          *
          * @param id The ID of the carver, which will be converted into the correct path.
-         * @param f A callback which will be passed an {@link ConfiguredCarverBuilder} to create the carver.
+         * @param f  A callback which will be passed an {@link ConfiguredCarverBuilder} to create the carver.
          */
-        void addConfiguredCarver(ResourceLocation id, Processor<ConfiguredCarverBuilder> f);
+        default void addConfiguredCarver(ResourceLocation id, ConfiguredCarverBuilder f) {
+            this.add("worldgen/configured_carver/", id, f);
+        }
 
         /**
          * Add a Carver with the given ID.
          *
          * @param id The ID of the carver, which will be converted into the correct path.
-         * @param f A callback which will be passed an {@link ConfiguredStructureFeatureBuilder} to create the carver.
+         * @param f  A callback which will be passed an {@link ConfiguredStructureFeatureBuilder} to create the carver.
          */
-        void addConfiguredStructureFeature(ResourceLocation id, Processor<ConfiguredStructureFeatureBuilder> f);
+        default void addConfiguredStructureFeature(ResourceLocation id, ConfiguredStructureFeatureBuilder f) {
+            this.add("worldgen/configured_structure_feature/", id, f);
+        }
 
         /**
          * Add a Feature with the given ID.
          *
          * @param id The ID of the feature, which will be converted into the correct path.
-         * @param f A callback which will be passed an {@link ConfiguredFeatureBuilder} to create the feature.
+         * @param f  A callback which will be passed an {@link ConfiguredFeatureBuilder} to create the feature.
          */
-        void addConfiguredFeature(ResourceLocation id, Processor<ConfiguredFeatureBuilder> f);
+        default void addConfiguredFeature(ResourceLocation id, ConfiguredFeatureBuilder f) {
+            this.add("worldgen/configured_feature/", id, f);
+        }
 
         /**
          * Add a Feature with the given ID.
          *
          * @param id The ID of the feature, which will be converted into the correct path.
-         * @param f A callback which will be passed an {@link PlacedFeatureBuilder} to create the feature.
+         * @param f  A callback which will be passed an {@link PlacedFeatureBuilder} to create the feature.
          */
-        void addPlacedFeature(ResourceLocation id, Processor<PlacedFeatureBuilder> f);
-
-        /**
-         * Add a ConfiguredSurfaceBuilder with the given ID.
-         *
-         * @param id The ID of the configured surface builder, which will be converted into the correct path.
-         * @param f A callback which will be passed an {@link ConfiguredSurfaceBuilder}
-         *          to create the configured surface .
-         */
-        void addConfiguredSurfaceBuilder(ResourceLocation id, Processor<ConfiguredSurfaceBuilder> f);
+        default void addPlacedFeature(ResourceLocation id, PlacedFeatureBuilder f) {
+            this.add("worldgen/placed_feature/", id, f);
+        }
 
         /**
          * Add a NoiseSettingsBuilder with the given ID.
          *
          * @param id The ID of the noise settings builder, which will be converted into the correct path.
-         * @param f A callback which will be passed an {@link NoiseSettingsBuilder}
-         *          to create the noise settings .
+         * @param f  A callback which will be passed an {@link NoiseSettingsBuilder}
+         *           to create the noise settings .
          */
-        void addNoiseSettingsBuilder(ResourceLocation id, Processor<NoiseSettingsBuilder> f);
+        default void addNoiseSettingsBuilder(ResourceLocation id, NoiseSettingsBuilder f) {
+            this.add("worldgen/noise_settings/", id, f);
+        }
 
         /**
          * Add a loot table with the given ID.
@@ -353,7 +388,9 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          * @param id The ID of the loot table, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link LootTableBuilder} to create the loot table.
          */
-        void addLootTable(ResourceLocation id, Processor<LootTableBuilder> f);
+        default void addLootTable(String type, ResourceLocation id, LootTableBuilder f) {
+            this.add("loot_tables/" + type + "/", id, f);
+        }
 
         /**
          * Add an item tag with the given ID.
@@ -361,7 +398,10 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          * @param id The ID of the tag, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
          */
-        void addItemTag(ResourceLocation id, TagBuilder f);
+        @Deprecated
+        default void addItemTag(ResourceLocation id, TagBuilder f) {
+            addTag("item", id, f);
+        }
 
         /**
          * Add a block tag with the given ID.
@@ -369,7 +409,10 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          * @param id The ID of the tag, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
          */
-        void addBlockTag(ResourceLocation id, TagBuilder f);
+        @Deprecated
+        default void addBlockTag(ResourceLocation id, TagBuilder f) {
+            addTag("block", id, f);
+        }
 
         /**
          * Add an entity type tag with the given ID.
@@ -377,7 +420,10 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          * @param id The ID of the tag, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
          */
-        void addEntityTypeTag(ResourceLocation id, TagBuilder f);
+        @Deprecated
+        default void addEntityTypeTag(ResourceLocation id, TagBuilder f) {
+            addTag("entity_type", id, f);
+        }
 
         /**
          * Add a fluid tag with the given ID.
@@ -385,7 +431,10 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          * @param id The ID of the tag, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
          */
-        void addFluidTag(ResourceLocation id, TagBuilder f);
+        @Deprecated
+        default void addFluidTag(ResourceLocation id, TagBuilder f) {
+            addTag("fluid", id, f);
+        }
 
         /**
          * Add a function tag with the given ID.
@@ -393,7 +442,21 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          * @param id The ID of the tag, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link TagBuilder} to create the tag.
          */
-        void addFunctionTag(ResourceLocation id, TagBuilder f);
+        @Deprecated
+        default void addFunctionTag(ResourceLocation id, TagBuilder f) {
+            addTag("function", id, f);
+        }
+
+        /**
+         * Add a tag with the given ID.
+         *
+         * @param tagType The type of tag you want
+         * @param id      The ID of the tag, which will be converted into the correct path.
+         * @param f       A callback which will be passed a {@link TagBuilder} to create the tag.
+         */
+        default void addTag(String tagType, ResourceLocation id, TagBuilder f) {
+            this.add("tags/" + tagType + "/", id, f);
+        }
 
         /**
          * Add a recipe with the given ID.
@@ -401,7 +464,10 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          * @param id The ID of the recipe, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link GenericRecipeBuilder} to create the recipe.
          */
-        void addGenericRecipe(ResourceLocation id, Processor<GenericRecipeBuilder> f);
+        @Deprecated
+        default void addGenericRecipe(ResourceLocation id, GenericRecipeBuilder f) {
+            this.addRecipe("generic", id, f);
+        }
 
         /**
          * Add a shaped crafting recipe with the given ID.
@@ -409,7 +475,10 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          * @param id The ID of the recipe, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link ShapedRecipeBuilder} to create the recipe.
          */
-        void addShapedRecipe(ResourceLocation id, Processor<ShapedRecipeBuilder> f);
+        @Deprecated
+        default void addShapedRecipe(ResourceLocation id, ShapedRecipeBuilder f) {
+            this.addRecipe("shaped", id, f);
+        }
 
         /**
          * Add a shapeless crafting recipe with the given ID.
@@ -417,7 +486,10 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          * @param id The ID of the recipe, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link ShapelessRecipeBuilder} to create the recipe.
          */
-        void addShapelessRecipe(ResourceLocation id, Processor<ShapelessRecipeBuilder> f);
+        @Deprecated
+        default void addShapelessRecipe(ResourceLocation id, ShapelessRecipeBuilder f) {
+            this.addRecipe("shapeless", id, f);
+        }
 
         /**
          * Add a stonecutter recipe with the given ID.
@@ -425,7 +497,10 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          * @param id The ID of the recipe, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link StonecuttingRecipeBuilder} to create the recipe.
          */
-        void addStonecuttingRecipe(ResourceLocation id, Processor<StonecuttingRecipeBuilder> f);
+        @Deprecated
+        default void addStonecuttingRecipe(ResourceLocation id, StonecuttingRecipeBuilder f) {
+            this.addRecipe("stonecutting", id, f);
+        }
 
         /**
          * Add a smelting recipe with the given ID.
@@ -433,7 +508,10 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          * @param id The ID of the recipe, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link CookingRecipeBuilder} to create the recipe.
          */
-        void addSmeltingRecipe(ResourceLocation id, Processor<CookingRecipeBuilder> f);
+        @Deprecated
+        default void addSmeltingRecipe(ResourceLocation id, CookingRecipeBuilder f) {
+            this.addRecipe("smelting", id, f);
+        }
 
         /**
          * Add a blast furnace recipe with the given ID.
@@ -441,7 +519,10 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          * @param id The ID of the recipe, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link CookingRecipeBuilder} to create the recipe.
          */
-        void addBlastingRecipe(ResourceLocation id, Processor<CookingRecipeBuilder> f);
+        @Deprecated
+        default void addBlastingRecipe(ResourceLocation id, CookingRecipeBuilder f) {
+            this.addRecipe("blasting", id, f);
+        }
 
         /**
          * Add a smoker recipe with the given ID.
@@ -449,7 +530,10 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          * @param id The ID of the recipe, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link CookingRecipeBuilder} to create the recipe.
          */
-        void addSmokingRecipe(ResourceLocation id, Processor<CookingRecipeBuilder> f);
+        @Deprecated
+        default void addSmokingRecipe(ResourceLocation id, CookingRecipeBuilder f) {
+            this.addRecipe("smoking", id, f);
+        }
 
         /**
          * Add a campfire recipe with the given ID.
@@ -457,14 +541,34 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
          * @param id The ID of the recipe, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link CookingRecipeBuilder} to create the recipe.
          */
-        void addCampfireRecipe(ResourceLocation id, Processor<CookingRecipeBuilder> f);
+        @Deprecated
+        default void addCampfireRecipe(ResourceLocation id, CookingRecipeBuilder f) {
+            this.addRecipe("campfire", id, f);
+        }
 
         /**
          * Add a smithing table recipe with the given ID.
          *
          * @param id The ID of the recipe, which will be converted into the correct path.
+         * @param f  A callback which will be passed a {@link SmithingRecipeBuilder} to create the recipe.
+         */
+        @Deprecated
+        default void addSmithingRecipe(ResourceLocation id, SmithingRecipeBuilder f) {
+            this.addRecipe("smithing", id, f);
+        }
+
+        /**
+         * Add a recipe with the given ID.
+         *
+         * @param id The ID of the recipe, which will be converted into the correct path.
          * @param f  A callback which will be passed a {@link CookingRecipeBuilder} to create the recipe.
          */
-        void addSmithingRecipe(ResourceLocation id, Processor<SmithingRecipeBuilder> f);
+        default void addRecipe(String recipeType, ResourceLocation id, RecipeBuilder<?> f) {
+            if (f.rootFolder != null) {
+                this.add("recipes/" + f.rootFolder + "/", id, f.type(new ResourceLocation(recipeType)));
+            } else {
+                this.add("recipes/" + recipeType + "/", id, f.type(new ResourceLocation(recipeType)));
+            }
+        }
     }
 }

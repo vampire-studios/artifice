@@ -31,3 +31,7 @@ Added a feature API.
 - Will now warn instead of crash in a certain case of developer error. 
 ### 0.14.7
 - Added documentation for deprecated methods and made the warning messages more clear.
+
+# Rewrite of Artifice
+## 0.19.0-rewrite+build.1-1.18.2
+- Rewrote most of Artifice

@@ -14,7 +14,7 @@ import net.minecraft.util.Mth;
  */
 @Environment(EnvType.CLIENT)
 public final class ModelElementBuilder extends TypedJsonObject {
-    ModelElementBuilder() { super(new JsonObject()); }
+    public ModelElementBuilder() { super(new JsonObject()); }
 
     /**
      * Set the start point of this cuboid.
@@ -86,7 +86,7 @@ public final class ModelElementBuilder extends TypedJsonObject {
      */
     @Environment(EnvType.CLIENT)
     public static final class Rotation extends TypedJsonObject {
-        private Rotation(JsonObject root) { super(root); }
+        public Rotation(JsonObject root) { super(root); }
 
         /**
          * Set the origin point of this rotation.
@@ -144,7 +144,7 @@ public final class ModelElementBuilder extends TypedJsonObject {
      */
     @Environment(EnvType.CLIENT)
     public static final class Face extends TypedJsonObject {
-        private Face(JsonObject root) { super(root); }
+        public Face() { super(new JsonObject()); }
 
         /**
          * Set the texture UV to apply to this face. Detected by position within the block if not specified.

@@ -8,24 +8,9 @@ import com.mojang.bridge.game.PackType;
 import io.github.vampirestudios.artifice.api.ArtificeResourcePack;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.builder.assets.*;
-import io.github.vampirestudios.artifice.api.builder.data.AdvancementBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.LootTableBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.TagBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.dimension.DimensionBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.dimension.DimensionTypeBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.recipe.*;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.NoiseSettingsBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.biome.BiomeBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.ConfiguredCarverBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.ConfiguredSurfaceBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.ConfiguredFeatureBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.feature.PlacedFeatureBuilder;
-import io.github.vampirestudios.artifice.api.builder.data.worldgen.configured.structure.ConfiguredStructureFeatureBuilder;
 import io.github.vampirestudios.artifice.api.resource.ArtificeResource;
 import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import io.github.vampirestudios.artifice.api.util.IdUtils;
-import io.github.vampirestudios.artifice.api.util.Processor;
 import io.github.vampirestudios.artifice.api.virtualpack.ArtificeResourcePackContainer;
 import io.github.vampirestudios.artifice.common.ArtificeRegistry;
 import io.github.vampirestudios.artifice.common.ClientOnly;
@@ -47,7 +32,6 @@ import java.io.*;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 public class ArtificeResourcePackImpl implements ArtificeResourcePack {
     private final net.minecraft.server.packs.PackType type;
@@ -262,41 +246,6 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
         }
 
         @Override
-        public void addItemModel(ResourceLocation id, Processor<ModelBuilder> f) {
-            this.add("models/item/", id, ".json", f, ModelBuilder::new);
-        }
-
-        @Override
-        public void addBlockModel(ResourceLocation id, Processor<ModelBuilder> f) {
-            this.add("models/block/", id, ".json", f, ModelBuilder::new);
-        }
-
-        @Override
-        public void addBlockState(ResourceLocation id, Processor<BlockStateBuilder> f) {
-            this.add("blockstates/", id, ".json", f, BlockStateBuilder::new);
-        }
-
-        @Override
-        public void addTranslations(ResourceLocation id, Processor<TranslationBuilder> f) {
-            this.add("lang/", id, ".json", f, TranslationBuilder::new);
-        }
-
-        @Override
-        public void addParticle(ResourceLocation id, Processor<ParticleBuilder> f) {
-            this.add("particles/", id, ".json", f, ParticleBuilder::new);
-        }
-
-        @Override
-        public void addItemAnimation(ResourceLocation id, Processor<AnimationBuilder> f) {
-            this.add("textures/item/", id, ".mcmeta", f, AnimationBuilder::new);
-        }
-
-        @Override
-        public void addBlockAnimation(ResourceLocation id, Processor<AnimationBuilder> f) {
-            this.add("textures/block/", id, ".mcmeta", f, AnimationBuilder::new);
-        }
-
-        @Override
         public void addLanguage(LanguageInfo def) {
             ArtificeResourcePackImpl.this.languages.add(def);
         }
@@ -307,136 +256,14 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
             this.addLanguage(new LanguageInfo(code, region, name, rtl));
         }
 
-        @Override
-        public void addAdvancement(ResourceLocation id, Processor<AdvancementBuilder> f) {
-            this.add("advancements/", id, ".json", f, AdvancementBuilder::new);
-        }
 
         @Override
-        public void addDimensionType(ResourceLocation id, Processor<DimensionTypeBuilder> f) {
-            this.add("dimension_type/", id, ".json", f, DimensionTypeBuilder::new);
+        public <T extends TypedJsonObject> void add(String path, ResourceLocation id, T f) {
+            this.add(IdUtils.wrapPath(path, id, ".json"), new JsonResource(f.build()));
         }
 
         @Override
-        public void addDimension(ResourceLocation id, Processor<DimensionBuilder> f) {
-            this.add("dimension/", id, ".json", f, DimensionBuilder::new);
-        }
-
-        @Override
-        public void addBiome(ResourceLocation id, Processor<BiomeBuilder> f) {
-            this.add("worldgen/biome/", id, ".json", f, BiomeBuilder::new);
-        }
-
-        @Override
-        public void addConfiguredCarver(ResourceLocation id, Processor<ConfiguredCarverBuilder> f) {
-            this.add("worldgen/configured_carver/", id, ".json", f, ConfiguredCarverBuilder::new);
-        }
-
-        @Override
-        public void addConfiguredStructureFeature(ResourceLocation id, Processor<ConfiguredStructureFeatureBuilder> f) {
-            this.add("worldgen/configured_structure_feature/", id, ".json", f, ConfiguredStructureFeatureBuilder::new);
-        }
-
-        @Override
-        public void addConfiguredFeature(ResourceLocation id, Processor<ConfiguredFeatureBuilder> f) {
-            this.add("worldgen/configured_feature/", id, ".json", f, ConfiguredFeatureBuilder::new);
-        }
-
-        @Override
-        public void addPlacedFeature(ResourceLocation id, Processor<PlacedFeatureBuilder> f) {
-            this.add("worldgen/placed_feature/", id, ".json", f, PlacedFeatureBuilder::new);
-        }
-
-        //remove?, this has been moved to surface rules within noise within dimensions from surface builders
-        public void addConfiguredSurfaceBuilder(ResourceLocation id, Processor<ConfiguredSurfaceBuilder> f) {
-            this.add("worldgen/configured_surface_builder/", id, ".json", f, ConfiguredSurfaceBuilder::new);
-        }
-
-        @Override
-        public void addNoiseSettingsBuilder(ResourceLocation id, Processor<NoiseSettingsBuilder> f) {
-            this.add("worldgen/noise_settings/", id, ".json", f, NoiseSettingsBuilder::new);
-        }
-
-        @Override
-        public void addLootTable(ResourceLocation id, Processor<LootTableBuilder> f) {
-            this.add("loot_tables/", id, ".json", f, LootTableBuilder::new);
-        }
-
-        @Override
-        public void addItemTag(ResourceLocation id, TagBuilder f) {
-            this.add("tags/items/", id, ".json", f);
-        }
-
-        @Override
-        public void addBlockTag(ResourceLocation id, TagBuilder f) {
-            this.add("tags/blocks/", id, ".json", f);
-        }
-
-        @Override
-        public void addEntityTypeTag(ResourceLocation id, TagBuilder f) {
-            this.add("tags/entity_types/", id, ".json", f);
-        }
-
-        @Override
-        public void addFluidTag(ResourceLocation id, TagBuilder f) {
-            this.add("tags/fluids/", id, ".json", f);
-        }
-
-        @Override
-        public void addFunctionTag(ResourceLocation id, TagBuilder f) {
-            this.add("tags/functions/", id, ".json", f);
-        }
-
-        @Override
-        public void addGenericRecipe(ResourceLocation id, Processor<GenericRecipeBuilder> f) {
-            this.add("recipes/", id, ".json", f, GenericRecipeBuilder::new);
-        }
-
-        @Override
-        public void addShapedRecipe(ResourceLocation id, Processor<ShapedRecipeBuilder> f) {
-            this.add("recipes/", id, ".json", f, ShapedRecipeBuilder::new);
-        }
-
-        @Override
-        public void addShapelessRecipe(ResourceLocation id, Processor<ShapelessRecipeBuilder> f) {
-            this.add("recipes/", id, ".json", f, ShapelessRecipeBuilder::new);
-        }
-
-        @Override
-        public void addStonecuttingRecipe(ResourceLocation id, Processor<StonecuttingRecipeBuilder> f) {
-            this.add("recipes/", id, ".json", f, StonecuttingRecipeBuilder::new);
-        }
-
-        @Override
-        public void addSmeltingRecipe(ResourceLocation id, Processor<CookingRecipeBuilder> f) {
-            this.add("recipes/", id, ".json", r -> f.process(r.type(new ResourceLocation("smelting"))), CookingRecipeBuilder::new);
-        }
-
-        @Override
-        public void addBlastingRecipe(ResourceLocation id, Processor<CookingRecipeBuilder> f) {
-            this.add("recipes/", id, ".json", r -> f.process(r.type(new ResourceLocation("blasting"))), CookingRecipeBuilder::new);
-        }
-
-        @Override
-        public void addSmokingRecipe(ResourceLocation id, Processor<CookingRecipeBuilder> f) {
-            this.add("recipes/", id, ".json", r -> f.process(r.type(new ResourceLocation("smoking"))), CookingRecipeBuilder::new);
-        }
-
-        @Override
-        public void addCampfireRecipe(ResourceLocation id, Processor<CookingRecipeBuilder> f) {
-            this.add("recipes/", id, ".json", r -> f.process(r.type(new ResourceLocation("campfire_cooking"))), CookingRecipeBuilder::new);
-        }
-
-        @Override
-        public void addSmithingRecipe(ResourceLocation id, Processor<SmithingRecipeBuilder> f) {
-            this.add("recipes/", id, ".json", r -> f.process(r.type(new ResourceLocation("blasting"))), SmithingRecipeBuilder::new);
-        }
-
-        private <T extends TypedJsonObject> void add(String path, ResourceLocation id, String ext, Processor<T> f, Supplier<T> ctor) {
-            this.add(IdUtils.wrapPath(path, id, ext), new JsonResource(f.process(ctor.get()).build()));
-        }
-
-        private <T extends TypedJsonObject> void add(String path, ResourceLocation id, String ext, T f) {
+        public <T extends TypedJsonObject> void add(String path, ResourceLocation id, String ext, T f) {
             this.add(IdUtils.wrapPath(path, id, ext), new JsonResource(f.build()));
         }
     }

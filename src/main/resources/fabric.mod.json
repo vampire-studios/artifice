@@ -22,10 +22,13 @@
 
   "mixins": [ "artifice.mixins.json" ],
   "accessWidener": "artifice.accesswidener",
+  "entrypoints": {
+    "main": ["io.github.vampirestudios.artifice.impl.ArtificeImpl"]
+  },
 
   "depends": {
     "minecraft": ">=1.18",
-    "fabricloader": ">=0.13.3",
+    "fabricloader": ">=0.14.6",
     "java": "17"
   },
 

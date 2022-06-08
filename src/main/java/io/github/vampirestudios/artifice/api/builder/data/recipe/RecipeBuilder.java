@@ -2,7 +2,6 @@ package io.github.vampirestudios.artifice.api.builder.data.recipe;
 
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.resource.JsonResource;
 import net.minecraft.resources.ResourceLocation;
 
 /**
@@ -12,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
  */
 @SuppressWarnings("unchecked")
 public abstract class RecipeBuilder<T extends RecipeBuilder<T>> extends TypedJsonObject {
+    public String rootFolder;
     protected RecipeBuilder() { super(new JsonObject()); }
 
     /**
@@ -31,6 +31,11 @@ public abstract class RecipeBuilder<T extends RecipeBuilder<T>> extends TypedJso
      */
     public T group(ResourceLocation id) {
         root.addProperty("group", id.toString());
+        return (T)this;
+    }
+
+    public T rootFolder(String id) {
+        this.rootFolder = id;
         return (T)this;
     }
 }

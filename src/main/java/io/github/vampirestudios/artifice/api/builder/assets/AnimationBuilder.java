@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.util.Processor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -22,7 +21,7 @@ public final class AnimationBuilder extends TypedJsonObject {
      * @return this
      */
     public AnimationBuilder interpolate(boolean interpolate) {
-        root.addProperty("interpolate", interpolate);
+        add("interpolate", interpolate);
         return this;
     }
 
@@ -32,7 +31,7 @@ public final class AnimationBuilder extends TypedJsonObject {
      * @return this
      */
     public AnimationBuilder width(int width) {
-        root.addProperty("width", width);
+        add("width", width);
         return this;
     }
 
@@ -42,7 +41,7 @@ public final class AnimationBuilder extends TypedJsonObject {
      * @return this
      */
     public AnimationBuilder height(int height) {
-        root.addProperty("height", height);
+        add("height", height);
         return this;
     }
 
@@ -52,7 +51,7 @@ public final class AnimationBuilder extends TypedJsonObject {
      * @return this
      */
     public AnimationBuilder frametime(int frametime) {
-        root.addProperty("frametime", frametime);
+        add("frametime", frametime);
         return this;
     }
 
@@ -61,8 +60,8 @@ public final class AnimationBuilder extends TypedJsonObject {
      * @param settings A callback which will be passed a {@link FrameOrder}.
      * @return this
      */
-    public AnimationBuilder frames(Processor<FrameOrder> settings) {
-        root.add("frames", settings.process(new FrameOrder()).build());
+    public AnimationBuilder frames(FrameOrder settings) {
+        add("frames", settings.build());
         return this;
     }
 
@@ -73,7 +72,8 @@ public final class AnimationBuilder extends TypedJsonObject {
     @Environment(EnvType.CLIENT)
     public static final class FrameOrder {
         private final JsonArray frames = new JsonArray();
-        private FrameOrder() {}
+        public FrameOrder() {}
+
         JsonArray build() { return frames; }
 
         /**

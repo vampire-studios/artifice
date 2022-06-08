@@ -29,9 +29,11 @@ public class BiomeSourceBuilder extends TypedJsonObject {
     public static MultiNoiseBiomeSourceBuilder multiNoise() {
         return new MultiNoiseBiomeSourceBuilder();
     }
+
     public static MultiNoiseBiomeSourceBuilder.BiomeBuilder noiseBiome(String id, MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder biomeSettingsBuilder) {
         return new MultiNoiseBiomeSourceBuilder.BiomeBuilder().biome(id).parameters(biomeSettingsBuilder);
     }
+
     public static MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder noiseBiomeParameters() {
         return new MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder();
     }

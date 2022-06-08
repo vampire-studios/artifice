@@ -2,6 +2,9 @@ package io.github.vampirestudios.artifice.api.builder.data;
 
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 
 public class StateDataBuilder extends TypedJsonObject {
 
@@ -9,6 +12,20 @@ public class StateDataBuilder extends TypedJsonObject {
 
     public StateDataBuilder() {
         super(new JsonObject());
+    }
+
+    /**
+     * Set the id of the block.
+     */
+    public static StateDataBuilder name(Block block) {
+        return name(Registry.BLOCK.getKey(block).toString());
+    }
+
+    /**
+     * Set the id of the block.
+     */
+    public static StateDataBuilder name(ResourceLocation id) {
+        return name(id.toString());
     }
 
     /**

@@ -21,13 +21,21 @@
   "icon": "assets/artifice/icon.png",
 
   "entrypoints": {
-    "main": [ "com.swordglowsblue.artifice.test.ArtificeTestMod" ],
-    "client": [ "com.swordglowsblue.artifice.test.ArtificeTestClientMod" ]
+    "main": [
+      "com.swordglowsblue.artifice.test.ExampleMod"
+    ],
+    "artifice:data_pack": [
+      "com.swordglowsblue.artifice.test.ExampleMod"
+    ],
+    "artifice:asset_pack": [
+      "com.swordglowsblue.artifice.test.ExampleClientMod",
+      "com.swordglowsblue.artifice.test.ExampleClientMod2"
+    ]
   },
 
   "depends": {
     "minecraft": ">=1.18",
-    "fabricloader": ">=0.13.3",
+    "fabricloader": ">=0.14.6",
     "artifice": "*",
     "java": "17"
   }

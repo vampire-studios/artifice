@@ -9,10 +9,5 @@ pluginManagement {
         maven { url = "https://maven.quiltmc.org/repository/release" }
         maven { url = 'https://server.bbkr.space/artifactory/libs-release/' }
     }
-
-    plugins {
-        id 'fabric-loom' version loom_version
-        id "com.jfrog.bintray" version bintray_gradle_version
-    }
 }
 

@@ -71,7 +71,6 @@ public final class BlockStateBuilder extends TypedJsonObject {
     @Environment(EnvType.CLIENT)
     public static final class Variant extends TypedJsonObject {
         public Variant() { super(new JsonObject()); }
-        private Variant(JsonObject root) { super(root); }
 
         /**
          * Set the model this variant should use.
@@ -79,7 +78,7 @@ public final class BlockStateBuilder extends TypedJsonObject {
          * @return this
          */
         public Variant model(ResourceLocation id) {
-            root.addProperty("model", id.toString());
+            add("model", id.toString());
             return this;
         }
 
@@ -91,7 +90,7 @@ public final class BlockStateBuilder extends TypedJsonObject {
          */
         public Variant rotationX(int x) {
             if(x % 90 != 0) throw new IllegalArgumentException("X rotation must be in increments of 90");
-            root.addProperty("x", x);
+            add("x", x);
             return this;
         }
 
@@ -103,7 +102,7 @@ public final class BlockStateBuilder extends TypedJsonObject {
          */
         public Variant rotationY(int y) {
             if(y % 90 != 0) throw new IllegalArgumentException("Y rotation must be in increments of 90");
-            root.addProperty("y", y);
+            add("y", y);
             return this;
         }
 
@@ -113,7 +112,7 @@ public final class BlockStateBuilder extends TypedJsonObject {
          * @return this
          */
         public Variant uvlock(boolean uvlock) {
-            root.addProperty("uvlock", uvlock);
+            add("uvlock", uvlock);
             return this;
         }
 
@@ -125,7 +124,7 @@ public final class BlockStateBuilder extends TypedJsonObject {
          * @return this
          */
         public Variant weight(int weight) {
-            root.addProperty("weight", weight);
+            add("weight", weight);
             return this;
         }
     }
@@ -136,7 +135,7 @@ public final class BlockStateBuilder extends TypedJsonObject {
      */
     @Environment(EnvType.CLIENT)
     public static final class Case extends TypedJsonObject {
-        private Case() { super(new JsonObject()); }
+        public Case() { super(new JsonObject()); }
 
         /**
          * Set the condition for this case to be applied.
@@ -148,6 +147,7 @@ public final class BlockStateBuilder extends TypedJsonObject {
         public Case when(String name, String state) {
             join("when", new TypedJsonObject().add(name, state).build());
             JsonObject condit = this.getObj("when");
+            assert condit != null;
             if(condit.has("OR")){
                 JsonObject or = condit.getAsJsonObject("OR");
                 for (Map.Entry<String, JsonElement> a : condit.entrySet()) {

@@ -1,8 +1,11 @@
 package io.github.vampirestudios.artifice.api.builder.data.recipe;
 
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
-import io.github.vampirestudios.artifice.api.util.Processor;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 
 /**
  * Builder for cooking recipes ({@code namespace:recipes/id.json}).
@@ -21,6 +24,16 @@ public final class CookingRecipeBuilder extends RecipeBuilder<CookingRecipeBuild
     }
 
     /**
+     * Set the item being cooked.
+     * @param id The item ID.
+     * @return this
+     */
+    public CookingRecipeBuilder ingredientItem(ItemLike id) {
+        root.add("ingredient", new JsonObjectBuilder().add("item", Registry.ITEM.getKey(id.asItem()).toString()).build());
+        return this;
+    }
+
+    /**
      * Set the item being cooked as any of the given tag.
      * @param id The tag ID.
      * @return this
@@ -31,12 +44,22 @@ public final class CookingRecipeBuilder extends RecipeBuilder<CookingRecipeBuild
     }
 
     /**
+     * Set the item being cooked.
+     * @param id The item ID.
+     * @return this
+     */
+    public CookingRecipeBuilder ingredientItem(TagKey<Item> id) {
+        root.add("ingredient", new JsonObjectBuilder().add("item", id.location().toString()).build());
+        return this;
+    }
+
+    /**
      * Set the item being cooked as one of a list of options.
      * @param settings A callback which will be passed a {@link MultiIngredientBuilder}.
      * @return this
      */
-    public CookingRecipeBuilder multiIngredient(Processor<MultiIngredientBuilder> settings) {
-        root.add("ingredient", settings.process(new MultiIngredientBuilder()).build());
+    public CookingRecipeBuilder multiIngredient(MultiIngredientBuilder settings) {
+        root.add("ingredient", settings.build());
         return this;
     }
 
@@ -47,6 +70,16 @@ public final class CookingRecipeBuilder extends RecipeBuilder<CookingRecipeBuild
      */
     public CookingRecipeBuilder result(ResourceLocation id) {
         root.addProperty("result", id.toString());
+        return this;
+    }
+
+    /**
+     * Set the item produced by this recipe.
+     * @param id The item ID.
+     * @return this
+     */
+    public CookingRecipeBuilder result(ItemLike id) {
+        root.addProperty("result", Registry.ITEM.getKey(id.asItem()).toString());
         return this;
     }
 

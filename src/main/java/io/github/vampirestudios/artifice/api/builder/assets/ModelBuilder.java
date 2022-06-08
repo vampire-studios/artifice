@@ -82,7 +82,7 @@ public final class ModelBuilder extends TypedJsonObject {
      */
     @Environment(EnvType.CLIENT)
     public static final class Display extends TypedJsonObject {
-        private Display() { super(); }
+        public Display() { super(); }
 
         /**
          * Set the rotation of this model around each axis.
@@ -127,7 +127,7 @@ public final class ModelBuilder extends TypedJsonObject {
      */
     @Environment(EnvType.CLIENT)
     public static final class Override extends TypedJsonObject {
-        private Override() { super(); }
+        public Override() { super(); }
 
         /**
          * Set the required value of the given property.

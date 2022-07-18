@@ -47,6 +47,12 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 		return builder;
 	}
 
+	public static DensityFunctionBuilder input(ResourceKey<NoiseParameters> noise) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("input", noise.location().toString());
+		return builder;
+	}
+
 	/**
 	 * Calculates the absolute value of another density function.
 	 *
@@ -441,6 +447,28 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 	 * @return {@link DensityFunctionBuilder}
 	 **/
 	public static DensityFunctionBuilder rangeChoice(DensityFunctionBuilder input, HeightProviderBuilders minInclusive, HeightProviderBuilders maxExclusive,
+													 DensityFunctionBuilder whenInRange, DensityFunctionBuilder whenOutOfRange) {
+		DensityFunctionBuilder builder = new DensityFunctionBuilder();
+		builder.add("type", "minecraft:range_choice");
+		builder.add("noise", input.build());
+		builder.add("min_inclusive", minInclusive.build());
+		builder.add("max_exclusive", maxExclusive.build());
+		builder.add("when_in_range", whenInRange.build());
+		builder.add("when_out_of_range", whenOutOfRange.build());
+		return builder;
+	}
+
+	/**
+	 * Computes the input value, and depending on that result returns one of two other density functions. Basically an if-then-else statement.
+	 *
+	 * @param input          The input density function
+	 * @param minInclusive   The lower bound of the range
+	 * @param maxExclusive   The upper bound of the range
+	 * @param whenInRange    Density function that will be returned when the input is inside the range
+	 * @param whenOutOfRange Density function that will be returned When the input is outside the range
+	 * @return {@link DensityFunctionBuilder}
+	 **/
+	public static DensityFunctionBuilder rangeChoice(ResourceKey<NoiseParameters> input, HeightProviderBuilders minInclusive, HeightProviderBuilders maxExclusive,
 													 DensityFunctionBuilder whenInRange, DensityFunctionBuilder whenOutOfRange) {
 		DensityFunctionBuilder builder = new DensityFunctionBuilder();
 		builder.add("type", "minecraft:range_choice");

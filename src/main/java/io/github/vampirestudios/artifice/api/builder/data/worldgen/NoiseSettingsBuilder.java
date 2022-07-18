@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.data.StateDataBuilder;
 import io.github.vampirestudios.artifice.api.builder.data.dimension.NoiseConfigBuilder;
+import net.minecraft.world.level.levelgen.DensityFunction;
 import net.minecraft.world.level.levelgen.NoiseRouterData;
 import net.minecraft.world.level.levelgen.Noises;
 
@@ -155,6 +156,37 @@ public class NoiseSettingsBuilder extends TypedJsonObject {
 	}
 
 	private JsonObject addFinalDensity() {
+		DensityFunctionBuilder.min(DensityFunctionBuilder.square(
+						DensityFunctionBuilder.mul(
+								0.64,
+								DensityFunctionBuilder.interpolated(
+										DensityFunctionBuilder.blendDensity(
+												DensityFunctionBuilder.add(
+														0.1171875,
+														DensityFunctionBuilder.mul(
+																DensityFunctionBuilder.yClampedGradient(-64, -40, 0, 1),
+																DensityFunctionBuilder.add(
+																		-0.1171875,
+																		DensityFunctionBuilder.add(
+																				-0.078125,
+																				DensityFunctionBuilder.mul(
+																						DensityFunctionBuilder.yClampedGradient(240, 256, 1, 0),
+																						DensityFunctionBuilder.add(
+																								0.078125,
+																								DensityFunctionBuilder.rangeChoice(
+																										DensityFunction.
+																								)
+																						)
+																				)
+																		)
+																)
+														)
+												)
+										)
+								)
+						)
+				)
+		);
 		String finalDensity = """
 				{
 				      "type": "minecraft:min",

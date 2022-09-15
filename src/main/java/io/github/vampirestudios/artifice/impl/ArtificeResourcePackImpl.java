@@ -46,8 +46,10 @@ import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import org.apache.commons.io.input.NullInputStream;
-import org.apache.logging.log4j.LogManager;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -133,6 +135,8 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 		private final Map<ResourceLocation, Supplier<byte[]>> data = new ConcurrentHashMap<>();
 		private final Map<ResourceLocation, Supplier<byte[]>> assets = new ConcurrentHashMap<>();
 		private final Map<String, Supplier<byte[]>> root = new ConcurrentHashMap<>();
+		private static final Logger LOGGER = LoggerFactory.getLogger(ArtificeResourcePackBuilder.class);
+		private static final Executor EXECUTOR = Executors.newSingleThreadExecutor();
 
 		public ArtificeResourcePackBuilder() {
 		}
@@ -158,74 +162,92 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 		}
 
 		@Override
-		public void dumpResources(String filePath, String type) throws IOException {
-			LogManager.getLogger().info("[Artifice] Dumping " + getName() + " " + type + " to " + filePath + ", this may take a while.");
+		@ApiStatus.Internal
+		public void dumpResources(String filePath, String type, boolean enableDump) throws IOException {
+			if (enableDump) {
+				LOGGER.info("Dumping " + getName() + " " + type + " to " + filePath + ", this may take a while.");
 
-			File dir = new File(filePath);
-			if (!dir.exists() && !dir.mkdirs()) {
-				throw new IOException("Can't dump resources to " + filePath + "; couldn't create parent directories");
-			}
-			if (!dir.isDirectory()) {
-				throw new IllegalArgumentException("Can't dump resources to " + filePath + " as it's not a directory");
-			}
-			if (!dir.canWrite()) {
-				throw new IOException("Can't dump resources to " + filePath + "; permission denied");
-			}
-
-			JsonObject packMeta;
-			if (type.equals("assets")) {
-				packMeta = new JsonObjectBuilder()
-						.add("pack_format", SharedConstants.getCurrentVersion().getPackVersion(com.mojang.bridge.game.PackType.RESOURCE))
-						.add("description", description != null ? description.getString() : "In-memory resource pack created with Artifice")
-						.build();
-			} else {
-				packMeta = new JsonObjectBuilder()
-						.add("pack_format", SharedConstants.getCurrentVersion().getPackVersion(com.mojang.bridge.game.PackType.DATA))
-						.add("description", description != null ? description.getString() : "In-memory data pack created with Artifice")
-						.build();
-			}
-
-			JsonObject languageMeta = new JsonObject();
-			if (isClient()) {
-				addLanguages(languageMeta);
-			}
-
-			JsonObjectBuilder builder = new JsonObjectBuilder();
-			builder.add("pack", packMeta);
-			if (languages.size() > 0) builder.add("language", languageMeta);
-			JsonResource<JsonObject> mcmeta = new JsonResource<>(builder.build());
-			new Thread(() -> {
-				writeResourceFile(new File(filePath + "/pack.mcmeta"), mcmeta);
-				try {
-					File DEFAULT_OUTPUT = new File(filePath);
-					Path folder = Paths.get(DEFAULT_OUTPUT.toURI());
-
-					for (Map.Entry<String, Supplier<byte[]>> e : this.root.entrySet()) {
-						Path root = folder.resolve(e.getKey());
-						Files.createDirectories(root.getParent());
-						Files.write(root, e.getValue().get());
-					}
-
-					Path assets = folder.resolve("assets");
-					Files.createDirectories(assets);
-					for (Map.Entry<ResourceLocation, Supplier<byte[]>> entry : this.assets.entrySet()) {
-						this.write(assets, entry.getKey(), entry.getValue().get());
-					}
-
-					Path data = folder.resolve("data");
-					Files.createDirectories(data);
-					for (Map.Entry<ResourceLocation, Supplier<byte[]>> entry : this.data.entrySet()) {
-						this.write(data, entry.getKey(), entry.getValue().get());
-					}
-				} catch (IOException exception) {
-					throw new RuntimeException(exception);
+				File dir = new File(filePath);
+				if (!dir.exists() && !dir.mkdirs()) {
+					throw new IOException("Can't dump resources to " + filePath + "; couldn't create parent directories");
 				}
-				resources.forEach((id, resource) -> {
-					String path = String.format("./%s/%s/%s/%s", filePath, type, id.getNamespace(), id.getPath());
-					writeResourceFile(new File(path), resource);
+				if (!dir.isDirectory()) {
+					throw new IllegalArgumentException("Can't dump resources to " + filePath + " as it's not a directory");
+				}
+				if (!dir.canWrite()) {
+					throw new IOException("Can't dump resources to " + filePath + "; permission denied");
+				}
+
+				JsonObject packMeta;
+				if (type.equals("assets")) {
+					packMeta = new JsonObjectBuilder()
+							.add("pack_format", SharedConstants.getCurrentVersion().getPackVersion(com.mojang.bridge.game.PackType.RESOURCE))
+							.add("description", description != null ? description.getString() : "In-memory resource pack created with Artifice")
+							.build();
+				} else {
+					packMeta = new JsonObjectBuilder()
+							.add("pack_format", SharedConstants.getCurrentVersion().getPackVersion(com.mojang.bridge.game.PackType.DATA))
+							.add("description", description != null ? description.getString() : "In-memory data pack created with Artifice")
+							.build();
+				}
+
+				JsonObject languageMeta = new JsonObject();
+				if (isClient()) {
+					addLanguages(languageMeta);
+				}
+
+				JsonObjectBuilder builder = new JsonObjectBuilder();
+				builder.add("pack", packMeta);
+				if (languages.size() > 0) builder.add("language", languageMeta);
+				JsonResource<JsonObject> mcmeta = new JsonResource<>(builder.build());
+				new Thread(() -> {
+					writeResourceFile(new File(filePath + "/pack.mcmeta"), mcmeta);
+					try {
+						File DEFAULT_OUTPUT = new File(filePath);
+						Path folder = Paths.get(DEFAULT_OUTPUT.toURI());
+
+						for (Map.Entry<String, Supplier<byte[]>> e : this.root.entrySet()) {
+							Path root = folder.resolve(e.getKey());
+							Files.createDirectories(root.getParent());
+							Files.write(root, e.getValue().get());
+						}
+
+						Path assets = folder.resolve("assets");
+						Files.createDirectories(assets);
+						for (Map.Entry<ResourceLocation, Supplier<byte[]>> entry : this.assets.entrySet()) {
+							this.write(assets, entry.getKey(), entry.getValue().get());
+						}
+
+						Path data = folder.resolve("data");
+						Files.createDirectories(data);
+						for (Map.Entry<ResourceLocation, Supplier<byte[]>> entry : this.data.entrySet()) {
+							this.write(data, entry.getKey(), entry.getValue().get());
+						}
+					} catch (IOException exception) {
+						throw new RuntimeException(exception);
+					}
+					resources.forEach((id, resource) -> {
+						String path = String.format("./%s/%s/%s/%s", filePath, type, id.getNamespace(), id.getPath());
+						writeResourceFile(new File(path), resource);
+					});
+					LOGGER.info("Finished dumping " + getName() + " " + type + ".");
+				}).start();
+			} else {
+				LOGGER.info("Not dumping files cause dumping is disabled");
+			}
+		}
+
+		@Override
+		public void dump(String filePath, String type, boolean enableDump) {
+			if (enableDump) {
+				EXECUTOR.execute(() -> {
+					try {
+						dumpResources(filePath, type);
+					} catch (IOException e) {
+						throw new RuntimeException(e);
+					}
 				});
-				LogManager.getLogger().info("[Artifice] Finished dumping " + getName() + " " + type + ".");
-			}).start();
+			}
 		}
 
 		private void write(Path dir, ResourceLocation identifier, byte[] data) {

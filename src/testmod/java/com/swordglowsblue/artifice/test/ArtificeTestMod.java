@@ -21,6 +21,7 @@ import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.FoliagePl
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.TrunkPlacerBuilder.FancyTrunkPlacerBuilder;
 import io.github.vampirestudios.artifice.api.resource.StringResource;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -31,15 +32,16 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
-
-import java.io.IOException;
+import net.minecraft.world.level.material.Fluids;
 
 public class ArtificeTestMod implements ModInitializer {
 	private static final Item.Properties itemSettings = new Item.Properties().tab(CreativeModeTab.TAB_MISC);
@@ -152,33 +154,33 @@ public class ArtificeTestMod implements ModInitializer {
 			);*/
 
 			pack.addDimension(id("test_dimension"), new DimensionBuilder()
-					.dimensionType(/*testDimension.location()*/new ResourceLocation("overworld"))
-					.flatGenerator(ChunkGeneratorTypeBuilder.FlatChunks()
+					.dimensionType(BuiltinDimensionTypes.OVERWORLD)
+					.flatGenerator(ChunkGeneratorTypeBuilder.flatChunks()
 							.addLayer(
-									new LayersBuilder("minecraft:bedrock", 2),
-									new LayersBuilder("minecraft:deepslate", 10),
-									new LayersBuilder("minecraft:stone", 2),
-									new LayersBuilder("minecraft:granite", 2)
-							).biome("minecraft:plains")
+									new LayersBuilder(Blocks.BEDROCK, 2),
+									new LayersBuilder(Blocks.DEEPSLATE, 10),
+									new LayersBuilder(Blocks.STONE, 2),
+									new LayersBuilder(Blocks.GRANITE, 2)
+							).biome(Biomes.PLAINS)
 					)
 			);
 
 			pack.addDimension(id("test_dimension2"), new DimensionBuilder()
-					.dimensionType(/*testDimension.location()*/new ResourceLocation("overworld"))
-					.flatGenerator(ChunkGeneratorTypeBuilder.FlatChunks()
+					.dimensionType(BuiltinDimensionTypes.OVERWORLD)
+					.flatGenerator(ChunkGeneratorTypeBuilder.flatChunks()
 							.lakes(false).features(true)
 							.addLayer(
-									new LayersBuilder("minecraft:bedrock", 2),
-									new LayersBuilder("minecraft:deepslate", 10),
-									new LayersBuilder("minecraft:stone", 2),
-									new LayersBuilder("minecraft:andesite", 2)
-							).biome("minecraft:plains")
+									new LayersBuilder(Blocks.BEDROCK, 2),
+									new LayersBuilder(Blocks.DEEPSLATE, 10),
+									new LayersBuilder(Blocks.STONE, 2),
+									new LayersBuilder(Blocks.ANDESITE, 2)
+							).biome(Biomes.PLAINS)
 					)
 			);
 
 			pack.addDimension(id("test_dimension_custom"), new DimensionBuilder()
-					.dimensionType(/*testDimensionCustom.location()*/new ResourceLocation("overworld"))
-					.noiseGenerator(ChunkGeneratorTypeBuilder.NoiseChunks()
+					.dimensionType(BuiltinDimensionTypes.OVERWORLD)
+					.noiseGenerator(ChunkGeneratorTypeBuilder.noiseChunks()
 							.multiNoiseBiomeSource(BiomeSourceBuilder.multiNoise().biomes(
 									BiomeSourceBuilder.noiseBiome(
 											id("test_biome").toString(),
@@ -204,13 +206,13 @@ public class ArtificeTestMod implements ModInitializer {
 													.temperature(0).humidity(1).continentalness(0).erosion(0.2F)
 													.weirdness(0).depth(1).offset(0)
 									)
-							)).noiseSettings("minecraft:overworld")
+							)).noiseSettings(NoiseGeneratorSettings.OVERWORLD)
 					)
 			);
 
 			pack.addDimension(id("test_dimension_custom2"), new DimensionBuilder()
-					.dimensionType(/*testDimensionCustom.location()*/new ResourceLocation("overworld"))
-					.noiseGenerator(ChunkGeneratorTypeBuilder.NoiseChunks()
+					.dimensionType(BuiltinDimensionTypes.OVERWORLD)
+					.noiseGenerator(ChunkGeneratorTypeBuilder.noiseChunks()
 							.multiNoiseBiomeSource(BiomeSourceBuilder.multiNoise().biomes(
 									BiomeSourceBuilder.noiseBiome(
 											id("test_biome").toString(),
@@ -254,8 +256,8 @@ public class ArtificeTestMod implements ModInitializer {
 			pack.addBiome(id("test_biome"), new BiomeBuilder()
 					.precipitation(Biome.Precipitation.RAIN)
 					.temperature(0.8F).downfall(0.4F)
-					.addSpawnCosts("minecraft:bee", new BiomeBuilder.SpawnDensityBuilder(0.12, 1))
-					.addSpawnCosts("minecraft:cat", new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
+					.addSpawnCosts(EntityType.BEE, new BiomeBuilder.SpawnDensityBuilder(0.12, 1))
+					.addSpawnCosts(EntityType.CAT, new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
 					.effects(new BiomeEffectsBuilder()
 							.waterColor(4159204)
 							.waterFogColor(329011)
@@ -267,8 +269,8 @@ public class ArtificeTestMod implements ModInitializer {
 			pack.addBiome(id("test_biome2"), new BiomeBuilder()
 					.precipitation(Biome.Precipitation.RAIN)
 					.temperature(0.8F).downfall(0.4F)
-					.addSpawnCosts("minecraft:spider", new BiomeBuilder.SpawnDensityBuilder(0.6, 1))
-					.addSpawnCosts("minecraft:cat", new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
+					.addSpawnCosts(EntityType.SPIDER, new BiomeBuilder.SpawnDensityBuilder(0.6, 1))
+					.addSpawnCosts(EntityType.CAT, new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
 					.effects(new BiomeEffectsBuilder()
 							.waterColor(4159204)
 							.waterFogColor(329011)
@@ -280,8 +282,8 @@ public class ArtificeTestMod implements ModInitializer {
 			pack.addBiome(id("test_biome3"), new BiomeBuilder()
 					.precipitation(Biome.Precipitation.RAIN)
 					.temperature(2.0F).downfall(0.4F)
-					.addSpawnCosts("minecraft:bee", new BiomeBuilder.SpawnDensityBuilder(0.12, 1))
-					.addSpawnCosts("minecraft:cat", new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
+					.addSpawnCosts(EntityType.BEE, new BiomeBuilder.SpawnDensityBuilder(0.12, 1))
+					.addSpawnCosts(EntityType.CAT, new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
 					.effects(new BiomeEffectsBuilder()
 							.waterColor(4159204)
 							.waterFogColor(329011)
@@ -293,8 +295,8 @@ public class ArtificeTestMod implements ModInitializer {
 			pack.addBiome(id("test_biome4"), new BiomeBuilder()
 					.precipitation(Biome.Precipitation.RAIN)
 					.temperature(1.4F).downfall(1.0F)
-					.addSpawnCosts("minecraft:bee", new BiomeBuilder.SpawnDensityBuilder(0.12, 1))
-					.addSpawnCosts("minecraft:cat", new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
+					.addSpawnCosts(EntityType.BEE, new BiomeBuilder.SpawnDensityBuilder(0.12, 1))
+					.addSpawnCosts(EntityType.CAT, new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
 					.effects(new BiomeEffectsBuilder()
 							.waterColor(4159204)
 							.waterFogColor(329011)
@@ -305,11 +307,11 @@ public class ArtificeTestMod implements ModInitializer {
 
 			// gotta wait on noise config
 			pack.addNoiseSettingsBuilder(id("test_dimension"), NoiseSettingsBuilder.create(new NoiseSettingsBuilder()
-					.defaultBlock(StateDataBuilder.name("minecraft:stone"))
-					.defaultFluid(StateDataBuilder.name("minecraft:lava").setProperty("level", "0"))
+					.defaultBlock(StateDataBuilder.name(Blocks.STONE))
+					.defaultFluid(StateDataBuilder.name(Fluids.LAVA).setProperty(BlockStateProperties.LEVEL, 0))
 					.seaLevel(65).legacyRandomSource(false).aquifersEnabled(true)
-					.disableMobGeneration(false).aquifersEnabled(true).oreVeinsEnabled(true)
-					.oreVeinsEnabled(true).noiseConfig(NoiseConfigBuilder.noiseConfig(-64, 384, 1, 2))
+					.disableMobGeneration(false).oreVeinsEnabled(true).oreVeinsEnabled(true)
+					.noiseConfig(NoiseConfigBuilder.noiseConfig(-64, 384, 1, 2))
 					.noiseRouter().surfaceRules(SurfaceRulesBuilder.sequence(
 							SurfaceRulesBuilder.condition(
 									SurfaceRulesBuilder.verticalGradient(
@@ -317,7 +319,7 @@ public class ArtificeTestMod implements ModInitializer {
 											YOffsetBuilder.aboveBottom(0),
 											YOffsetBuilder.aboveBottom(5)
 									),
-									SurfaceRulesBuilder.block(StateDataBuilder.name("minecraft:bedrock"))
+									SurfaceRulesBuilder.block(StateDataBuilder.name(Blocks.BEDROCK))
 							),
 							SurfaceRulesBuilder.condition(
 									SurfaceRulesBuilder.verticalGradient(
@@ -325,7 +327,7 @@ public class ArtificeTestMod implements ModInitializer {
 											YOffsetBuilder.absolute(-16),
 											YOffsetBuilder.absolute(0)
 									),
-									SurfaceRulesBuilder.block(StateDataBuilder.name("minecraft:deepslate").setProperty("axis", "y"))
+									SurfaceRulesBuilder.block(StateDataBuilder.name(Blocks.DEEPSLATE).setProperty(BlockStateProperties.AXIS, Direction.Axis.Y.getName()))
 							),
 							SurfaceRulesBuilder.condition(
 									SurfaceRulesBuilder.verticalGradient(
@@ -333,35 +335,35 @@ public class ArtificeTestMod implements ModInitializer {
 											YOffsetBuilder.absolute(0),
 											YOffsetBuilder.absolute(16)
 									),
-									SurfaceRulesBuilder.block(StateDataBuilder.name("minecraft:tuff"))
+									SurfaceRulesBuilder.block(StateDataBuilder.name(Blocks.TUFF))
 							),
 							SurfaceRulesBuilder.condition(
 									SurfaceRulesBuilder.aboveMainSurface(),
 									SurfaceRulesBuilder.sequence(
 											SurfaceRulesBuilder.condition(
 													SurfaceRulesBuilder.biome(id("test_biome").toString()),
-													SurfaceRulesBuilder.block(StateDataBuilder.name("artifice:test_block"))),
-											SurfaceRulesBuilder.block(StateDataBuilder.name("minecraft:bedrock")))),
+													SurfaceRulesBuilder.block(StateDataBuilder.name(testBlock))),
+											SurfaceRulesBuilder.block(StateDataBuilder.name(Blocks.BEDROCK)))),
 							SurfaceRulesBuilder.condition(
 									SurfaceRulesBuilder.aboveMainSurface(),
 									SurfaceRulesBuilder.sequence(SurfaceRulesBuilder.condition(
 													SurfaceRulesBuilder.biome(id("test_biome").toString()),
-													SurfaceRulesBuilder.block(StateDataBuilder.name("artifice:test_block"))),
-											SurfaceRulesBuilder.block(StateDataBuilder.name("minecraft:grass_block")))
+													SurfaceRulesBuilder.block(StateDataBuilder.name(testBlock))),
+											SurfaceRulesBuilder.block(StateDataBuilder.name(Blocks.GRASS_BLOCK)))
 							), SurfaceRulesBuilder.condition(
 									SurfaceRulesBuilder.verticalGradient(
 											"deepslate",
 											YOffsetBuilder.absolute(-16),
 											YOffsetBuilder.absolute(0)
 									),
-									SurfaceRulesBuilder.block(StateDataBuilder.name("minecraft:deepslate").setProperty("axis", "y"))
+									SurfaceRulesBuilder.block(StateDataBuilder.name(Blocks.DEEPSLATE).setProperty(BlockStateProperties.AXIS, Direction.Axis.Y.getName()))
 							), SurfaceRulesBuilder.condition(
 									SurfaceRulesBuilder.verticalGradient(
 											"tuff",
 											YOffsetBuilder.absolute(0),
 											YOffsetBuilder.absolute(16)
 									),
-									SurfaceRulesBuilder.block(StateDataBuilder.name("minecraft:tuff"))
+									SurfaceRulesBuilder.block(StateDataBuilder.name(Blocks.TUFF))
 							)
 					))
 			));
@@ -389,11 +391,7 @@ public class ArtificeTestMod implements ModInitializer {
 					"artifice:test_featureee", PlacementModifier.biome(), PlacementModifier.inSquare()
 			));
 
-			try {
-				pack.dumpResources("testing_data", "data");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			pack.dump("testing_data", "data", FabricLoader.getInstance().isDevelopmentEnvironment());
 		});
 	}
 

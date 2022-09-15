@@ -5,10 +5,9 @@ import io.github.vampirestudios.artifice.api.ArtificeResourcePack;
 import io.github.vampirestudios.artifice.api.builder.assets.BlockStateBuilder;
 import io.github.vampirestudios.artifice.api.builder.assets.ModelBuilder;
 import io.github.vampirestudios.artifice.api.builder.assets.TranslationBuilder;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-
-import java.io.IOException;
 
 public class ArtificeTestClientMod implements ArtificeAssetPackEntrypoint {
 	public static ResourceLocation makeResourceLocation(String name) {
@@ -53,11 +52,7 @@ public class ArtificeTestClientMod implements ArtificeAssetPackEntrypoint {
 		texture.setPixel(15, 15, new CustomColor(255, 255, 255));
 		pack.addTexture(makeResourceLocation("testing"), texture.makeImage());
 
-		try {
-			pack.dumpResources("testing_assets", "assets");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		pack.dump("testing_assets", "assets", FabricLoader.getInstance().isDevelopmentEnvironment());
 	}
 
 	@Override

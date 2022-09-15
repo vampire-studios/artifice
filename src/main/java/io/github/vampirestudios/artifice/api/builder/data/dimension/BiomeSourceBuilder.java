@@ -3,6 +3,8 @@ package io.github.vampirestudios.artifice.api.builder.data.dimension;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.biome.Biome;
 
 public class BiomeSourceBuilder extends TypedJsonObject {
 
@@ -24,6 +26,10 @@ public class BiomeSourceBuilder extends TypedJsonObject {
 
 	public static MultiNoiseBiomeSourceBuilder.BiomeBuilder noiseBiome(String id, MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder biomeSettingsBuilder) {
 		return new MultiNoiseBiomeSourceBuilder.BiomeBuilder().biome(id).parameters(biomeSettingsBuilder);
+	}
+
+	public static MultiNoiseBiomeSourceBuilder.BiomeBuilder noiseBiome(ResourceKey<Biome> id, MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder biomeSettingsBuilder) {
+		return new MultiNoiseBiomeSourceBuilder.BiomeBuilder().biome(id.location().toString()).parameters(biomeSettingsBuilder);
 	}
 
 	public static MultiNoiseBiomeSourceBuilder.BiomeParametersBuilder noiseBiomeParameters() {

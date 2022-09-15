@@ -3,6 +3,11 @@ package io.github.vampirestudios.artifice.api.builder.data.dimension;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 
 public class ChunkGeneratorTypeBuilder extends TypedJsonObject {
 
@@ -34,11 +39,11 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonObject {
 		return this;
 	}
 
-	public static NoiseChunkGeneratorTypeBuilder NoiseChunks() {
+	public static NoiseChunkGeneratorTypeBuilder noiseChunks() {
 		return new NoiseChunkGeneratorTypeBuilder();
 	}
 
-	public static FlatChunkGeneratorTypeBuilder FlatChunks() {
+	public static FlatChunkGeneratorTypeBuilder flatChunks() {
 		return new FlatChunkGeneratorTypeBuilder();
 	}
 
@@ -65,6 +70,17 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonObject {
 		 */
 		public NoiseChunkGeneratorTypeBuilder noiseSettings(String noiseSettingsID) {
 			this.root.addProperty("settings", noiseSettingsID);
+			return this;
+		}
+
+		/**
+		 * Set Noise Settings to Id.
+		 *
+		 * @param noiseSettingsID the identifier
+		 * @return this
+		 */
+		public NoiseChunkGeneratorTypeBuilder noiseSettings(ResourceKey<NoiseGeneratorSettings> noiseSettingsID) {
+			this.root.addProperty("settings", noiseSettingsID.location().toString());
 			return this;
 		}
 
@@ -129,6 +145,17 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonObject {
 		}
 
 		/**
+		 * Set the biome to biomeId.
+		 *
+		 * @param biomeId the biome.
+		 * @return this
+		 */
+		public FlatChunkGeneratorTypeBuilder biome(ResourceKey<Biome> biomeId) {
+			this.root.getAsJsonObject("settings").addProperty("biome", biomeId.location().toString());
+			return this;
+		}
+
+		/**
 		 * Defines if the generator should generate lakes  or not
 		 *
 		 * @return this
@@ -167,6 +194,9 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonObject {
 		}
 
 		public record LayersBuilder(String block, int height) {
+			public LayersBuilder(Block block, int height) {
+				this(Registry.BLOCK.getKey(block).toString(), height);
+			}
 		}
 	}
 }

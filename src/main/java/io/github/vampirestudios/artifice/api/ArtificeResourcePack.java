@@ -29,6 +29,7 @@ import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.ServerPacksSource;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -156,7 +157,28 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
 		 *
 		 * @param filePath The path to dump to
 		 */
-		void dumpResources(String filePath, String type) throws IOException;
+		@ApiStatus.Internal
+		default void dumpResources(String filePath, String type) throws IOException {
+			try {
+				this.dumpResources(filePath, type, true);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		default void dump(String filePath, String type) {
+			this.dump(filePath, type, true);
+		}
+
+		/**
+		 * Dumps the pack files
+		 *
+		 * @param filePath The path to dump to
+		 */
+		@ApiStatus.Internal
+		void dumpResources(String filePath, String type, boolean enableDump) throws IOException;
+
+		void dump(String filePath, String type, boolean enableDump);
 
 		/**
 		 * Mark this pack as optional (can be disabled in the resource packs menu). Will automatically mark it as visible.

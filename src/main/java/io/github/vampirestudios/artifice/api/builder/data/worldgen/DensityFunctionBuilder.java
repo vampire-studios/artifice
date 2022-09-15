@@ -472,7 +472,7 @@ public class DensityFunctionBuilder extends TypedJsonObject {
 													 DensityFunctionBuilder whenInRange, DensityFunctionBuilder whenOutOfRange) {
 		DensityFunctionBuilder builder = new DensityFunctionBuilder();
 		builder.add("type", "minecraft:range_choice");
-		builder.add("noise", input.build());
+		builder.add("noise", input.location().toString());
 		builder.add("min_inclusive", minInclusive.build());
 		builder.add("max_exclusive", maxExclusive.build());
 		builder.add("when_in_range", whenInRange.build());

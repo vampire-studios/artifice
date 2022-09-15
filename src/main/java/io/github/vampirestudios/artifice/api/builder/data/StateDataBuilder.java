@@ -6,6 +6,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.material.Fluid;
 
 import java.util.Map;
 
@@ -19,6 +20,10 @@ public class StateDataBuilder extends TypedJsonObject {
 
 	public static StateDataBuilder name(Block block) {
 		return name(Registry.BLOCK.getKey(block).toString());
+	}
+
+	public static StateDataBuilder name(Fluid block) {
+		return name(Registry.FLUID.getKey(block).toString());
 	}
 
 	public static StateDataBuilder name(ResourceLocation id) {
@@ -45,14 +50,17 @@ public class StateDataBuilder extends TypedJsonObject {
 
 	public StateDataBuilder setProperty(Property<?> property, Object value) {
 		JsonObject obj = new JsonObject();
-		if (value instanceof JsonObject) obj.add(property.getName(), (JsonObject) value);
-		else if (value instanceof Double) obj.addProperty(property.getName(), (double) value);
-		else if (value instanceof Integer) obj.addProperty(property.getName(), (int) value);
-		else if (value instanceof Float) obj.addProperty(property.getName(), (float) value);
-		else if (value instanceof Boolean) obj.addProperty(property.getName(), (boolean) value);
-		else if (value instanceof String) obj.addProperty(property.getName(), (String) value);
-		else
-			throw new IllegalArgumentException(property.getName() + " must be json object or double or int or float or boolean or string");
+		switch (value) {
+
+			case JsonObject object -> obj.add(property.getName(), object);
+			case Double aDouble -> obj.addProperty(property.getName(), aDouble);
+			case Integer integer -> obj.addProperty(property.getName(), integer);
+			case Float aFloat -> obj.addProperty(property.getName(), aFloat);
+			case Boolean aBoolean -> obj.addProperty(property.getName(), aBoolean);
+			case String s -> obj.addProperty(property.getName(), s);
+			case null, default ->
+					throw new IllegalArgumentException(property.getName() + " must be json object or double or int or float or boolean or string");
+		}
 		this.root.add("Properties", obj);
 		return this;
 	}

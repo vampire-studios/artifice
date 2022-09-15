@@ -2,7 +2,9 @@ package io.github.vampirestudios.artifice.api.builder.data.dimension;
 
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.dimension.DimensionType;
 
 public class DimensionBuilder extends TypedJsonObject {
 	public DimensionBuilder() {
@@ -14,6 +16,14 @@ public class DimensionBuilder extends TypedJsonObject {
 	 */
 	public DimensionBuilder dimensionType(ResourceLocation identifier) {
 		this.root.addProperty("type", identifier.toString());
+		return this;
+	}
+
+	/**
+	 * Set the dimension type.
+	 */
+	public DimensionBuilder dimensionType(ResourceKey<DimensionType> identifier) {
+		this.root.addProperty("type", identifier.location().toString());
 		return this;
 	}
 

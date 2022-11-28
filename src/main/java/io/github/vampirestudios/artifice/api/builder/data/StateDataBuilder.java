@@ -3,6 +3,8 @@ package io.github.vampirestudios.artifice.api.builder.data;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.Property;
@@ -19,11 +21,11 @@ public class StateDataBuilder extends TypedJsonObject {
 	}
 
 	public static StateDataBuilder name(Block block) {
-		return name(Registry.BLOCK.getKey(block).toString());
+		return name(BuiltInRegistries.BLOCK.getKey(block).toString());
 	}
 
 	public static StateDataBuilder name(Fluid block) {
-		return name(Registry.FLUID.getKey(block).toString());
+		return name(BuiltInRegistries.FLUID.getKey(block).toString());
 	}
 
 	public static StateDataBuilder name(ResourceLocation id) {

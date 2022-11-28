@@ -29,7 +29,7 @@ dependencies {
     minecraft libs.minecraft
     mappings loom.layered {
         it.mappings("org.quiltmc:quilt-mappings:${libs.versions.quilt.mappings.get()}:intermediary-v2")
-        it.parchment("org.parchmentmc.data:parchment-1.19.2:${libs.versions.parchment.get()}@zip")
+        it.parchment("org.parchmentmc.data:parchment-1.19.2:${libs.versions.parchment.get()}@zip") //update to 1.19.3 version when available
         it.officialMojangMappings()
     }
     modImplementation libs.fabric.loader

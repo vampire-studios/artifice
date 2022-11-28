@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -195,7 +196,7 @@ public class ChunkGeneratorTypeBuilder extends TypedJsonObject {
 
 		public record LayersBuilder(String block, int height) {
 			public LayersBuilder(Block block, int height) {
-				this(Registry.BLOCK.getKey(block).toString(), height);
+				this(BuiltInRegistries.BLOCK.getKey(block).toString(), height);
 			}
 		}
 	}

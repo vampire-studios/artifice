@@ -20,8 +20,8 @@ public class ArtificeResourcePackContainer extends Pack {
 
 	public ArtificeResourcePackContainer(boolean optional, boolean visible, Pack wrapping) {
 		super(
-				wrapping.getId(), !optional, wrapping::open,
-				wrapping.getTitle(), wrapping.getDescription(),
+				wrapping.getId(), !optional, string -> wrapping.open(),
+				wrapping.getTitle(), new Info(wrapping.getDescription(), 11, wrapping.getRequestedFeatures()),
 				wrapping.getCompatibility(), wrapping.getDefaultPosition(),
 				wrapping.isFixedPosition(), ARTIFICE_RESOURCE_PACK_SOURCE
 		);

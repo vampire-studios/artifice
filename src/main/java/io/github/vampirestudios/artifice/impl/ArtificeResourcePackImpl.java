@@ -168,7 +168,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 		@ApiStatus.Internal
 		public void dumpResources(String filePath, String type, boolean enableDump) throws IOException {
 			if (enableDump) {
-				LOGGER.info("Dumping " + getName() + " " + type + " to " + filePath + ", this may take a while.");
+				LOGGER.info("Dumping " + packId() + " " + type + " to " + filePath + ", this may take a while.");
 
 				File dir = new File(filePath);
 				if (!dir.exists() && !dir.mkdirs()) {
@@ -233,7 +233,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 						String path = String.format("./%s/%s/%s/%s", filePath, type, id.getNamespace(), id.getPath());
 						writeResourceFile(new File(path), resource);
 					});
-					LOGGER.info("Finished dumping " + getName() + " " + type + ".");
+					LOGGER.info("Finished dumping " + packId() + " " + type + ".");
 				}).start();
 			} else {
 				LOGGER.info("Not dumping files cause dumping is disabled");
@@ -581,53 +581,6 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 		Set<ResourceLocation> keys = new HashSet<>(this.resources.keySet());
 		keys.removeIf(id -> !id.getPath().startsWith(startingPath) || !pathFilter.test(id));
 		return keys;*/
-		FileUtil.decomposePath(startingPath).get().ifLeft((pathSegments) -> {
-			Path path = this.root.resolve(type.getDirectory()).resolve(namespace);
-			listPath(namespace, path, pathSegments, consumer);
-		}).ifRight((result) -> {
-			LOGGER.error("Invalid path {}: {}", startingPath, result.message());
-		});
-	}
-
-	public static void listPath(String namespace, Path path, List<String> pathSegments, PackResources.ResourceOutput consumer) {
-		Path path2 = FileUtil.resolvePath(path, pathSegments);
-
-		try {
-			Stream<Path> stream = Files.find(path2, Integer.MAX_VALUE, (p, attr) -> {
-				return attr.isRegularFile();
-			}, new FileVisitOption[0]);
-
-			try {
-				stream.forEach((childPath) -> {
-					String string2 = PATH_JOINER.join(path.relativize(childPath));
-					ResourceLocation resourceLocation = ResourceLocation.tryBuild(namespace, string2);
-					if (resourceLocation == null) {
-						Util.logAndPauseIfInIde(String.format(Locale.ROOT, "Invalid path in pack: %s:%s, ignoring", namespace, string2));
-					} else {
-						consumer.accept(resourceLocation, IoSupplier.create(childPath));
-					}
-
-				});
-			} catch (Throwable var9) {
-				if (stream != null) {
-					try {
-						stream.close();
-					} catch (Throwable var8) {
-						var9.addSuppressed(var8);
-					}
-				}
-
-				throw var9;
-			}
-
-			if (stream != null) {
-				stream.close();
-			}
-		} catch (NoSuchFileException var10) {
-		} catch (IOException var11) {
-			LOGGER.error("Failed to list path {}", path2, var11);
-		}
-
 	}
 
 	/*@Override

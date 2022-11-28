@@ -2,8 +2,9 @@ package io.github.vampirestudios.artifice.api.builder.assets;
 
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
-import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.Locale;
 
@@ -11,7 +12,7 @@ import java.util.Locale;
  * Builder for a atlas file ({@code namespace:atlases/"atlas name".json).
  * @see <a href="https://minecraft.gamepedia.com/Resource_pack#Animation" target="_blank">Minecraft Wiki</a>
  */
-@ClientOnly
+@Environment(EnvType.CLIENT)
 public final class AtlasBuilder extends TypedJsonObject {
     public AtlasBuilder() {
         super(new JsonObject());
@@ -31,7 +32,7 @@ public final class AtlasBuilder extends TypedJsonObject {
      * Builder for the `frames` property of a texture animation file.
      * @see AtlasBuilder
      */
-    @ClientOnly
+    @Environment(EnvType.CLIENT)
     public static final class Source extends TypedJsonObject {
         private Source() {}
 

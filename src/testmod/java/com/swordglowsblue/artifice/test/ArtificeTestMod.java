@@ -21,16 +21,17 @@ import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.FoliagePl
 import io.github.vampirestudios.artifice.api.builder.data.worldgen.gen.TrunkPlacerBuilder.FancyTrunkPlacerBuilder;
 import io.github.vampirestudios.artifice.api.resource.StringResource;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
@@ -44,20 +45,22 @@ import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.material.Fluids;
 
 public class ArtificeTestMod implements ModInitializer {
-	private static final Item.Properties itemSettings = new Item.Properties().tab(CreativeModeTab.TAB_MISC);
-	private static final Item testItem = Registry.register(Registry.ITEM, id("test_item"), new Item(itemSettings));
-	private static final Block testBlock = Registry.register(Registry.BLOCK, id("test_block"), new Block(BlockBehaviour.Properties.copy(Blocks.STONE)));
-	private static final Item testBlockItem = Registry.register(Registry.ITEM, id("test_block"), new BlockItem(testBlock, itemSettings));
-	private static final ResourceKey<DimensionType> testDimension = ResourceKey.create(Registry.DIMENSION_TYPE_REGISTRY, id("test_dimension_type_vanilla"));
-	private static final ResourceKey<DimensionType> testDimensionCustom = ResourceKey.create(Registry.DIMENSION_TYPE_REGISTRY, id("test_dimension_type_custom"));
-	private static final ResourceKey<NoiseGeneratorSettings> testDimensionSettings = ResourceKey.create(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY, id("test_dimension"));
+	private static final FabricItemSettings itemSettings = new FabricItemSettings();
+
+	private static final Item testItem = Registry.register(BuiltInRegistries.ITEM, id("test_item"), new Item(itemSettings));
+	private static final Block testBlock = Registry.register(BuiltInRegistries.BLOCK, id("test_block"), new Block(BlockBehaviour.Properties.copy(Blocks.STONE)));
+	private static final Item testBlockItem = Registry.register(BuiltInRegistries.ITEM, id("test_block"), new BlockItem(testBlock, itemSettings));
+
+	private static final ResourceKey<DimensionType> testDimension = ResourceKey.create(Registries.DIMENSION_TYPE, id("test_dimension_type_vanilla"));
+	private static final ResourceKey<DimensionType> testDimensionCustom = ResourceKey.create(Registries.DIMENSION_TYPE, id("test_dimension_type_custom"));
+	private static final ResourceKey<NoiseGeneratorSettings> testDimensionSettings = ResourceKey.create(Registries.NOISE_SETTINGS, id("test_dimension"));
 
 	private static ResourceLocation id(String name) {
 		return new ResourceLocation("artifice", name);
 	}
 
 	public void onInitialize() {
-		Registry.register(Registry.CHUNK_GENERATOR, ResourceKey.create(Registry.CHUNK_GENERATOR_REGISTRY, id("test_chunk_generator")).location(), TestChunkGenerator.CODEC);
+//		Registry.register(BuiltInRegistries.CHUNK_GENERATOR, ResourceKey.create(Registries.CHUNK_GENERATOR, id("test_chunk_generator")).location(), TestChunkGenerator.CODEC);
 
 		Artifice.registerDataPack(id("optional_test"), pack -> {
 			pack.setOptional();
@@ -106,7 +109,7 @@ public class ArtificeTestMod implements ModInitializer {
 					  }
 					}"""));
 
-			RegistryUtils<Block> blockRegistryUtils = new RegistryUtils<>(Registry.BLOCK);
+			RegistryUtils<Block> blockRegistryUtils = new RegistryUtils<>(BuiltInRegistries.BLOCK);
 			pack.addTag("block", ArtificeTestClientMod.makeResourceLocation("test_block_tag"), new TagBuilder<Block>()
 					.replace(false)
 					.values(blockRegistryUtils.getIdByType(Blocks.GRASS_BLOCK),
@@ -118,7 +121,7 @@ public class ArtificeTestMod implements ModInitializer {
 //					.values(Blocks.GRASS_BLOCK, Blocks.STONE, Blocks.DIRT, Blocks.PODZOL, Blocks.MYCELIUM)
 			);
 
-			RegistryUtils<Item> itemRegistryUtils = new RegistryUtils<>(Registry.ITEM);
+			RegistryUtils<Item> itemRegistryUtils = new RegistryUtils<>(BuiltInRegistries.ITEM);
 			pack.addTag("item", ArtificeTestClientMod.makeResourceLocation("test_item_tag"), new TagBuilder<Item>()
 					.replace(false)
 					.values(itemRegistryUtils.getIdByType(Items.DIAMOND),
@@ -130,7 +133,7 @@ public class ArtificeTestMod implements ModInitializer {
 //					.values(Items.DIAMOND, Items.GOLD_INGOT, Items.EMERALD, Items.PHANTOM_MEMBRANE, Items.RAW_COPPER)
 			);
 
-			RegistryUtils<EntityType<?>> entityTypeRegistryUtils = new RegistryUtils<>(Registry.ENTITY_TYPE);
+			RegistryUtils<EntityType<?>> entityTypeRegistryUtils = new RegistryUtils<>(BuiltInRegistries.ENTITY_TYPE);
 			pack.addTag("item", ArtificeTestClientMod.makeResourceLocation("test_entity_tag"), new TagBuilder<Item>()
 							.replace(false)
 							.values(itemRegistryUtils.getIdByType(Items.DIAMOND),

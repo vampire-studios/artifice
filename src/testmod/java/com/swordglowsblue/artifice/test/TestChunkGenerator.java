@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.LevelHeightAccessor;
@@ -17,10 +18,12 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.FlatLevelSource;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.blending.Blender;
+import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 
 import java.util.List;
@@ -29,18 +32,21 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 public class TestChunkGenerator extends ChunkGenerator {
-	public static final Codec<TestChunkGenerator> CODEC = RecordCodecBuilder.create(
-			instance -> commonCodec(instance)
-					.and(RegistryOps.retrieveRegistry(Registry.BIOME_REGISTRY).forGetter(debugChunkGenerator -> debugChunkGenerator.biomeRegistry))
+/*	public static final Codec<TestChunkGenerator> CODEC = RecordCodecBuilder.create(
+			instance -> instance.group(RegistryOps.retrieveElement(Registries.BIOME).forGetter(debugChunkGenerator -> debugChunkGenerator.biomeRegistry))
 					.and(Codec.BOOL.fieldOf("test_bool").forGetter((generator) -> generator.testBool))
 					.apply(instance, instance.stable(TestChunkGenerator::new))
-	);
+			*//*instance -> commonCodec(instance)
+					.and(RegistryOps.retrieveGetter(Registries.BIOME).forGetter(debugChunkGenerator -> debugChunkGenerator.biomeRegistry))
+					.and(Codec.BOOL.fieldOf("test_bool").forGetter((generator) -> generator.testBool))
+					.apply(instance, instance.stable(TestChunkGenerator::new))*//*
+	);*/
 
 	private final boolean testBool;
 	private final Registry<Biome> biomeRegistry;
 
-	public TestChunkGenerator(Registry<StructureSet> registry, Registry<Biome> registry2, boolean testBool) {
-		super(registry, Optional.empty(), new FixedBiomeSource(registry2.getOrCreateHolderOrThrow(Biomes.PLAINS)));
+	public TestChunkGenerator(Registry<Biome> registry2, boolean testBool) {
+		super(new FixedBiomeSource(registry2.getHolderOrThrow(Biomes.PLAINS)));
 		this.testBool = testBool;
 		this.biomeRegistry = registry2;
 	}

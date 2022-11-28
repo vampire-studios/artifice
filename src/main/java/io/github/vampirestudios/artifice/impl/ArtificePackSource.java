@@ -17,4 +17,9 @@ public class ArtificePackSource implements PackSource {
 		return Component.translatable("pack.nameAndSource", packName, Component.translatable("pack.source.builtinArtifice", modId)).withStyle(ChatFormatting.GRAY);
 	}
 
+	@Override
+	public boolean shouldAddAutomatically() {
+		return false;
+	}
+
 }

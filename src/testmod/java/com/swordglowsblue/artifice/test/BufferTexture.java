@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.resources.metadata.animation.AnimationFrame;
 import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
+import net.minecraft.client.resources.metadata.animation.FrameSize;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,9 +40,10 @@ public class BufferTexture {
 		buffer = Arrays.copyOf(texture.buffer, texture.buffer.length);
 		List<AnimationFrame> copyani = Lists.<AnimationFrame>newArrayList();
 		texture.animation.forEachFrame((index, time) -> copyani.add(new AnimationFrame(index, time)));
+		FrameSize s = texture.animation.calculateFrameSize(-1,-1);
 		this.animation = new AnimationMetadataSection(copyani,
-				texture.animation.getFrameWidth(-1),
-				texture.animation.getFrameHeight(-1),
+				s.width(),
+				s.height(),
 				texture.animation.getDefaultFrameTime(),
 				texture.animation.isInterpolatedFrames());
 	}

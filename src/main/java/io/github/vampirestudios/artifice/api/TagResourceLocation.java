@@ -3,9 +3,9 @@ package io.github.vampirestudios.artifice.api;
 import net.minecraft.resources.ResourceLocation;
 
 public class TagResourceLocation extends ResourceLocation {
-	public TagResourceLocation(String[] strings) {
+	/*public TagResourceLocation(String[] strings) {
 		super(strings);
-	}
+	}*/
 
 	public TagResourceLocation(String string) {
 		super(string);

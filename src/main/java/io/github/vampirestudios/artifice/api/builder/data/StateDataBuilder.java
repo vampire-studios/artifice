@@ -52,17 +52,25 @@ public class StateDataBuilder extends TypedJsonObject {
 
 	public StateDataBuilder setProperty(Property<?> property, Object value) {
 		JsonObject obj = new JsonObject();
-		switch (value) {
+//		switch (value) { //ide complains about 17se preview features
+//
+//			case JsonObject object -> obj.add(property.getName(), object);
+//			case Double aDouble -> obj.addProperty(property.getName(), aDouble);
+//			case Integer integer -> obj.addProperty(property.getName(), integer);
+//			case Float aFloat -> obj.addProperty(property.getName(), aFloat);
+//			case Boolean aBoolean -> obj.addProperty(property.getName(), aBoolean);
+//			case String s -> obj.addProperty(property.getName(), s);
+//			case null, default ->
+//					throw new IllegalArgumentException(property.getName() + " must be json object or double or int or float or boolean or string");
+//		}
+		if(value instanceof JsonObject object) obj.add(property.getName(), object);
+		else if (value instanceof Double aDouble) obj.addProperty(property.getName(), aDouble);
+		else if (value instanceof Integer integer) obj.addProperty(property.getName(), integer);
+		else if (value instanceof Float aFloat) obj.addProperty(property.getName(), aFloat);
+		else if (value instanceof Boolean aBoolean) obj.addProperty(property.getName(), aBoolean);
+		else if (value instanceof String s) obj.addProperty(property.getName(), s);
+		else throw new IllegalArgumentException(property.getName() + " must be json object or double or int or float or boolean or string");
 
-			case JsonObject object -> obj.add(property.getName(), object);
-			case Double aDouble -> obj.addProperty(property.getName(), aDouble);
-			case Integer integer -> obj.addProperty(property.getName(), integer);
-			case Float aFloat -> obj.addProperty(property.getName(), aFloat);
-			case Boolean aBoolean -> obj.addProperty(property.getName(), aBoolean);
-			case String s -> obj.addProperty(property.getName(), s);
-			case null, default ->
-					throw new IllegalArgumentException(property.getName() + " must be json object or double or int or float or boolean or string");
-		}
 		this.root.add("Properties", obj);
 		return this;
 	}

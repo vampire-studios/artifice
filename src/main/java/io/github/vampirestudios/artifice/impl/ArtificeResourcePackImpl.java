@@ -571,8 +571,8 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 	@Override
 	@Nullable
 	public IoSupplier<InputStream> getResource(PackType type, ResourceLocation id) {
-		Path path = this.root.resolve(type.getDirectory()).resolve(id.getNamespace());
-		return PathPackResources.getResource(id, path);
+		//Path path = this.root.resolve(type.getDirectory()).resolve(id.getNamespace());
+		return () -> new NullInputStream(0);
 	}
 
 	@Override

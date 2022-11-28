@@ -10,9 +10,9 @@ import java.util.function.Consumer;
 
 public final class ArtificeDataResourcePackProvider implements RepositorySource {
 	@Override
-	public void loadPacks(Consumer<Pack> consumer, Pack.PackConstructor factory) {
+	public void loadPacks(Consumer<Pack> consumer) {
 		for (ResourceLocation id : ArtificeRegistry.DATA.keySet()) {
-			consumer.accept(Objects.requireNonNull(ArtificeRegistry.DATA.get(id)).toServerResourcePackProfile(factory));
+			consumer.accept(Objects.requireNonNull(ArtificeRegistry.DATA.get(id)).toServerResourcePackProfile());
 		}
 	}
 }

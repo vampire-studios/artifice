@@ -6,7 +6,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.platform.NativeImage;
-import io.github.vampirestudios.artifice.api.Artifice;
 import io.github.vampirestudios.artifice.api.ArtificeResourcePack;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
@@ -36,15 +35,20 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.FileUtil;
 import net.minecraft.SharedConstants;
+import net.minecraft.Util;
 import net.minecraft.client.resources.language.LanguageInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.PathPackResources;
 import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
-import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
+import net.minecraft.server.packs.resources.IoSupplier;
+import net.minecraft.world.flag.FeatureFlagSet;
 import org.apache.commons.io.input.NullInputStream;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -54,14 +58,13 @@ import org.slf4j.LoggerFactory;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.*;
+import java.util.stream.Stream;
 
 public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 	public static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(Math.max(Runtime.getRuntime().availableProcessors() / 2 - 1, 1), new ThreadFactoryBuilder().setDaemon(true).setNameFormat("Artifice-Workers-%s").build());
@@ -558,30 +561,79 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 		}
 	}
 
+	@Nullable
 	@Override
-	public InputStream getRootResource(String fname) {
-		if (fname.equals("pack.mcmeta")) return metadata.toInputStream();
-		return new NullInputStream(0);
+	public IoSupplier<InputStream> getRootResource(String... path) {
+		if (path[path.length - 1].equals("pack.mcmeta")) return metadata::toInputStream;
+		return () -> new NullInputStream(0);
 	}
 
 	@Override
-	public InputStream getResource(net.minecraft.server.packs.PackType type, ResourceLocation id) throws IOException {
-		if (!hasResource(type, id)) throw new FileNotFoundException(id.getPath());
-		return this.resources.get(id).toInputStream();
+	@Nullable
+	public IoSupplier<InputStream> getResource(PackType type, ResourceLocation id) {
+		Path path = this.root.resolve(type.getDirectory()).resolve(id.getNamespace());
+		return PathPackResources.getResource(id, path);
 	}
 
 	@Override
-	public Collection<ResourceLocation> getResources(net.minecraft.server.packs.PackType type, String namespace, String prefix, Predicate<ResourceLocation> pathFilter) {
-		if (type != this.type) return new HashSet<>();
+	public void listResources(net.minecraft.server.packs.PackType type, String namespace, String startingPath, ResourceOutput pathFilter) {
+		/*if (type != this.type) return new HashSet<>();
 		Set<ResourceLocation> keys = new HashSet<>(this.resources.keySet());
-		keys.removeIf(id -> !id.getPath().startsWith(prefix) || !pathFilter.test(id));
-		return keys;
+		keys.removeIf(id -> !id.getPath().startsWith(startingPath) || !pathFilter.test(id));
+		return keys;*/
+		FileUtil.decomposePath(startingPath).get().ifLeft((pathSegments) -> {
+			Path path = this.root.resolve(type.getDirectory()).resolve(namespace);
+			listPath(namespace, path, pathSegments, consumer);
+		}).ifRight((result) -> {
+			LOGGER.error("Invalid path {}: {}", startingPath, result.message());
+		});
 	}
 
-	@Override
+	public static void listPath(String namespace, Path path, List<String> pathSegments, PackResources.ResourceOutput consumer) {
+		Path path2 = FileUtil.resolvePath(path, pathSegments);
+
+		try {
+			Stream<Path> stream = Files.find(path2, Integer.MAX_VALUE, (p, attr) -> {
+				return attr.isRegularFile();
+			}, new FileVisitOption[0]);
+
+			try {
+				stream.forEach((childPath) -> {
+					String string2 = PATH_JOINER.join(path.relativize(childPath));
+					ResourceLocation resourceLocation = ResourceLocation.tryBuild(namespace, string2);
+					if (resourceLocation == null) {
+						Util.logAndPauseIfInIde(String.format(Locale.ROOT, "Invalid path in pack: %s:%s, ignoring", namespace, string2));
+					} else {
+						consumer.accept(resourceLocation, IoSupplier.create(childPath));
+					}
+
+				});
+			} catch (Throwable var9) {
+				if (stream != null) {
+					try {
+						stream.close();
+					} catch (Throwable var8) {
+						var9.addSuppressed(var8);
+					}
+				}
+
+				throw var9;
+			}
+
+			if (stream != null) {
+				stream.close();
+			}
+		} catch (NoSuchFileException var10) {
+		} catch (IOException var11) {
+			LOGGER.error("Failed to list path {}", path2, var11);
+		}
+
+	}
+
+	/*@Override
 	public boolean hasResource(net.minecraft.server.packs.PackType type, ResourceLocation id) {
 		return type == this.type && this.resources.containsKey(id);
-	}
+	}*/
 
 	@Override
 	public <T> T getMetadataSection(MetadataSectionSerializer<T> reader) {
@@ -620,7 +672,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 	}
 
 	@Override
-	public String getName() {
+	public String packId() {
 		if (displayName == null) {
 			switch (this.type) {
 				case CLIENT_RESOURCES -> {
@@ -638,37 +690,29 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 		return displayName.getString();
 	}
 
-	public static PackSource ARTIFICE_RESOURCE_PACK_SOURCE = PackSource.decorating("pack.source.artifice");
+	public static PackSource ARTIFICE_RESOURCE_PACK_SOURCE = PackSource.create(
+			component -> Component.translatable("pack.source.artifice"),
+			false
+	);
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public ClientOnly<Pack> toClientResourcePackProfile(Pack.PackConstructor factory) {
+	public ClientOnly<Pack> toClientResourcePackProfile() {
 		Pack profile;
 		String id = identifier == null ? "null" : identifier.toString();
 		if (!this.overwrite) {
-			PackMetadataSection packMetadataSection = this.getMetadataSection(PackMetadataSection.SERIALIZER);
-			if (packMetadataSection == null) {
-				Artifice.LOGGER.warn("Couldn't find pack meta for pack {}", id);
-				return null;
-			}
-
 			profile = new ArtificeResourcePackContainer(this.optional, this.visible, Objects.requireNonNull(Pack.create(
-					id,
-					false, () -> this, factory,
-					this.optional ? Pack.Position.TOP : Pack.Position.BOTTOM,
-					ARTIFICE_RESOURCE_PACK_SOURCE
+					id, displayName,
+					false, string -> ArtificeResourcePackImpl.this, new Pack.Info(description, 12, FeatureFlagSet.of()),
+					PackType.CLIENT_RESOURCES, this.optional ? Pack.Position.TOP : Pack.Position.BOTTOM,
+					false, ARTIFICE_RESOURCE_PACK_SOURCE
 			)));
 		} else {
-			PackMetadataSection packMetadataSection = this.getMetadataSection(PackMetadataSection.SERIALIZER);
-			if (packMetadataSection == null) {
-				Artifice.LOGGER.warn("Couldn't find pack meta for pack {}", id);
-				return null;
-			}
 			profile = new ArtificeResourcePackContainer(false, false, Objects.requireNonNull(Pack.create(
-					id,
-					true, () -> this, factory,
-					Pack.Position.TOP,
-					ARTIFICE_RESOURCE_PACK_SOURCE
+					id, displayName,
+					true, string -> ArtificeResourcePackImpl.this, new Pack.Info(description, 12, FeatureFlagSet.of()),
+					PackType.CLIENT_RESOURCES, Pack.Position.TOP,
+					false, ARTIFICE_RESOURCE_PACK_SOURCE
 			)));
 		}
 
@@ -677,23 +721,23 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public ArtificeResourcePackContainer getAssetsContainer(Pack.PackConstructor factory) {
-		return (ArtificeResourcePackContainer) toClientResourcePackProfile(factory).get();
+	public ArtificeResourcePackContainer getAssetsContainer() {
+		return (ArtificeResourcePackContainer) toClientResourcePackProfile().get();
 	}
 
 	@Override
-	public Pack toServerResourcePackProfile(Pack.PackConstructor factory) {
+	public Pack toServerResourcePackProfile() {
 		String id = identifier == null ? "null" : identifier.toString();
 		return Pack.create(
-				id,
-				!optional, () -> this, factory,
-				Pack.Position.BOTTOM,
-				ARTIFICE_RESOURCE_PACK_SOURCE
+				id, displayName,
+				!optional, string -> ArtificeResourcePackImpl.this, new Pack.Info(description, 11, FeatureFlagSet.of()),
+				PackType.SERVER_DATA, Pack.Position.BOTTOM,
+				false, ARTIFICE_RESOURCE_PACK_SOURCE
 		);
 	}
 
-	public Pack getDataContainer(Pack.PackConstructor factory) {
-		return toServerResourcePackProfile(factory);
+	public Pack getDataContainer() {
+		return toServerResourcePackProfile();
 	}
 
 	private class Memoized<T> implements Supplier<byte[]> {

@@ -23,12 +23,12 @@ public class DynamicResourcePackFactory<T extends ArtificeResourcePack.ResourceP
 	}
 
 	@Override
-	public ClientOnly<Pack> toClientResourcePackProfile(Pack.PackConstructor factory) {
-		return new ArtificeResourcePackImpl(type, identifier, init).toClientResourcePackProfile(factory);
+	public ClientOnly<Pack> toClientResourcePackProfile() {
+		return new ArtificeResourcePackImpl(type, identifier, init).toClientResourcePackProfile();
 	}
 
 	@Override
-	public Pack toServerResourcePackProfile(Pack.PackConstructor factory) {
-		return new ArtificeResourcePackImpl(type, identifier, init).toServerResourcePackProfile(factory);
+	public Pack toServerResourcePackProfile() {
+		return new ArtificeResourcePackImpl(type, identifier, init).toServerResourcePackProfile();
 	}
 }

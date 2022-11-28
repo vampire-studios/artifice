@@ -67,44 +67,40 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
 	/**
 	 * Create a client-side {@link Pack} for this pack.
 	 *
-	 * @param factory The factory function passed to {@link ServerPacksSource#loadPacks(Consumer, Pack.PackConstructor)}.
 	 * @return The created container.
 	 */
 	@Override
 	@Environment(EnvType.CLIENT)
-	default <T extends Pack> ClientOnly<Pack> toClientResourcePackProfile(Pack.PackConstructor factory) {
-		return new ClientOnly<>(getAssetsContainer(factory));
+	default <T extends Pack> ClientOnly<Pack> toClientResourcePackProfile() {
+		return new ClientOnly<>(getAssetsContainer());
 	}
 
 	/**
 	 * Create a server-side {@link Pack} for this pack.
 	 *
-	 * @param factory The factory function passed to {@link ServerPacksSource#loadPacks}.
 	 * @return The created container.
 	 */
 	@Override
-	default <T extends Pack> Pack toServerResourcePackProfile(Pack.PackConstructor factory) {
-		return getDataContainer(factory);
+	default <T extends Pack> Pack toServerResourcePackProfile() {
+		return getDataContainer();
 	}
 
 	/**
-	 * @param factory The factory function passed to {@link ServerPacksSource#loadPacks(Consumer, Pack.PackConstructor)}.
 	 * @return The created container.
-	 * @deprecated use {@link ArtificeResourcePack#toClientResourcePackProfile(Pack.PackConstructor)}
+	 * @deprecated use {@link ArtificeResourcePack#toClientResourcePackProfile()}
 	 * Create a client-side {@link Pack} for this pack.
 	 */
 	@Environment(EnvType.CLIENT)
 	@Deprecated
-	ArtificeResourcePackContainer getAssetsContainer(Pack.PackConstructor factory);
+	ArtificeResourcePackContainer getAssetsContainer();
 
 	/**
-	 * @param factory The factory function passed to {@link ServerPacksSource#loadPacks}.
 	 * @return The created container.
-	 * @deprecated use {@link ArtificeResourcePack#toServerResourcePackProfile(Pack.PackConstructor)}
+	 * @deprecated use {@link ArtificeResourcePack#toServerResourcePackProfile()}
 	 * Create a server-side {@link Pack} for this pack.
 	 */
 	@Deprecated
-	Pack getDataContainer(Pack.PackConstructor factory);
+	Pack getDataContainer();
 
 	/**
 	 * Passed to resource construction callbacks to register resources.

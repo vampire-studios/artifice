@@ -12,11 +12,10 @@ import java.util.function.Consumer;
 
 public final class ArtificeAssetsResourcePackProvider implements RepositorySource {
 
-	@Environment(EnvType.CLIENT)
 	@Override
-	public void loadPacks(Consumer<Pack> consumer, Pack.PackConstructor factory) {
+	public void loadPacks(Consumer<Pack> profileAdder) {
 		for (ResourceLocation id : ArtificeRegistry.ASSETS.keySet()) {
-			consumer.accept(Objects.requireNonNull(ArtificeRegistry.ASSETS.get(id)).toClientResourcePackProfile(factory).get());
+			profileAdder.accept(Objects.requireNonNull(ArtificeRegistry.ASSETS.get(id)).toClientResourcePackProfile().get());
 		}
 	}
 }

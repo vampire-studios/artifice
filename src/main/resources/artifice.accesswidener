@@ -30,4 +30,4 @@ transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData P
 transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData SPAGHETTI_2D_THICKNESS_MODULATOR Lnet/minecraft/resources/ResourceKey;
 transitive-accessible field net/minecraft/world/level/levelgen/NoiseRouterData SPAGHETTI_2D Lnet/minecraft/resources/ResourceKey;
 
-accessible method net/minecraft/world/level/levelgen/NoiseGeneratorSettings overworld (ZZ)Lnet/minecraft/world/level/levelgen/NoiseGeneratorSettings;
+accessible method net/minecraft/world/level/levelgen/NoiseGeneratorSettings overworld (Lnet/minecraft/data/worldgen/BootstapContext;ZZ)Lnet/minecraft/world/level/levelgen/NoiseGeneratorSettings;

@@ -1,16 +1,8 @@
 package io.github.vampirestudios.artifice.api.builder.assets;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
-import io.github.vampirestudios.artifice.api.builder.TypedJsonBuilder;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import io.github.vampirestudios.artifice.api.resource.JsonResource;
-import io.github.vampirestudios.artifice.api.util.Processor;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ResourceLocationPattern;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.Locale;

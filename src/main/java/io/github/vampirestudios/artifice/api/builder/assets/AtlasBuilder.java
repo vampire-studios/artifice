@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.Locale;
 
 /**
- * Builder for a atlas file ({@code namespace:atlases/"atlas name".json).
+ * Builder for a atlas file ({@code namespace:atlases/"atlas name".json}).
  * @see <a href="https://minecraft.gamepedia.com/Resource_pack#Animation" target="_blank">Minecraft Wiki</a>
  */
 @Environment(EnvType.CLIENT)

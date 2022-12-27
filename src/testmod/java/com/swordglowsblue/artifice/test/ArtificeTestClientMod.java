@@ -6,7 +6,6 @@ import io.github.vampirestudios.artifice.api.builder.assets.BlockStateBuilder;
 import io.github.vampirestudios.artifice.api.builder.assets.ModelBuilder;
 import io.github.vampirestudios.artifice.api.builder.assets.TranslationBuilder;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class ArtificeTestClientMod implements ArtificeAssetPackEntrypoint {
@@ -16,8 +15,8 @@ public class ArtificeTestClientMod implements ArtificeAssetPackEntrypoint {
 
 	@Override
 	public void generateAssetPack(ArtificeResourcePack.ClientResourcePackBuilder pack) {
-		pack.setDisplayName(Component.literal("Artifice Test Resources"));
-		pack.setDescription(Component.literal("Resources for the Artifice test mod"));
+		pack.setDisplayName("Artifice Test Resources");
+		pack.setDescription("Resources for the Artifice test mod");
 
 		pack.addItemModel(makeResourceLocation("test_item"), new ModelBuilder()
 				.parent(new ResourceLocation("item/generated"))

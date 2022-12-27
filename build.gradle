@@ -6,7 +6,7 @@ plugins {
 }
 
 archivesBaseName = project.archives_base_name
-version = "$mod_version+build.$build_number-${libs.versions.minecraft.get()}"
+version = "$mod_version+build.$build_number-${libs.versions.minecraft.get()}-EXPERIMENTAL"
 group = maven_group
 
 repositories {

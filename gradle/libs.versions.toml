@@ -1,10 +1,10 @@
 [versions]
-    minecraft = '1.19.3-pre2'
-    quilt_mappings = '1.19.3-pre2+build.1'
-    loader_version='0.14.10'
-    parchment = '2022.11.20'
+    minecraft = '1.19.3'
+    quilt_mappings = '1.19.3+build.5'
+    loader_version='0.14.11'
+    parchment = '2022.11.27'
 
-    fabric = "0.67.0+1.19.3"
+    fabric = "0.69.1+1.19.3"
 
 [libraries]
     minecraft = { module = 'com.mojang:minecraft', version.ref = 'minecraft' }
@@ -13,6 +13,7 @@
 
     fabric_api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric" }
     fabric_api_deprecated = { module = "net.fabricmc.fabric-api:fabric-api-deprecated", version.ref = "fabric" }
+
 [plugins]
     fabric_loom = { id = "fabric_loom", version = "1.0-SNAPSHOT" }
 

@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.platform.NativeImage;
+import io.github.vampirestudios.artifice.api.Artifice;
 import io.github.vampirestudios.artifice.api.ArtificeResourcePack;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
@@ -29,27 +30,21 @@ import io.github.vampirestudios.artifice.api.util.CountingInputStream;
 import io.github.vampirestudios.artifice.api.util.IdUtils;
 import io.github.vampirestudios.artifice.api.util.Processor;
 import io.github.vampirestudios.artifice.api.virtualpack.ArtificeResourcePackContainer;
-import io.github.vampirestudios.artifice.common.ArtificeRegistry;
 import io.github.vampirestudios.artifice.common.ClientOnly;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.FileUtil;
 import net.minecraft.SharedConstants;
-import net.minecraft.Util;
 import net.minecraft.client.resources.language.LanguageInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.PathPackResources;
 import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraft.world.flag.FeatureFlagSet;
-import org.apache.commons.io.input.NullInputStream;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -58,13 +53,17 @@ import org.slf4j.LoggerFactory;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.*;
-import java.util.stream.Stream;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.IntUnaryOperator;
+import java.util.function.Supplier;
 
 public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 	public static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(Math.max(Runtime.getRuntime().availableProcessors() / 2 - 1, 1), new ThreadFactoryBuilder().setDaemon(true).setNameFormat("Artifice-Workers-%s").build());
@@ -83,6 +82,9 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 	private boolean optional;
 	private boolean visible;
 	private boolean overwrite;
+	private final Map<ResourceLocation, Supplier<byte[]>> data = new ConcurrentHashMap<>();
+	private final Map<ResourceLocation, Supplier<byte[]>> assets = new ConcurrentHashMap<>();
+	private final Map<String, Supplier<byte[]>> root = new ConcurrentHashMap<>();
 
 	@SuppressWarnings("unchecked")
 	public <T extends ResourcePackBuilder> ArtificeResourcePackImpl(net.minecraft.server.packs.PackType type, @Nullable ResourceLocation identifier, Consumer<T> registerResources) {
@@ -135,9 +137,6 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 
 	@EnvironmentInterface(value = EnvType.CLIENT, itf = ClientResourcePackBuilder.class)
 	private final class ArtificeResourcePackBuilder implements ClientResourcePackBuilder, ServerResourcePackBuilder {
-		private final Map<ResourceLocation, Supplier<byte[]>> data = new ConcurrentHashMap<>();
-		private final Map<ResourceLocation, Supplier<byte[]>> assets = new ConcurrentHashMap<>();
-		private final Map<String, Supplier<byte[]>> root = new ConcurrentHashMap<>();
 		private static final Logger LOGGER = LoggerFactory.getLogger(ArtificeResourcePackBuilder.class);
 		private static final Executor EXECUTOR = Executors.newSingleThreadExecutor();
 
@@ -209,7 +208,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 						File DEFAULT_OUTPUT = new File(filePath);
 						Path folder = Paths.get(DEFAULT_OUTPUT.toURI());
 
-						for (Map.Entry<String, Supplier<byte[]>> e : this.root.entrySet()) {
+						for (Map.Entry<String, Supplier<byte[]>> e : ArtificeResourcePackImpl.this.root.entrySet()) {
 							Path root = folder.resolve(e.getKey());
 							Files.createDirectories(root.getParent());
 							Files.write(root, e.getValue().get());
@@ -217,13 +216,13 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 
 						Path assets = folder.resolve("assets");
 						Files.createDirectories(assets);
-						for (Map.Entry<ResourceLocation, Supplier<byte[]>> entry : this.assets.entrySet()) {
+						for (Map.Entry<ResourceLocation, Supplier<byte[]>> entry : ArtificeResourcePackImpl.this.assets.entrySet()) {
 							this.write(assets, entry.getKey(), entry.getValue().get());
 						}
 
 						Path data = folder.resolve("data");
 						Files.createDirectories(data);
-						for (Map.Entry<ResourceLocation, Supplier<byte[]>> entry : this.data.entrySet()) {
+						for (Map.Entry<ResourceLocation, Supplier<byte[]>> entry : ArtificeResourcePackImpl.this.data.entrySet()) {
 							this.write(data, entry.getKey(), entry.getValue().get());
 						}
 					} catch (IOException exception) {
@@ -292,7 +291,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 		@Override
 		public Future<byte[]> addAsyncResource(PackType type, ResourceLocation identifier, CallableFunction<ResourceLocation, byte[]> data) {
 			Future<byte[]> future = EXECUTOR_SERVICE.submit(() -> data.get(identifier));
-			this.getSys(type).put(identifier, () -> {
+			ArtificeResourcePackImpl.this.getSys(type).put(identifier, () -> {
 				try {
 					return future.get();
 				} catch (InterruptedException | ExecutionException e) {
@@ -304,19 +303,19 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 
 		@Override
 		public void addLazyResource(PackType type, ResourceLocation path, BiFunction<ArtificeResourcePack, ResourceLocation, byte[]> func) {
-			this.getSys(type).put(path, new Memoized<>(func, path));
+			ArtificeResourcePackImpl.this.getSys(type).put(path, new Memoized<>(func, path));
 		}
 
 		@Override
 		public byte[] addResource(PackType type, ResourceLocation path, byte[] data) {
-			this.getSys(type).put(path, () -> data);
+			ArtificeResourcePackImpl.this.getSys(type).put(path, () -> data);
 			return data;
 		}
 
 		@Override
 		public Future<byte[]> addAsyncRootResource(String path, CallableFunction<String, byte[]> data) {
 			Future<byte[]> future = EXECUTOR_SERVICE.submit(() -> data.get(path));
-			this.root.put(path, () -> {
+			ArtificeResourcePackImpl.this.root.put(path, () -> {
 				try {
 					return future.get();
 				} catch (InterruptedException | ExecutionException e) {
@@ -328,12 +327,12 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 
 		@Override
 		public void addLazyRootResource(String path, BiFunction<ArtificeResourcePack, String, byte[]> data) {
-			this.root.put(path, new Memoized<>(data, path));
+			ArtificeResourcePackImpl.this.root.put(path, new Memoized<>(data, path));
 		}
 
 		@Override
 		public byte[] addRootResource(String path, byte[] data) {
-			this.root.put(path, () -> data);
+			ArtificeResourcePackImpl.this.root.put(path, () -> data);
 			return data;
 		}
 
@@ -555,38 +554,56 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 		private static ResourceLocation fix(ResourceLocation identifier, String prefix, String append) {
 			return new ResourceLocation(identifier.getNamespace(), prefix + '/' + identifier.getPath() + '.' + append);
 		}
+	}
 
-		private Map<ResourceLocation, Supplier<byte[]>> getSys(PackType side) {
-			return side == PackType.CLIENT_RESOURCES ? this.assets : this.data;
-		}
+	private Map<ResourceLocation, Supplier<byte[]>> getSys(PackType side) {
+		return side == PackType.CLIENT_RESOURCES ? this.assets : this.data;
 	}
 
 	@Nullable
 	@Override
 	public IoSupplier<InputStream> getRootResource(String... path) {
-		if (path[path.length - 1].equals("pack.mcmeta")) return metadata::toInputStream;
-		return () -> new NullInputStream(0);
+		this.lock();
+		Supplier<byte[]> supplier = this.root.get(Arrays.asList(path));
+		if(supplier == null) {
+			this.waiting.unlock();
+			return null;
+		}
+		this.waiting.unlock();
+		return () -> new ByteArrayInputStream(supplier.get());
 	}
 
 	@Override
 	@Nullable
 	public IoSupplier<InputStream> getResource(PackType type, ResourceLocation id) {
-		//Path path = this.root.resolve(type.getDirectory()).resolve(id.getNamespace());
-		return () -> new NullInputStream(0);
+		this.lock();
+		Supplier<byte[]> supplier = this.getSys(type).get(id);
+		if(supplier == null) {
+			Artifice.LOGGER.warn("No resource found for " + id);
+			this.waiting.unlock();
+			return null;
+		}
+		this.waiting.unlock();
+		return () -> new ByteArrayInputStream(supplier.get());
 	}
 
 	@Override
 	public void listResources(net.minecraft.server.packs.PackType type, String namespace, String startingPath, ResourceOutput pathFilter) {
-		/*if (type != this.type) return new HashSet<>();
-		Set<ResourceLocation> keys = new HashSet<>(this.resources.keySet());
-		keys.removeIf(id -> !id.getPath().startsWith(startingPath) || !pathFilter.test(id));
-		return keys;*/
+		this.lock();
+		for(ResourceLocation identifier : this.getSys(type).keySet()) {
+			Supplier<byte[]> supplier = this.getSys(type).get(identifier);
+			if(supplier == null) {
+				Artifice.LOGGER.warn("No resource found for " + identifier);
+				this.waiting.unlock();
+				continue;
+			}
+			IoSupplier<InputStream> inputSupplier = () -> new ByteArrayInputStream(supplier.get());
+			if(identifier.getNamespace().equals(namespace) && identifier.getPath().startsWith(startingPath)) {
+				pathFilter.accept(identifier, inputSupplier);
+			}
+		}
+		this.waiting.unlock();
 	}
-
-	/*@Override
-	public boolean hasResource(net.minecraft.server.packs.PackType type, ResourceLocation id) {
-		return type == this.type && this.resources.containsKey(id);
-	}*/
 
 	@Override
 	public <T> T getMetadataSection(MetadataSectionSerializer<T> reader) {
@@ -597,7 +614,13 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 
 	@Override
 	public Set<String> getNamespaces(net.minecraft.server.packs.PackType type) {
-		return new HashSet<>(this.namespaces);
+		this.lock();
+		Set<String> namespaces = new HashSet<>();
+		for(ResourceLocation identifier : this.getSys(type).keySet()) {
+			namespaces.add(identifier.getNamespace());
+		}
+		this.waiting.unlock();
+		return namespaces;
 	}
 
 	@Override
@@ -622,11 +645,12 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 
 	@Override
 	public void close() {
+		Artifice.LOGGER.info("closing rrp " + this.identifier);
 	}
 
 	@Override
 	public String packId() {
-		if (displayName == null) {
+		/*if (displayName == null) {
 			switch (this.type) {
 				case CLIENT_RESOURCES -> {
 					ResourceLocation aid = ArtificeRegistry.ASSETS.getKey(this);
@@ -640,7 +664,8 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 				}
 			}
 		}
-		return displayName.getString();
+		return displayName.getString();*/
+		return "Test";
 	}
 
 	public static PackSource ARTIFICE_RESOURCE_PACK_SOURCE = PackSource.create(

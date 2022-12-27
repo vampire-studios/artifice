@@ -124,7 +124,7 @@ public final class LootTableBuilder extends TypedJsonObject {
 		 * @see Pool
 		 */
 		public static final class Entry extends TypedJsonObject {
-			private Entry() {
+			public Entry() {
 				super(new JsonObject());
 			}
 

@@ -31,8 +31,10 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.*;
-import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -261,7 +263,7 @@ public class ArtificeTestMod implements ModInitializer {
             );
 
             pack.addBiome(id("test_biome"), new BiomeBuilder()
-                    .precipitation(Biome.Precipitation.RAIN)
+                    .hasPrecipitation(true)
                     .temperature(0.8F).downfall(0.4F)
                     .addSpawnCosts(EntityType.BEE, new BiomeBuilder.SpawnDensityBuilder(0.12, 1))
                     .addSpawnCosts(EntityType.CAT, new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
@@ -274,7 +276,7 @@ public class ArtificeTestMod implements ModInitializer {
             );
 
             pack.addBiome(id("test_biome2"), new BiomeBuilder()
-                    .precipitation(Biome.Precipitation.RAIN)
+                    .hasPrecipitation(true)
                     .temperature(0.8F).downfall(0.4F)
                     .addSpawnCosts(EntityType.SPIDER, new BiomeBuilder.SpawnDensityBuilder(0.6, 1))
                     .addSpawnCosts(EntityType.CAT, new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
@@ -287,7 +289,7 @@ public class ArtificeTestMod implements ModInitializer {
             );
 
             pack.addBiome(id("test_biome3"), new BiomeBuilder()
-                    .precipitation(Biome.Precipitation.RAIN)
+                    .hasPrecipitation(true)
                     .temperature(2.0F).downfall(0.4F)
                     .addSpawnCosts(EntityType.BEE, new BiomeBuilder.SpawnDensityBuilder(0.12, 1))
                     .addSpawnCosts(EntityType.CAT, new BiomeBuilder.SpawnDensityBuilder(0.4, 1))
@@ -300,7 +302,7 @@ public class ArtificeTestMod implements ModInitializer {
             );
 
             pack.addBiome(id("test_biome4"), new BiomeBuilder()
-                    .precipitation(Biome.Precipitation.RAIN)
+                    .hasPrecipitation(true)
                     .temperature(1.4F).downfall(1.0F)
                     .addSpawnCosts(EntityType.BEE, new BiomeBuilder.SpawnDensityBuilder(0.12, 1))
                     .addSpawnCosts(EntityType.CAT, new BiomeBuilder.SpawnDensityBuilder(0.4, 1))

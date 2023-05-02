@@ -250,7 +250,7 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
 		 *
 		 * @param def A {@link LanguageInfo} for the desired language.
 		 */
-		void addLanguage(LanguageInfo def);
+		void addLanguage(ExpandedLanguageInfo def);
 
 		/**
 		 * Add a custom language. Translations must be added separately with {@link ClientResourcePackBuilder#addTranslations}.

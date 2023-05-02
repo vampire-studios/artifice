@@ -1,15 +1,15 @@
 [versions]
-    minecraft = '1.19.3'
-    quilt_mappings = '1.19.3+build.5'
-    loader_version='0.14.11'
-    parchment = '2022.11.27'
+    minecraft = '23w17a'
+    quilt_mappings = "23w16a+build.1"
+    fabric-loader = "0.14.19"
+    parchment = "2023.03.12"
 
-    fabric = "0.69.1+1.19.3"
+    fabric = "0.80.0+1.20"
 
 [libraries]
     minecraft = { module = 'com.mojang:minecraft', version.ref = 'minecraft' }
     quilt_mappings = { module = 'org.quiltmc:quilt-mappings', version.ref = 'quilt_mappings' }
-    fabric_loader = { module = 'net.fabricmc:fabric-loader', version.ref = 'loader_version' }
+    fabric_loader = { module = 'net.fabricmc:fabric-loader', version.ref = 'fabric-loader' }
 
     fabric_api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric" }
     fabric_api_deprecated = { module = "net.fabricmc.fabric-api:fabric-api-deprecated", version.ref = "fabric" }

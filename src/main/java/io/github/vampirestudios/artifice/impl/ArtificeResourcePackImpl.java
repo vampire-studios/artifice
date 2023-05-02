@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.mojang.blaze3d.platform.NativeImage;
 import io.github.vampirestudios.artifice.api.Artifice;
 import io.github.vampirestudios.artifice.api.ArtificeResourcePack;
+import io.github.vampirestudios.artifice.api.ExpandedLanguageInfo;
 import io.github.vampirestudios.artifice.api.builder.JsonObjectBuilder;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import io.github.vampirestudios.artifice.api.builder.assets.*;
@@ -74,7 +75,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 	private final ResourceLocation identifier;
 	private final Set<String> namespaces = new HashSet<>();
 	private final Map<ResourceLocation, ArtificeResource<?>> resources = new HashMap<>();
-	private final Set<LanguageInfo> languages = new HashSet<>();
+	private final Set<ExpandedLanguageInfo> languages = new HashSet<>();
 	private final JsonResource<JsonObject> metadata;
 
 	private Component description;
@@ -95,12 +96,12 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 		JsonObject packMeta;
 		if (type.equals(net.minecraft.server.packs.PackType.CLIENT_RESOURCES)) {
 			packMeta = new JsonObjectBuilder()
-					.add("pack_format", SharedConstants.getCurrentVersion().getPackVersion(com.mojang.bridge.game.PackType.RESOURCE))
+					.add("pack_format", SharedConstants.getCurrentVersion().getPackVersion(PackType.CLIENT_RESOURCES))
 					.add("description", description != null ? description.getString() : "In-memory resource pack created with Artifice")
 					.build();
 		} else {
 			packMeta = new JsonObjectBuilder()
-					.add("pack_format", SharedConstants.getCurrentVersion().getPackVersion(com.mojang.bridge.game.PackType.DATA))
+					.add("pack_format", SharedConstants.getCurrentVersion().getPackVersion(PackType.SERVER_DATA))
 					.add("description", description != null ? description.getString() : "In-memory data pack created with Artifice")
 					.build();
 		}
@@ -126,11 +127,11 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 
 	@SuppressWarnings("MethodCallSideOnly")
 	private void addLanguages(JsonObject languageMeta) {
-		for (LanguageInfo def : languages) {
-			languageMeta.add(def.getCode(), new JsonObjectBuilder()
-					.add("name", def.getName())
-					.add("region", def.getRegion())
-					.add("bidirectional", def.isBidirectional())
+		for (ExpandedLanguageInfo def : languages) {
+			languageMeta.add(def.code(), new JsonObjectBuilder()
+					.add("name", def.languageInfo().name())
+					.add("region", def.languageInfo().region())
+					.add("bidirectional", def.languageInfo().bidirectional())
 					.build());
 		}
 	}
@@ -183,12 +184,12 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 				JsonObject packMeta;
 				if (type.equals("assets")) {
 					packMeta = new JsonObjectBuilder()
-							.add("pack_format", SharedConstants.getCurrentVersion().getPackVersion(com.mojang.bridge.game.PackType.RESOURCE))
+							.add("pack_format", SharedConstants.getCurrentVersion().getPackVersion(PackType.CLIENT_RESOURCES))
 							.add("description", description != null ? description.getString() : "In-memory resource pack created with Artifice")
 							.build();
 				} else {
 					packMeta = new JsonObjectBuilder()
-							.add("pack_format", SharedConstants.getCurrentVersion().getPackVersion(com.mojang.bridge.game.PackType.DATA))
+							.add("pack_format", SharedConstants.getCurrentVersion().getPackVersion(PackType.SERVER_DATA))
 							.add("description", description != null ? description.getString() : "In-memory data pack created with Artifice")
 							.build();
 				}
@@ -401,14 +402,14 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 		}
 
 		@Override
-		public void addLanguage(LanguageInfo def) {
+		public void addLanguage(ExpandedLanguageInfo def) {
 			ArtificeResourcePackImpl.this.languages.add(def);
 		}
 
 		@Environment(EnvType.CLIENT)
 		@Override
-		public void addLanguage(String code, String region, String name, boolean rtl) {
-			this.addLanguage(new LanguageInfo(code, region, name, rtl));
+		public void addLanguage(String code, String region, String name,  boolean rtl) {
+			this.addLanguage(new ExpandedLanguageInfo(code, new LanguageInfo(name, region, rtl)));
 		}
 
 		@Override

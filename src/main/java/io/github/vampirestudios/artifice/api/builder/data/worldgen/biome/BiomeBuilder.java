@@ -3,12 +3,10 @@ package io.github.vampirestudios.artifice.api.builder.data.worldgen.biome;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
@@ -37,8 +35,8 @@ public class BiomeBuilder extends TypedJsonObject {
 		return this;
 	}
 
-	public BiomeBuilder precipitation(Biome.Precipitation precipitation) {
-		this.root.addProperty("precipitation", precipitation.getName());
+	public BiomeBuilder hasPrecipitation(boolean hasPrecipitation) {
+		this.root.addProperty("has_precipitation", hasPrecipitation);
 		return this;
 	}
 

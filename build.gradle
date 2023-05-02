@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.0-SNAPSHOT'
+    id 'fabric-loom' version '1.2-SNAPSHOT'
     id 'maven-publish'
     id "io.github.juuxel.loom-quiltflower" version "1.7.+"
     id 'org.quiltmc.quilt-mappings-on-loom' version '4.+'
@@ -28,8 +28,9 @@ loom {
 dependencies {
     minecraft libs.minecraft
     mappings loom.layered {
-        it.mappings("org.quiltmc:quilt-mappings:${libs.versions.quilt.mappings.get()}:intermediary-v2")
-        it.parchment("org.parchmentmc.data:parchment-1.19.2:${libs.versions.parchment.get()}@zip") //update to 1.19.3 version when available
+//		it.mappings("org.quiltmc:quilt-mappings:${libs.versions.quilt.mappings.get()}:intermediary-v2")
+//		it.mappings("net.fabricmc:yarn:${libs.versions.fabric.mappings.get()}:v2")
+        it.parchment("org.parchmentmc.data:parchment-1.19.3:${libs.versions.parchment.get()}@zip")
         it.officialMojangMappings()
     }
     modImplementation libs.fabric.loader

@@ -70,7 +70,7 @@ public class ArtificeTestMod implements ModInitializer {
 
         Artifice.registerDataPack(id("optional_test"), pack -> {
             pack.setOptional();
-            pack.setDisplayName("");
+            pack.setDisplayName("Test");
 
             pack.add(id("recipes/test_optional.json"), new StringResource("""
                     {
@@ -148,7 +148,6 @@ public class ArtificeTestMod implements ModInitializer {
                                     itemRegistryUtils.getIdByType(Items.PHANTOM_MEMBRANE),
                                     itemRegistryUtils.getIdByType(Items.RAW_COPPER)
                             )
-//					.values(Items.DIAMOND, Items.GOLD_INGOT, Items.EMERALD, Items.PHANTOM_MEMBRANE, Items.RAW_COPPER)
             );
 
 			/*pack.addDimensionType(testDimension.location(), dimensionTypeBuilder -> dimensionTypeBuilder

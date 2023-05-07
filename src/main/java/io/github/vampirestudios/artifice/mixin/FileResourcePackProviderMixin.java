@@ -4,6 +4,7 @@ import io.github.vampirestudios.artifice.common.ArtificeRegistry;
 import io.github.vampirestudios.artifice.common.ClientResourcePackProfileLike;
 import io.github.vampirestudios.artifice.common.ServerResourcePackProfileLike;
 import net.minecraft.ChatFormatting;
+import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.FolderRepositorySource;
@@ -46,7 +47,7 @@ public class FileResourcePackProviderMixin {
 					pack.getTitle(),
 					false,
 					(name) -> pack.open(),
-					new Pack.Info(pack.getDescription(), 12, pack.getRequestedFeatures()),
+					new Pack.Info(pack.getDescription(), SharedConstants.getCurrentVersion().getPackVersion(PackType.CLIENT_RESOURCES), pack.getRequestedFeatures()),
 					this.packType,
 					Pack.Position.TOP,
 					false,
@@ -61,7 +62,7 @@ public class FileResourcePackProviderMixin {
 					pack.getTitle(),
 					false,
 					(name) -> pack.open(),
-					new Pack.Info(pack.getDescription(), 12, pack.getRequestedFeatures()),
+					new Pack.Info(pack.getDescription(), SharedConstants.getCurrentVersion().getPackVersion(PackType.SERVER_DATA), pack.getRequestedFeatures()),
 					this.packType,
 					Pack.Position.TOP,
 					false,

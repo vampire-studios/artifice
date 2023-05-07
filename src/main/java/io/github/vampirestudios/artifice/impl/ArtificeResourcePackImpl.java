@@ -31,6 +31,7 @@ import io.github.vampirestudios.artifice.api.util.CountingInputStream;
 import io.github.vampirestudios.artifice.api.util.IdUtils;
 import io.github.vampirestudios.artifice.api.util.Processor;
 import io.github.vampirestudios.artifice.api.virtualpack.ArtificeResourcePackContainer;
+import io.github.vampirestudios.artifice.common.ArtificeRegistry;
 import io.github.vampirestudios.artifice.common.ClientOnly;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -67,7 +68,8 @@ import java.util.function.IntUnaryOperator;
 import java.util.function.Supplier;
 
 public class ArtificeResourcePackImpl implements ArtificeResourcePack {
-	public static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(Math.max(Runtime.getRuntime().availableProcessors() / 2 - 1, 1), new ThreadFactoryBuilder().setDaemon(true).setNameFormat("Artifice-Workers-%s").build());
+	public static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(Math.max(Runtime.getRuntime().availableProcessors() / 2 - 1, 1), new ThreadFactoryBuilder()
+			.setDaemon(true).setNameFormat("Artifice-Workers-%s").build());
 	private final Lock waiting = new ReentrantLock();
 
 	private final net.minecraft.server.packs.PackType type;
@@ -651,7 +653,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 
 	@Override
 	public String packId() {
-		/*if (displayName == null) {
+		if (displayName == null) {
 			switch (this.type) {
 				case CLIENT_RESOURCES -> {
 					ResourceLocation aid = ArtificeRegistry.ASSETS.getKey(this);
@@ -665,8 +667,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 				}
 			}
 		}
-		return displayName.getString();*/
-		return "Test";
+		return displayName.getString();
 	}
 
 	public static PackSource ARTIFICE_RESOURCE_PACK_SOURCE = PackSource.create(

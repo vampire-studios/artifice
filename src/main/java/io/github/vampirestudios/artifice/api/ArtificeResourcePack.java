@@ -28,7 +28,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
-import net.minecraft.server.packs.repository.ServerPacksSource;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.io.IOException;
@@ -71,7 +70,7 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
 	 */
 	@Override
 	@Environment(EnvType.CLIENT)
-	default <T extends Pack> ClientOnly<Pack> toClientResourcePackProfile() {
+	default ClientOnly<Pack> toClientResourcePackProfile() {
 		return new ClientOnly<>(getAssetsContainer());
 	}
 
@@ -81,7 +80,7 @@ public interface ArtificeResourcePack extends PackResources, ServerResourcePackP
 	 * @return The created container.
 	 */
 	@Override
-	default <T extends Pack> Pack toServerResourcePackProfile() {
+	default Pack toServerResourcePackProfile() {
 		return getDataContainer();
 	}
 

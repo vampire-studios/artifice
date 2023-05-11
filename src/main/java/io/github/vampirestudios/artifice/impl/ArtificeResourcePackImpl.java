@@ -45,9 +45,13 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
+import net.minecraft.server.packs.resources.FallbackResourceManager;
 import net.minecraft.server.packs.resources.IoSupplier;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceMetadata;
 import net.minecraft.world.flag.FeatureFlagSet;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,6 +84,12 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 	private final Set<ExpandedLanguageInfo> languages = new HashSet<>();
 	private final JsonResource<JsonObject> metadata;
 
+	// To check if packs conflict
+	private final Set<String> addedPacks = new HashSet<>();
+	// Map from namespace to list of sub SPResourcePacks that are registered to handle the namespace.
+	// There can be multiple of them as mods can modify resources of other namespaces, such as the vanilla "minecraft" namespace
+	private final Map<String, List<ArtificeResourcePack>> subResourcePacks = new HashMap<>();
+
 	private Component description;
 	private Component displayName;
 	private boolean optional;
@@ -87,7 +97,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 	private boolean overwrite;
 	private final Map<ResourceLocation, Supplier<byte[]>> data = new ConcurrentHashMap<>();
 	private final Map<ResourceLocation, Supplier<byte[]>> assets = new ConcurrentHashMap<>();
-	private final Map<String, Supplier<byte[]>> root = new ConcurrentHashMap<>();
+	private final Map<List<String>, Supplier<byte[]>> root = new ConcurrentHashMap<>();
 
 	@SuppressWarnings("unchecked")
 	public <T extends ResourcePackBuilder> ArtificeResourcePackImpl(net.minecraft.server.packs.PackType type, @Nullable ResourceLocation identifier, Consumer<T> registerResources) {
@@ -148,7 +158,7 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 
 		@Override
 		public void setDisplayName(String name) {
-			ArtificeResourcePackImpl.this.displayName = Component.literal(name);
+			this.setDisplayName(Component.literal(name));
 		}
 
 		@Override
@@ -211,24 +221,34 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 						File DEFAULT_OUTPUT = new File(filePath);
 						Path folder = Paths.get(DEFAULT_OUTPUT.toURI());
 
-						for (Map.Entry<String, Supplier<byte[]>> e : ArtificeResourcePackImpl.this.root.entrySet()) {
-							Path root = folder.resolve(e.getKey());
-							Files.createDirectories(root.getParent());
-							Files.write(root, e.getValue().get());
+						if (!root.isEmpty()) {
+							for (Map.Entry<List<String>, Supplier<byte[]>> e : ArtificeResourcePackImpl.this.root.entrySet()) {
+								Path root = folder.resolve(String.join("/", e.getKey()));
+								Files.createDirectories(root.getParent());
+								Files.write(root, e.getValue().get());
+								if (Thread.interrupted()) {
+									throw new InterruptedException("Dumping root resources");
+								}
+							}
 						}
 
-						Path assets = folder.resolve("assets");
-						Files.createDirectories(assets);
-						for (Map.Entry<ResourceLocation, Supplier<byte[]>> entry : ArtificeResourcePackImpl.this.assets.entrySet()) {
-							this.write(assets, entry.getKey(), entry.getValue().get());
+						if (!type.equals("data") && !assets.isEmpty()) {
+							Path assets = folder.resolve("assets");
+							Files.createDirectories(assets);
+							for (Map.Entry<ResourceLocation, Supplier<byte[]>> entry : ArtificeResourcePackImpl.this.assets.entrySet()) {
+								this.write(assets, entry.getKey(), entry.getValue().get());
+								if (Thread.interrupted()) throw new InterruptedException("Dumping server data");
+							}
 						}
-
-						Path data = folder.resolve("data");
-						Files.createDirectories(data);
-						for (Map.Entry<ResourceLocation, Supplier<byte[]>> entry : ArtificeResourcePackImpl.this.data.entrySet()) {
-							this.write(data, entry.getKey(), entry.getValue().get());
+						if (!type.equals("assets") && !data.isEmpty()) {
+							Path data = folder.resolve("data");
+							Files.createDirectories(data);
+							for (Map.Entry<ResourceLocation, Supplier<byte[]>> entry : ArtificeResourcePackImpl.this.data.entrySet()) {
+								this.write(data, entry.getKey(), entry.getValue().get());
+								if (Thread.interrupted()) throw new InterruptedException("Dumping client resources");
+							}
 						}
-					} catch (IOException exception) {
+					} catch (IOException | InterruptedException exception) {
 						throw new RuntimeException(exception);
 					}
 					resources.forEach((id, resource) -> {
@@ -317,8 +337,11 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 
 		@Override
 		public Future<byte[]> addAsyncRootResource(String path, CallableFunction<String, byte[]> data) {
+//			if (!allowsDuplicateResource && root.containsKey(Arrays.asList(path.split("/")))) {
+//				throw new IllegalArgumentException(String.format("Duplicate root resource id %s in runtime resource pack %s!", path, getName()));
+//			}
 			Future<byte[]> future = EXECUTOR_SERVICE.submit(() -> data.get(path));
-			ArtificeResourcePackImpl.this.root.put(path, () -> {
+			ArtificeResourcePackImpl.this.root.put(Arrays.asList(path.split("/")), () -> {
 				try {
 					return future.get();
 				} catch (InterruptedException | ExecutionException e) {
@@ -330,12 +353,12 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 
 		@Override
 		public void addLazyRootResource(String path, BiFunction<ArtificeResourcePack, String, byte[]> data) {
-			ArtificeResourcePackImpl.this.root.put(path, new Memoized<>(data, path));
+			ArtificeResourcePackImpl.this.root.put(Arrays.asList(path.split("/")), new Memoized<>(data, path));
 		}
 
 		@Override
 		public byte[] addRootResource(String path, byte[] data) {
-			ArtificeResourcePackImpl.this.root.put(path, () -> data);
+			ArtificeResourcePackImpl.this.root.put(Arrays.asList(path.split("/")), () -> data);
 			return data;
 		}
 
@@ -566,46 +589,28 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 	@Nullable
 	@Override
 	public IoSupplier<InputStream> getRootResource(String... path) {
-		this.lock();
 		Supplier<byte[]> supplier = this.root.get(Arrays.asList(path));
-		if(supplier == null) {
-			this.waiting.unlock();
+		if (supplier == null) {
 			return null;
 		}
-		this.waiting.unlock();
 		return () -> new ByteArrayInputStream(supplier.get());
 	}
 
 	@Override
 	@Nullable
 	public IoSupplier<InputStream> getResource(PackType type, ResourceLocation id) {
-		this.lock();
 		Supplier<byte[]> supplier = this.getSys(type).get(id);
-		if(supplier == null) {
-			Artifice.LOGGER.warn("No resource found for " + id);
-			this.waiting.unlock();
-			return null;
-		}
-		this.waiting.unlock();
-		return () -> new ByteArrayInputStream(supplier.get());
+		return supplier == null ? null : () -> new ByteArrayInputStream(supplier.get());
 	}
 
 	@Override
 	public void listResources(net.minecraft.server.packs.PackType type, String namespace, String startingPath, ResourceOutput pathFilter) {
-		this.lock();
-		for(ResourceLocation identifier : this.getSys(type).keySet()) {
-			Supplier<byte[]> supplier = this.getSys(type).get(identifier);
-			if(supplier == null) {
-				Artifice.LOGGER.warn("No resource found for " + identifier);
-				this.waiting.unlock();
-				continue;
-			}
-			IoSupplier<InputStream> inputSupplier = () -> new ByteArrayInputStream(supplier.get());
-			if(identifier.getNamespace().equals(namespace) && identifier.getPath().startsWith(startingPath)) {
-				pathFilter.accept(identifier, inputSupplier);
+		for (ResourceLocation identifier : this.getSys(type).keySet()) {
+			// deleted section: detecting "No resource found for..."
+			if (identifier.getNamespace().equals(namespace) && identifier.getPath().startsWith(startingPath)) {
+				pathFilter.accept(identifier, getResource(type, identifier));
 			}
 		}
-		this.waiting.unlock();
 	}
 
 	@Override
@@ -617,12 +622,10 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 
 	@Override
 	public Set<String> getNamespaces(net.minecraft.server.packs.PackType type) {
-		this.lock();
 		Set<String> namespaces = new HashSet<>();
-		for(ResourceLocation identifier : this.getSys(type).keySet()) {
+		for (ResourceLocation identifier : this.getSys(type).keySet()) {
 			namespaces.add(identifier.getNamespace());
 		}
-		this.waiting.unlock();
 		return namespaces;
 	}
 
@@ -648,21 +651,52 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 
 	@Override
 	public void close() {
-		Artifice.LOGGER.info("closing rrp " + this.identifier);
+		Artifice.LOGGER.info("closing artifice pack " + this.identifier);
+		this.addedPacks.clear();
+		this.subResourcePacks.clear();
+	}
+
+	/**
+	 * For appending resources if multiple resource packs use the same namespace, such as "minecraft" tags used in multiple
+	 * SPResourcePacks.
+	 * <p>
+	 * This is copied from Fabric's {@link net.fabricmc.fabric.impl.resource.loader.GroupResourcePack}.
+	 */
+	public void appendResources(PackType type, ResourceLocation id, List<Resource> resources) throws IOException {
+		List<ArtificeResourcePack> packs = this.subResourcePacks.get(id.getNamespace());
+
+		if (packs == null) {
+			return;
+		}
+
+		ResourceLocation metadataId = FallbackResourceManager.getMetadataLocation(id);
+
+		for (ArtificeResourcePack pack : packs) {
+			IoSupplier<InputStream> supplier = pack.getResource(type, id);
+
+			if (supplier != null) {
+				IoSupplier<ResourceMetadata> metadataSupplier = () -> {
+					IoSupplier<InputStream> rawMetadataSupplier = pack.getResource(type, metadataId);
+					return rawMetadataSupplier != null ? FallbackResourceManager.parseMetadata(rawMetadataSupplier) : ResourceMetadata.EMPTY;
+				};
+
+				resources.add(new Resource(pack, supplier, metadataSupplier));
+			}
+		}
 	}
 
 	@Override
-	public String packId() {
+	public @NotNull String packId() {
 		if (displayName == null) {
 			switch (this.type) {
 				case CLIENT_RESOURCES -> {
 					ResourceLocation aid = ArtificeRegistry.ASSETS.getKey(this);
-					displayName = Component.literal(aid != null ? aid.toString() : "Generated Resources");
+					displayName = Component.literal(/*aid != null ? aid.toString() : */"Generated Resources");
 					return displayName.getString();
 				}
 				case SERVER_DATA -> {
 					ResourceLocation did = ArtificeRegistry.DATA.getKey(this);
-					displayName = Component.literal(did != null ? did.toString() : "Generated Data");
+					displayName = Component.literal(/*did != null ? did.toString() : */"Generated Data");
 					return displayName.getString();
 				}
 			}

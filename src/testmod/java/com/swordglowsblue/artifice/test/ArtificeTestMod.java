@@ -23,11 +23,11 @@ import io.github.vampirestudios.artifice.api.resource.StringResource;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -45,6 +45,8 @@ import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.material.Fluids;
+
+import java.io.IOException;
 
 public class ArtificeTestMod implements ModInitializer {
     private static final FabricItemSettings itemSettings = new FabricItemSettings();
@@ -66,11 +68,11 @@ public class ArtificeTestMod implements ModInitializer {
             entries.accept(testItem);
             entries.accept(testBlockItem);
         });
-//		Registry.register(BuiltInRegistries.CHUNK_GENERATOR, ResourceKey.create(Registries.CHUNK_GENERATOR, id("test_chunk_generator")).location(), TestChunkGenerator.CODEC);
 
         Artifice.registerDataPack(id("optional_test"), pack -> {
             pack.setOptional();
-            pack.setDisplayName("Test");
+            pack.setDescription("Data for the Artifice test mod");
+            pack.setDisplayName(Component.literal("Test"));
 
             pack.add(id("recipes/test_optional.json"), new StringResource("""
                     {
@@ -91,9 +93,15 @@ public class ArtificeTestMod implements ModInitializer {
                         "count": 2
                       }
                     }"""));
+
+            try {
+                pack.dumpResources("optional_test", "data");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
         Artifice.registerDataPack(id("testmod"), pack -> {
-            pack.setDisplayName("Artifice Test Data");
+            pack.setDisplayName(Component.literal("Artifice Test Data"));
             pack.setDescription("Data for the Artifice test mod");
 
             pack.add(id("recipes/test_item.json"), new StringResource("""
@@ -399,7 +407,11 @@ public class ArtificeTestMod implements ModInitializer {
                     "artifice:test_featureee", PlacementModifier.biome(), PlacementModifier.inSquare()
             ));
 
-            pack.dump("testing_data", "data", FabricLoader.getInstance().isDevelopmentEnvironment());
+            try {
+                pack.dumpResources("testmod", "data");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
     }
 

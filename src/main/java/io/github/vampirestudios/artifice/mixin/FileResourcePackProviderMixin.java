@@ -2,7 +2,6 @@ package io.github.vampirestudios.artifice.mixin;
 
 import io.github.vampirestudios.artifice.common.ArtificeRegistry;
 import io.github.vampirestudios.artifice.common.ClientResourcePackProfileLike;
-import io.github.vampirestudios.artifice.common.ServerResourcePackProfileLike;
 import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
@@ -45,27 +44,12 @@ public class FileResourcePackProviderMixin {
 			adder.accept(Pack.create(
 					pack.getId(),
 					pack.getTitle(),
-					false,
+					pack.isRequired(),
 					(name) -> pack.open(),
 					new Pack.Info(pack.getDescription(), SharedConstants.getCurrentVersion().getPackVersion(PackType.CLIENT_RESOURCES), pack.getRequestedFeatures()),
 					this.packType,
 					Pack.Position.TOP,
-					false,
-					RUNTIME
-			));
-		}
-
-		for (ServerResourcePackProfileLike asset : ArtificeRegistry.DATA) {
-			Pack pack = asset.toServerResourcePackProfile();
-			adder.accept(Pack.create(
-					pack.getId(),
-					pack.getTitle(),
-					false,
-					(name) -> pack.open(),
-					new Pack.Info(pack.getDescription(), SharedConstants.getCurrentVersion().getPackVersion(PackType.SERVER_DATA), pack.getRequestedFeatures()),
-					this.packType,
-					Pack.Position.TOP,
-					false,
+					pack.isFixedPosition(),
 					RUNTIME
 			));
 		}

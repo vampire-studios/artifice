@@ -45,10 +45,7 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
-import net.minecraft.server.packs.resources.FallbackResourceManager;
 import net.minecraft.server.packs.resources.IoSupplier;
-import net.minecraft.server.packs.resources.Resource;
-import net.minecraft.server.packs.resources.ResourceMetadata;
 import net.minecraft.world.flag.FeatureFlagSet;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -656,35 +653,6 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 		this.subResourcePacks.clear();
 	}
 
-	/**
-	 * For appending resources if multiple resource packs use the same namespace, such as "minecraft" tags used in multiple
-	 * SPResourcePacks.
-	 * <p>
-	 * This is copied from Fabric's {@link net.fabricmc.fabric.impl.resource.loader.GroupResourcePack}.
-	 */
-	public void appendResources(PackType type, ResourceLocation id, List<Resource> resources) throws IOException {
-		List<ArtificeResourcePack> packs = this.subResourcePacks.get(id.getNamespace());
-
-		if (packs == null) {
-			return;
-		}
-
-		ResourceLocation metadataId = FallbackResourceManager.getMetadataLocation(id);
-
-		for (ArtificeResourcePack pack : packs) {
-			IoSupplier<InputStream> supplier = pack.getResource(type, id);
-
-			if (supplier != null) {
-				IoSupplier<ResourceMetadata> metadataSupplier = () -> {
-					IoSupplier<InputStream> rawMetadataSupplier = pack.getResource(type, metadataId);
-					return rawMetadataSupplier != null ? FallbackResourceManager.parseMetadata(rawMetadataSupplier) : ResourceMetadata.EMPTY;
-				};
-
-				resources.add(new Resource(pack, supplier, metadataSupplier));
-			}
-		}
-	}
-
 	@Override
 	public @NotNull String packId() {
 		if (displayName == null) {
@@ -717,14 +685,14 @@ public class ArtificeResourcePackImpl implements ArtificeResourcePack {
 		if (!this.overwrite) {
 			profile = new ArtificeResourcePackContainer(this.optional, this.visible, Objects.requireNonNull(Pack.create(
 					id, displayName,
-					false, string -> ArtificeResourcePackImpl.this, new Pack.Info(description, 12, FeatureFlagSet.of()),
+					false, string -> ArtificeResourcePackImpl.this, new Pack.Info(description, SharedConstants.getCurrentVersion().getPackVersion(PackType.CLIENT_RESOURCES), FeatureFlagSet.of()),
 					PackType.CLIENT_RESOURCES, this.optional ? Pack.Position.TOP : Pack.Position.BOTTOM,
 					false, ARTIFICE_RESOURCE_PACK_SOURCE
 			)));
 		} else {
 			profile = new ArtificeResourcePackContainer(false, false, Objects.requireNonNull(Pack.create(
 					id, displayName,
-					true, string -> ArtificeResourcePackImpl.this, new Pack.Info(description, 12, FeatureFlagSet.of()),
+					true, string -> ArtificeResourcePackImpl.this, new Pack.Info(description, SharedConstants.getCurrentVersion().getPackVersion(PackType.CLIENT_RESOURCES), FeatureFlagSet.of()),
 					PackType.CLIENT_RESOURCES, Pack.Position.TOP,
 					false, ARTIFICE_RESOURCE_PACK_SOURCE
 			)));

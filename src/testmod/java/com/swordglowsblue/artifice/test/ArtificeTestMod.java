@@ -133,7 +133,6 @@ public class ArtificeTestMod implements ModInitializer {
                                     blockRegistryUtils.getIdByType(Blocks.PODZOL),
                                     blockRegistryUtils.getIdByType(Blocks.MYCELIUM)
                             )
-//					.values(Blocks.GRASS_BLOCK, Blocks.STONE, Blocks.DIRT, Blocks.PODZOL, Blocks.MYCELIUM)
             );
 
             RegistryUtils<Item> itemRegistryUtils = new RegistryUtils<>(BuiltInRegistries.ITEM);
@@ -148,13 +147,13 @@ public class ArtificeTestMod implements ModInitializer {
             );
 
             RegistryUtils<EntityType<?>> entityTypeRegistryUtils = new RegistryUtils<>(BuiltInRegistries.ENTITY_TYPE);
-            pack.addTag("item", ArtificeTestClientMod.makeResourceLocation("test_entity_tag"), new TagBuilder<Item>()
+            pack.addTag("entity", ArtificeTestClientMod.makeResourceLocation("test_entity_tag"), new TagBuilder<EntityType<?>>()
                             .replace(false)
-                            .values(itemRegistryUtils.getIdByType(Items.DIAMOND),
-                                    itemRegistryUtils.getIdByType(Items.GOLD_INGOT),
-                                    itemRegistryUtils.getIdByType(Items.EMERALD),
-                                    itemRegistryUtils.getIdByType(Items.PHANTOM_MEMBRANE),
-                                    itemRegistryUtils.getIdByType(Items.RAW_COPPER)
+                            .values(entityTypeRegistryUtils.getIdByType(EntityType.CAT),
+                                    entityTypeRegistryUtils.getIdByType(EntityType.WOLF),
+                                    entityTypeRegistryUtils.getIdByType(EntityType.WITHER),
+                                    entityTypeRegistryUtils.getIdByType(EntityType.ZOMBIE),
+                                    entityTypeRegistryUtils.getIdByType(EntityType.WARDEN)
                             )
             );
 

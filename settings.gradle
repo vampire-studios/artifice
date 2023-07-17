@@ -4,9 +4,12 @@ pluginManagement {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
         }
+        maven {
+            name = 'Babric'
+            url = 'https://maven.glass-launcher.net/babric'
+        }
+        mavenCentral()
         gradlePluginPortal()
-        maven { url = "https://maven.quiltmc.org/repository/release" }
-        maven { url = 'https://server.bbkr.space/artifactory/libs-release/' }
     }
 }
 

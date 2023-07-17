@@ -1,17 +1,68 @@
 plugins {
-    id 'fabric-loom' version '1.2-SNAPSHOT'
+    id 'babric-loom' version '1.1-SNAPSHOT'
     id 'maven-publish'
     id "io.github.juuxel.loom-quiltflower" version "1.7.+"
     id 'org.quiltmc.quilt-mappings-on-loom' version '4.+'
 }
 
-archivesBaseName = project.archives_base_name
-version = "$mod_version+build.$build_number-${libs.versions.minecraft.get()}-EXPERIMENTAL"
-group = maven_group
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+archivesBaseName = project.archives_base_name + "-" + project.minecraft_version
+version = "$project.mod_version+mc.$project.minecraft_version"
+group = project.maven_group
+
+loom {
+	gluedMinecraftJar()
+	customMinecraftManifest.set("https://babric.github.io/manifest-polyfill/${minecraft_version}.json")
+    // accessWidenerPath = file("src/main/resources/artifice.accesswidener")
+}
 
 repositories {
-    mavenCentral()
-    maven { url = "https://maven.parchmentmc.org" }
+    // Add repositories to retrieve artifacts from in here.
+	// You should only use this when depending on other mods because
+	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
+	// for more information about repositories.
+
+	// Used for the fabric toolchain in this project.
+	maven {
+		name = 'Babric'
+		url = 'https://maven.glass-launcher.net/babric'
+	}
+	// Used for mappings.
+	maven {
+		name = 'Glass Releases'
+		url = 'https://maven.glass-launcher.net/releases'
+	}
+	// Used for StationAPI and HowManyItems.
+	maven {
+		name = 'Glass Snapshots'
+		url = 'https://maven.glass-launcher.net/snapshots'
+	}
+	// Used for a StationAPI dependency.
+	maven {
+		name = 'Froge'
+		url 'https://maven.minecraftforge.net/'
+	}
+	// Used for projects that do not have a maven repository, but do have a GitHub repository with working build scripts.
+	maven {
+		name = 'Jitpack'
+		url = 'https://jitpack.io'
+	}
+	// Used for another StationAPI dependency
+	exclusiveContent {
+		forRepository {
+			maven {
+				name = "Modrinth"
+				url = "https://api.modrinth.com/maven"
+			}
+		}
+		filter {
+			includeGroup "maven.modrinth"
+		}
+	}
+	mavenCentral()
 }
 
 sourceSets {
@@ -21,27 +72,34 @@ sourceSets {
     }
 }
 
-loom {
-    accessWidenerPath = file("src/main/resources/artifice.accesswidener")
-}
-
 dependencies {
-    minecraft libs.minecraft
-    mappings loom.layered {
-//		it.mappings("org.quiltmc:quilt-mappings:${libs.versions.quilt.mappings.get()}:intermediary-v2")
-//		it.mappings("net.fabricmc:yarn:${libs.versions.fabric.mappings.get()}:v2")
-        it.parchment("org.parchmentmc.data:parchment-1.19.3:${libs.versions.parchment.get()}@zip")
-        it.officialMojangMappings()
-    }
-    modImplementation libs.fabric.loader
+    // To change the versions see the gradle.properties file
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.glasslauncher:bin:${project.yarn_mappings}"
+	modImplementation "babric:fabric-loader:${project.loader_version}"
 
-    modApi (libs.bundles.fabric)
+	implementation "org.slf4j:slf4j-api:1.8.0-beta4"
+	implementation 'org.apache.logging.log4j:log4j-slf4j18-impl:2.17.2'
+
+	modImplementation "net.modificationstation:StationAPI:${project.stapi_version}"
+
+	// Optional, but convenient mods for mod creators and users alike.
+	modImplementation("com.github.calmilamsy:ModMenu:${project.modmenu_version}") {
+		transitive false
+	}
+	modImplementation("net.glasslauncher.mods:GlassConfigAPI:${project.gcapi_version}") {
+		transitive false
+	}
+	modImplementation("net.glasslauncher:HowManyItems-Fabric-Unofficial:${project.howmanyitems_version}") {
+		transitive false
+	}
 
     testmodImplementation sourceSets.main.output
 }
 
 Properties properties = new Properties()
 properties.put("total_version", version)
+properties.put("mc_version", project.minecraft_version)
 
 task updateTemplate(type: Copy) {
     group = "template"
@@ -56,20 +114,15 @@ task updateTemplate(type: Copy) {
     }
     destinationDir = rootDir
 }
+
 publish.dependsOn updateTemplate
 
 processResources {
-    inputs.property "version", project.version
+	inputs.property "version", project.version
 
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version
-    }
-}
-
-java {
-    withSourcesJar()
-    withJavadocJar()
-    toolchain.languageVersion = JavaLanguageVersion.of(17)
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -77,16 +130,15 @@ tasks.withType(JavaCompile).configureEach {
     it.options.encoding = 'UTF-8'
 }
 
-compileJava {
-    options.compilerArgs += '--enable-preview'
+java {
+    withSourcesJar()
+    withJavadocJar()
 }
 
 jar {
-    from('LICENSE') {
-        rename {
-            "${it}_$archivesBaseName"
-        }
-    }
+	from("LICENSE") {
+		rename { "${it}_${project.archivesBaseName}"}
+	}
 }
 
 publishing {

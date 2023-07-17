@@ -27,9 +27,10 @@
   "accessWidener": "artifice.accesswidener",
 
   "depends": {
-    "minecraft": ">=1.19-alpha.22.13.a",
+    "minecraft": "1.0.0-beta.7.3",
     "fabricloader": ">=0.13.3",
-    "java": "17"
+    "java": "17",
+    "stationapi": "*"
   },
   "custom": {
     "modmenu": {

@@ -1,9 +1,9 @@
 package io.github.vampirestudios.artifice.api;
 
-import net.minecraft.resources.ResourceLocation;
+import net.modificationstation.stationapi.api.registry.Identifier;
 
 public interface ArtificeAssetPackEntrypoint {
 	void generateAssetPack(ArtificeResourcePack.ClientResourcePackBuilder builder);
 
-	ResourceLocation getClientID();
+	Identifier getClientID();
 }

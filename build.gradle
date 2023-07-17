@@ -1,8 +1,8 @@
 plugins {
     id 'babric-loom' version '1.1-SNAPSHOT'
     id 'maven-publish'
-    id "io.github.juuxel.loom-quiltflower" version "1.7.+"
-    id 'org.quiltmc.quilt-mappings-on-loom' version '4.+'
+//    id "io.github.juuxel.loom-quiltflower" version "1.7.+"
+//    id 'org.quiltmc.quilt-mappings-on-loom' version '4.+'
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -75,7 +75,7 @@ sourceSets {
 dependencies {
     // To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.glasslauncher:bin:${project.yarn_mappings}"
+	mappings "babric:barn:${project.yarn_mappings}"
 	modImplementation "babric:fabric-loader:${project.loader_version}"
 
 	implementation "org.slf4j:slf4j-api:1.8.0-beta4"

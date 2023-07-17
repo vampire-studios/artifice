@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.resources.ResourceLocation;
+import net.modificationstation.stationapi.api.registry.Identifier;
 
 /**
  * Builder for a model file ({@code namespace:models/block|item/modelid.json}).
@@ -23,7 +23,7 @@ public final class ModelBuilder extends TypedJsonObject {
 	 * @param id The parent model ID ({@code namespace:block|item/modelid}
 	 * @return this
 	 */
-	public ModelBuilder parent(ResourceLocation id) {
+	public ModelBuilder parent(Identifier id) {
 		root.addProperty("parent", id.toString());
 		return this;
 	}
@@ -35,7 +35,7 @@ public final class ModelBuilder extends TypedJsonObject {
 	 * @param path The texture ID ({@code namespace:type/textureid}).
 	 * @return this
 	 */
-	public ModelBuilder texture(String name, ResourceLocation path) {
+	public ModelBuilder texture(String name, Identifier path) {
 		join("textures", new TypedJsonObject().add(name, path.toString()).build());
 		return this;
 	}
@@ -167,7 +167,7 @@ public final class ModelBuilder extends TypedJsonObject {
 		 * @param id The model id ({@code namespace:block|item/modelid}).
 		 * @return this
 		 */
-		public Override model(ResourceLocation id) {
+		public Override model(Identifier id) {
 			root.addProperty("model", id.toString());
 			return this;
 		}

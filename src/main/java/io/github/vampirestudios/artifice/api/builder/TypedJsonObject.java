@@ -3,7 +3,7 @@ package io.github.vampirestudios.artifice.api.builder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.resources.ResourceLocation;
+import net.modificationstation.stationapi.api.registry.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
@@ -123,9 +123,9 @@ public class TypedJsonObject {
 		return array;
 	}
 
-	public static JsonArray arrayOf(ResourceLocation... values) {
+	public static JsonArray arrayOf(Identifier... values) {
 		JsonArray array = new JsonArray();
-		for (ResourceLocation i : values) array.add(i.toString());
+		for (Identifier i : values) array.add(i.toString());
 		return array;
 	}
 

@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.resources.ResourceLocation;
+import net.modificationstation.stationapi.api.registry.Identifier;
 
 /**
  * Builder for a particle definition ({@code namespace:particles/particleid.json}).
@@ -22,7 +22,7 @@ public final class ParticleBuilder extends TypedJsonObject {
 	 * @param id The texure ID ({@code namespace:textureid}).
 	 * @return this
 	 */
-	public ParticleBuilder texture(ResourceLocation id) {
+	public ParticleBuilder texture(Identifier id) {
 		join("textures", arrayOf(id));
 		return this;
 	}

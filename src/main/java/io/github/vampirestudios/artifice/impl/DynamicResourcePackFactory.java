@@ -7,16 +7,18 @@ import io.github.vampirestudios.artifice.common.ServerResourcePackProfileLike;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
+import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.resource.ResourceType;
 
 import java.util.function.Consumer;
 
 public class DynamicResourcePackFactory<T extends ArtificeResourcePack.ResourcePackBuilder> implements ClientResourcePackProfileLike, ServerResourcePackProfileLike {
 
-	private final PackType type;
-	private final ResourceLocation identifier;
+	private final ResourceType type;
+	private final Identifier identifier;
 	private final Consumer<T> init;
 
-	public DynamicResourcePackFactory(PackType type, ResourceLocation identifier, Consumer<T> init) {
+	public DynamicResourcePackFactory(ResourceType type, Identifier identifier, Consumer<T> init) {
 		this.type = type;
 		this.identifier = identifier;
 		this.init = init;

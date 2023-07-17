@@ -7,6 +7,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.modificationstation.stationapi.api.registry.Identifier;
 
 public class ArtificeImpl implements ModInitializer {
 
@@ -20,7 +21,7 @@ public class ArtificeImpl implements ModInitializer {
 		}
 	}
 
-	public static <V, T extends V> T registerSafely(Registry<V> registry, ResourceLocation id, T entry) {
+	public static <V, T extends V> T registerSafely(Registry<V> registry, Identifier id, T entry) {
 		return Registry.register(registry, id, entry);
 	}
 

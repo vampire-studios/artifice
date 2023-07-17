@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.resources.ResourceLocation;
+import net.modificationstation.stationapi.api.registry.Identifier;
 
 import java.util.Locale;
 
@@ -36,7 +36,7 @@ public final class AtlasBuilder extends TypedJsonObject {
     public static final class Source extends TypedJsonObject {
         private Source() {}
 
-        public static Source singleFile(ResourceLocation resource) {
+        public static Source singleFile(Identifier resource) {
             return new Source()
                     .type(SourceType.SINGLE_FILE)
                     .resource(resource);
@@ -49,19 +49,19 @@ public final class AtlasBuilder extends TypedJsonObject {
                     .prefix(prefix);
         }
 
-        /*public static Source filter(ResourceLocationPattern resourceLocationPattern) {
-            return new Source()
-                    .type(SourceType.FILTER)
-                    .source(source)
-                    .prefix(prefix);
-        }
+//        public static Source filter(Identifier resourceLocationPattern) {
+//            return new Source()
+//                    .type(SourceType.FILTER)
+//                    .source(source)
+//                    .prefix(prefix);
+//        }
 
         public static Source unsticher(String source, String prefix) {
             return new Source()
                     .type(SourceType.UNSTITCHER)
                     .source(source)
                     .prefix(prefix);
-        }*/
+        }
 
         /**
          * Sets the source type for this specific source.
@@ -78,7 +78,7 @@ public final class AtlasBuilder extends TypedJsonObject {
          * @param resource the path for the resource
          * @return this
          */
-        public Source resource(ResourceLocation resource) {
+        public Source resource(Identifier resource) {
             root.addProperty("resource", resource.toString());
             return this;
         }
@@ -88,7 +88,7 @@ public final class AtlasBuilder extends TypedJsonObject {
          * @param resource the path for the resource
          * @return this
          */
-        public Source sprite(ResourceLocation resource) {
+        public Source sprite(Identifier resource) {
             root.addProperty("resource", resource.toString());
             return this;
         }

@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.resources.ResourceLocation;
+import net.modificationstation.stationapi.api.registry.Identifier;
 
 import java.util.Map;
 
@@ -87,7 +87,7 @@ public final class BlockStateBuilder extends TypedJsonObject {
 		 * @param id The model ID ({@code namespace:block|item/modelid}).
 		 * @return this
 		 */
-		public Variant model(ResourceLocation id) {
+		public Variant model(Identifier id) {
 			root.addProperty("model", id.toString());
 			return this;
 		}

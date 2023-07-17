@@ -4,9 +4,9 @@ import com.google.gson.JsonObject;
 import io.github.vampirestudios.artifice.api.builder.TypedJsonObject;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
+import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.math.Direction;
+import net.modificationstation.stationapi.api.util.math.MathHelper;
 
 /**
  * Builder for an individual model element.
@@ -29,9 +29,9 @@ public final class ModelElementBuilder extends TypedJsonObject {
 	 */
 	public ModelElementBuilder from(float x, float y, float z) {
 		root.add("from", arrayOf(
-				Mth.clamp(x, -16, 32),
-				Mth.clamp(y, -16, 32),
-				Mth.clamp(z, -16, 32)
+				MathHelper.clamp(x, -16, 32),
+				MathHelper.clamp(y, -16, 32),
+				MathHelper.clamp(z, -16, 32)
 		));
 		return this;
 	}
@@ -46,9 +46,9 @@ public final class ModelElementBuilder extends TypedJsonObject {
 	 */
 	public ModelElementBuilder to(float x, float y, float z) {
 		root.add("to", arrayOf(
-				Mth.clamp(x, -16, 32),
-				Mth.clamp(y, -16, 32),
-				Mth.clamp(z, -16, 32)
+				MathHelper.clamp(x, -16, 32),
+				MathHelper.clamp(y, -16, 32),
+				MathHelper.clamp(z, -16, 32)
 		));
 		return this;
 	}
@@ -109,9 +109,9 @@ public final class ModelElementBuilder extends TypedJsonObject {
 		 */
 		public Rotation origin(float x, float y, float z) {
 			root.add("origin", arrayOf(
-					Mth.clamp(x, -16, 32),
-					Mth.clamp(y, -16, 32),
-					Mth.clamp(z, -16, 32)
+					MathHelper.clamp(x, -16, 32),
+					MathHelper.clamp(y, -16, 32),
+					MathHelper.clamp(z, -16, 32)
 			));
 			return this;
 		}
@@ -135,7 +135,7 @@ public final class ModelElementBuilder extends TypedJsonObject {
 		 * @throws IllegalArgumentException if the angle is not between -45 and 45 or is not divisible by 22.5.
 		 */
 		public Rotation angle(float angle) {
-			if (angle != Mth.clamp(angle, -45f, 45f) || angle % 22.5f != 0)
+			if (angle != MathHelper.clamp(angle, -45f, 45f) || angle % 22.5f != 0)
 				throw new IllegalArgumentException("Angle must be between -45 and 45 in increments of 22.5");
 			root.addProperty("angle", angle);
 			return this;
@@ -175,10 +175,10 @@ public final class ModelElementBuilder extends TypedJsonObject {
 		 */
 		public Face uv(int x1, int x2, int y1, int y2) {
 			root.add("uv", arrayOf(
-					Mth.clamp(x1, 0, 16),
-					Mth.clamp(x2, 0, 16),
-					Mth.clamp(y1, 0, 16),
-					Mth.clamp(y2, 0, 16)
+					MathHelper.clamp(x1, 0, 16),
+					MathHelper.clamp(x2, 0, 16),
+					MathHelper.clamp(y1, 0, 16),
+					MathHelper.clamp(y2, 0, 16)
 			));
 			return this;
 		}
@@ -200,7 +200,7 @@ public final class ModelElementBuilder extends TypedJsonObject {
 		 * @param path The texture path ({@code namespace:type/textureid}).
 		 * @return this
 		 */
-		public Face texture(ResourceLocation path) {
+		public Face texture(Identifier path) {
 			root.addProperty("texture", path.toString());
 			return this;
 		}
@@ -224,7 +224,7 @@ public final class ModelElementBuilder extends TypedJsonObject {
 		 * @throws IllegalArgumentException if the rotation is not between 0 and 270 or is not divisible by 90.
 		 */
 		public Face rotation(int rotation) {
-			if (rotation != Mth.clamp(rotation, 0, 270) || rotation % 90 != 0)
+			if (rotation != MathHelper.clamp(rotation, 0, 270) || rotation % 90 != 0)
 				throw new IllegalArgumentException("Rotation must be between 0 and 270 in increments of 90");
 			root.addProperty("rotation", rotation);
 			return this;
